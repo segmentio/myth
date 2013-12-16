@@ -1,0 +1,15 @@
+{
+  "name": "source-sans-regular",
+  "repo": "typefaces/source-sans-regular",
+  "description": "The Source Sans regular typeface.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "styles": [
+    "index.css"
+  ],
+  "fonts": [
+    "fonts/source-sans-regular.eot",
+    "fonts/source-sans-regular.ttf",
+    "fonts/source-sans-regular.woff"
+  ]
+}

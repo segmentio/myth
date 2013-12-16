@@ -1,0 +1,15 @@
+{
+  "name": "source-sans-semibold",
+  "repo": "typefaces/source-sans-semibold",
+  "description": "The Source Sans semibold typeface.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "styles": [
+    "index.css"
+  ],
+  "fonts": [
+    "fonts/source-sans-semibold.eot",
+    "fonts/source-sans-semibold.ttf",
+    "fonts/source-sans-semibold.woff"
+  ]
+}

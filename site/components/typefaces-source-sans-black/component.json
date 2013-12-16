@@ -1,0 +1,15 @@
+{
+  "name": "source-sans-black",
+  "repo": "typefaces/source-sans-black",
+  "description": "The Source Sans black typeface.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "styles": [
+    "index.css"
+  ],
+  "fonts": [
+    "fonts/source-sans-black.eot",
+    "fonts/source-sans-black.ttf",
+    "fonts/source-sans-black.woff"
+  ]
+}

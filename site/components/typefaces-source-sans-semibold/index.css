@@ -1,0 +1,10 @@
+
+@font-face {
+  font-family: 'Source Sans';
+  src: url('fonts/source-sans-semibold.eot');
+  src: url('fonts/source-sans-semibold.eot?#iefix') format('embedded-opentype'),
+       url('fonts/source-sans-semibold.woff') format('woff'),
+       url('fonts/source-sans-semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}

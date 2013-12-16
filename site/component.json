@@ -1,0 +1,10 @@
+{
+  "name": "myth-site",
+  "private": true,
+  "scripts": ["index.js"],
+  "styles": ["index.css"],
+  "dependencies": {
+    "necolas/normalize.css": "*",
+    "typefaces/source-sans": "*"
+  }
+}

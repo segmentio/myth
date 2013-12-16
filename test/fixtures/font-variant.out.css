@@ -1,0 +1,7 @@
+
+h2 {
+  -webkit-font-feature-settings: "smcp", "c2sc";
+  -moz-font-feature-settings: "smcp", "c2sc";
+  font-feature-settings: "smcp", "c2sc";
+  font-variant-caps: all-small-caps;
+}

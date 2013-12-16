@@ -1,0 +1,15 @@
+{
+  "name": "source-sans-bold",
+  "repo": "typefaces/source-sans-bold",
+  "description": "The Source Sans bold typeface.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "styles": [
+    "index.css"
+  ],
+  "fonts": [
+    "fonts/source-sans-bold.eot",
+    "fonts/source-sans-bold.ttf",
+    "fonts/source-sans-bold.woff"
+  ]
+}

@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var myth = require('..');
+var program = require('commander');
+var stdin = require('stdin');
+
+/**
+ * Program.
+ */
+
+program
+  .version(require('../package').version)
+  .usage('[<input>] [<output>]')
+  .parse(process.argv);
+
+/**
+ * Transform.
+ */
+
+read(program.args[0], function (err, css) {
+  if (err) throw err;
+  write(program.args[1], myth(css));
+});
+
+/**
+ * Read from a `file`, falling back to stdin.
+ *
+ * @param {String} file
+ * @param {Function} callback
+ */
+
+function read (file, callback) {
+  if (file) {
+    fs.readFile(file, function (err, data) {
+      callback(err, data.toString());
+    });
+  } else {
+    stdin(function (str) {
+      callback(null, str);
+    });
+  }
+}
+
+/**
+ * Write `css` to a `file`, falling back to stdout.
+ *
+ * @param {String} file
+ * @param {String} css
+ */
+
+function write (file, css) {
+  if (file) return fs.writeFileSync(file, css);
+  process.stdout.write(css);
+}
