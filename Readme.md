@@ -1,7 +1,7 @@
 
 # myth
 
-  The simplest way to write CSS.
+  CSS the way it was imagined.
 
   Myth is a CSS **post**-processor that lets you write plain old, spec-compliant CSS without having to worry about browser support. It's a CSS polyfill.
 

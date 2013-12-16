@@ -3,7 +3,7 @@
   "repository": "git://github.com/segmentio/myth.git",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "The simplest way to write CSS.",
+  "description": "CSS the way it was imagined.",
   "keywords": [
     "preprocessor",
     "postprocessor",
