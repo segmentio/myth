@@ -4,55 +4,48 @@ var fs = require('fs');
 var myth = require('..');
 var path = require('path');
 
-/**
- * Features.
- */
-
-var features = [
-  'calc',
-  'color',
-  'font-variant',
-  'hex',
-  'prefixes',
-  'vars'
-];
-
-/**
- * Examples.
- */
-
-var examples = [
-  'myth.io'
-];
-
-/**
- * Tests.
- */
-
 describe('myth', function () {
-  features.forEach(function (name) {
-    test(name, 'features/' + name);
+  it('should return a css string', function () {
+    assert('string' == typeof myth('body {}'));
   });
 
-  examples.forEach(function (name) {
-    test(name, 'examples/' + name);
+  it('should return a rework plugin', function () {
+    assert('function' == typeof myth());
+  });
+
+  describe('features', function () {
+    var features = [
+      'calc',
+      'color',
+      'font-variant',
+      'hex',
+      'prefixes',
+      'vars'
+    ];
+
+    features.forEach(function (name) {
+      it('should add ' + name + ' support', function () {
+        var input = read('features/' + name);
+        var output = read('features/' + name + '.out');
+        assert.equal(myth(input).trim(), output.trim());
+      });
+    });
+  });
+
+  describe('examples', function () {
+    var examples = [
+      'myth.io'
+    ];
+
+    examples.forEach(function (name) {
+      it('should convert ' + name + '\'s css', function () {
+        var input = read('examples/' + name);
+        var output = read('examples/' + name + '.out');
+        assert.equal(myth(input).trim(), output.trim());
+      });
+    });
   });
 });
-
-/**
- * Generate a test from a test case `name` and `fixture`.
- *
- * @param {String} name
- * @param {String} fixture
- */
-
-function test (name, fixture) {
-  it('should rework ' + name, function () {
-    var input = read(fixture);
-    var output = read(fixture + '.out');
-    assert.equal(myth(input).trim(), output.trim());
-  });
-}
 
 /**
  * Read a fixture by `filename`.

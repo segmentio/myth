@@ -14,19 +14,32 @@ var vars = require('rework-vars')();
 module.exports = myth;
 
 /**
- * Rework a CSS `string`.
+ * Rework a CSS `string`, or return the myth rework plugin.
  *
- * @param {String} string
+ * @param {String or Undefined} [string]
  * @return {String}
  */
 
 function myth (string) {
+  if ('string' != typeof string) return plugin;
   return rework(string)
+    .use(plugin)
+    .toString();
+}
+
+/**
+ * Plugin.
+ *
+ * @param {Object} stylesheet
+ * @param {Rework} rework
+ */
+
+function plugin (stylesheet, rework) {
+  rework
     .use(vars)
     .use(hex)
     .use(color)
     .use(calc)
     .use(variants)
-    .use(prefixes)
-    .toString();
+    .use(prefixes);
 }
