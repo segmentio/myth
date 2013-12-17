@@ -23,7 +23,7 @@ module.exports = myth;
 function myth (string) {
   return rework(string)
     .use(vars)
-    // .use(hex)
+    .use(hex)
     .use(color)
     .use(calc)
     .use(variants)

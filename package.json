@@ -19,7 +19,7 @@
     "commander": "~2.1.0",
     "stdin": "0.0.1",
     "klei-rework-plugins": "~0.2.1",
-    "rework-hex-alpha": "0.0.1",
+    "rework-hex-alpha": "0.0.2",
     "rework-color-function": "0.0.2",
     "colors": "~0.6.2"
   },
