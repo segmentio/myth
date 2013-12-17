@@ -1,9 +1,0 @@
-@font-face {
-  font-family: 'Source Sans';
-  src: url('fonts/source-sans-black-italic.eot');
-  src: url('fonts/source-sans-black-italic.eot?#iefix') format('embedded-opentype'),
-       url('fonts/source-sans-black-italic.woff') format('woff'),
-       url('fonts/source-sans-black-italic.ttf') format('truetype');
-  font-weight: 900;
-  font-style: italic;
-}

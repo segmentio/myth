@@ -1,7 +1,7 @@
 {
   "name": "myth",
   "repository": "git://github.com/segmentio/myth.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "description": "CSS the way it was imagined.",
   "keywords": [

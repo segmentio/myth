@@ -1,9 +1,0 @@
-@font-face {
-  font-family: 'Source Sans';
-  src: url('fonts/source-sans-light.eot');
-  src: url('fonts/source-sans-light.eot?#iefix') format('embedded-opentype'),
-       url('fonts/source-sans-light.woff') format('woff'),
-       url('fonts/source-sans-light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}

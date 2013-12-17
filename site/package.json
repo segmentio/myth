@@ -1,9 +1,0 @@
-{
-  "name": "myth-site",
-  "private": true,
-  "dependencies": {
-    "component": "~0.18.0",
-    "hbs": "~2.4.0",
-    "express": "~3.4.7"
-  }
-}
