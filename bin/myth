@@ -15,7 +15,12 @@ program
   .usage('[<input>] [<output>]')
   .option('-w, --watch', 'watch the input file')
   .option('-v, --verbose', 'write verbose output')
-  .on('--help', function () {
+  .on('--help', function () { 
+    help();
+  })
+  .parse(process.argv);
+
+function help() {
     console.log('  Examples:');
     console.log();
     console.log('    # pass an input and output file');
@@ -27,8 +32,8 @@ program
     console.log('    # stdin and stdout');
     console.log('    $ cat index.css | myth | grep background-color');
     console.log();
-  })
-  .parse(process.argv);
+    process.exit(code=0)
+}
 
 /**
  * Settings.
@@ -42,7 +47,10 @@ var watch = program.watch;
 if (program.args.length) {
   input = program.args[0];
   output = program.args[1];
+} else {
+  help();
 }
+
 
 /**
  * Logging.
