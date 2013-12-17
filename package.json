@@ -1,7 +1,7 @@
 {
   "name": "myth",
   "repository": "git://github.com/segmentio/myth.git",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "description": "CSS the way it was imagined.",
   "keywords": [
@@ -11,6 +11,9 @@
     "css",
     "pure"
   ],
+  "bin": {
+    "myth": "bin/myth"
+  },
   "dependencies": {
     "rework-font-variant": "0.0.3",
     "rework-vars": "~1.1.0",
