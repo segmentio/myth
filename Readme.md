@@ -3,11 +3,21 @@
 
   CSS the way it was imagined.
 
-  Myth is a CSS **post**-processor that lets you write plain old, spec-compliant CSS without having to worry about browser support. It's a CSS polyfill.
+  Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a CSS polyfill.
 
-  You can use CSS variables, un-prefixed properties, shorthands that haven't been implemented yet, and even a few things that haven't been properly standardized yet as if they were supported everywhere. That way you can still write pure CSS, and when browser support finally lands for variables or a prefixed property, you don't have to change anything, you've been using them the whole time.
+## Installation
 
-### Example
+    $ npm install -g myth
+
+## Why?
+
+  Myth lets you write pure CSS and still get the benefits of preprocessors you're used to like variables and math. Since you're writing valid CSS, when browsers finally support these features you won't need to rewrite your code, just remove the preprocessor.
+
+  Taking pure CSS as an input also means you can use Myth to post-process anyone else's CSS, adding the browser support you need, without having to re-write the code in a completely different syntax.
+
+  And finally, Myth is built with [Rework](https://github.com/visionmedia/rework) so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
+
+## Example
 
   An example is the easiest way to explain it. If you write spec-compliant CSS:
 
@@ -95,7 +105,60 @@ input:focus::-webkit-input-placeholder {
 }
 ```
 
-### Command Line API
+## Features
+
+#### Variables
+  
+  As defined by the [CSS spec](http://dev.w3.org/csswg/css-variables/) with [`rework-vars`](https://github.com/visionmedia/rework-vars):
+
+```css
+:root {
+  var-purple: #847AD1;
+}
+
+a {
+  color: var(purple);
+}
+```
+
+#### Math
+  
+  As defined by the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Thanks to [`klei-rework-plugins`](https://github.com/klei-dev/rework-plugins).
+
+```css
+pre {
+  margin: calc(50px * 2);
+}
+```
+
+#### Color Manipulation
+  
+  As defined by [Tab Atkins's draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors) that will be submitted to the working group for approval. Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+
+```css
+a {
+  color: #847AD1;
+}
+
+a:hover {
+  color: color(#847AD1 tint(20%));
+}
+```
+
+#### No Prefixes
+  
+  So you never need to worry about what the current browser support landscape is. Thanks to [`autoprefixer`](https://github.com/ai/autoprefixer).
+
+```css
+.button {
+  background: linear-gradient(to bottom, black, white);
+  transition: transform .25s;
+}
+```
+
+## API
+
+#### Command Line
 
 ```
 Usage: myth [<input>] [<output>]
@@ -117,7 +180,7 @@ Examples:
   $ cat index.css | myth
 ```
 
-### Node.js API
+#### Node.js
 
 ```js
 var myth = require('myth');
