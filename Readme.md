@@ -1,9 +1,8 @@
-
 # Myth
 
   _CSS the way it was imagined._
 
-  Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a CSS polyfill.
+  Myth is a postprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a CSS polyfill.
 
 ## Installation
 
@@ -11,11 +10,13 @@
 
 ## Why?
 
-  Myth lets you write pure CSS and still get the benefits of preprocessors you're used to like variables and math. Since you're writing valid CSS, when browsers finally support these features you won't need to rewrite your code, just remove the preprocessor.
+  Myth lets you write pure CSS while still giving you the benefits of tools like LESS and Sass. You can still use variables, math functions, etc. It's a polyfill for future versions of the spec.
 
-  Taking pure CSS as an input also means you can use Myth to post-process anyone else's CSS, adding the browser support you need, without having to re-write the code in a completely different syntax.
+  Since you're writing valid CSS, when browsers finally support these features you won't need to rewrite your code.
 
-  And finally, Myth is built with [Rework](https://github.com/visionmedia/rework) so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
+  Taking plain CSS as an input also means you can use Myth to <em>post-process</em> anyone else's CSS, adding the browser support you need, without having to re-write their code in a completely different syntax.
+
+  Myth is built with [Rework](https://github.com/visionmedia/rework) so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
 
 ## Example
 
