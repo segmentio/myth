@@ -1,7 +1,7 @@
 
-# myth
+# Myth
 
-  CSS the way it was imagined.
+  _CSS the way it was imagined._
 
   Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a CSS polyfill.
 
@@ -26,10 +26,6 @@
   var-green: #a6c776;
 }
 
-body {
-  font-family: 'Helvetica Neue', sans-serif;
-}
-
 a {
   color: var(green);
   font-variant: all-small-caps;
@@ -40,12 +36,12 @@ a:hover {
   color: color(var(green) shade(20%));
 }
 
-input::placeholder {
+::placeholder {
   opacity: .4;
   transition: opacity 1s;
 }
 
-input:focus::placeholder {
+:focus::placeholder {
   opacity: .2;
 }
 ```
@@ -55,11 +51,6 @@ input:focus::placeholder {
 ```css
 :root {
   var-green: #a6c776;
-  var-dark-green: #83a552;
-}
-
-body {
-  font-family: "Helvetica Neue", sans-serif;
 }
 
 a {
@@ -76,31 +67,31 @@ a:hover {
   color: rgb(133, 159, 94);
 }
 
-input::-moz-placeholder {
+::-moz-placeholder {
   opacity: .4;
   transition: opacity 1s;
 }
 
-input:-ms-input-placeholder {
+:-ms-input-placeholder {
   opacity: .4;
   transition: opacity 1s;
 }
 
-input::-webkit-input-placeholder {
+::-webkit-input-placeholder {
   opacity: .4;
   -webkit-transition: opacity 1s;
   transition: opacity 1s;
 }
 
-input:focus::-moz-placeholder {
+:focus::-moz-placeholder {
   opacity: .2;
 }
 
-input:focus:-ms-input-placeholder {
+:focus:-ms-input-placeholder {
   opacity: .2;
 }
 
-input:focus::-webkit-input-placeholder {
+:focus::-webkit-input-placeholder {
   opacity: .2;
 }
 ```
@@ -109,7 +100,7 @@ input:focus::-webkit-input-placeholder {
 
 #### Variables
   
-  As defined by the [CSS spec](http://dev.w3.org/csswg/css-variables/) with [`rework-vars`](https://github.com/visionmedia/rework-vars):
+  As defined by the [CSS spec](http://dev.w3.org/csswg/css-variables/). Thanks to [`rework-vars`](https://github.com/visionmedia/rework-vars).
 
 ```css
 :root {
@@ -133,7 +124,7 @@ pre {
 
 #### Color Manipulation
   
-  As defined by [Tab Atkins's draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors) that will be submitted to the working group for approval. Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+  As defined by [Tab Atkins's draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors), soon to be submitted to the working group. Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
 a {
@@ -172,27 +163,24 @@ Examples:
 
   # pass an input and output file
   $ myth input.css output.css
-
-  # write to stdout
-  $ myth input.css
-
-  # read from stdin and write to stdout
-  $ cat index.css | myth
+  
+  # watch for changes
+  $ myth --watch input.css output.css
+  
+  # stdin and stdout
+  $ cat index.css | myth | grep .button
 ```
 
 #### Node.js
 
 ```js
 var myth = require('myth');
-var fs = require('fs');
-var read = fs.readFileSync;
-var write = fs.writeFileSync;
 
-var css = read('index.css', 'utf8');
-write('converted.css', myth(css));
+var css = fs.readFileSync('index.css', 'utf8');
+fs.writeFileSync('converted.css', myth(css));
 ```
 
-### License
+## License
 
   The MIT License (MIT)
 
