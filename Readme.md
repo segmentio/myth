@@ -14,7 +14,6 @@
 ```css
 :root {
   var-green: #a6c776;
-  var-dark-green: #83a552;
 }
 
 body {
@@ -28,7 +27,7 @@ a {
 }
 
 a:hover {
-  color: var(dark-green);
+  color: color(var(green) shade(20%));
 }
 
 input::placeholder {
@@ -64,7 +63,7 @@ a {
 }
 
 a:hover {
-  color: #83a552;
+  color: rgb(133, 159, 94);
 }
 
 input::-moz-placeholder {
@@ -96,6 +95,48 @@ input:focus::-webkit-input-placeholder {
 }
 ```
 
-### Post-processor?
+### Command Line API
 
-  
+```
+Usage: myth [<input>] [<output>]
+
+Options:
+
+  -h, --help     output usage information
+  -V, --version  output the version number
+
+Examples:
+
+  # pass an input and output file
+  $ myth input.css output.css
+
+  # write to stdout
+  $ myth input.css
+
+  # read from stdin and write to stdout
+  $ cat index.css | myth
+```
+
+### Node.js API
+
+```js
+var myth = require('myth');
+var fs = require('fs');
+var read = fs.readFileSync;
+var write = fs.writeFileSync;
+
+var css = read('index.css', 'utf8');
+write('converted.css', myth(css));
+```
+
+### License
+
+  The MIT License (MIT)
+
+  Copyright (c) 2013, Segment.io &lt;friends@segment.io&gt;
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

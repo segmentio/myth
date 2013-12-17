@@ -12,6 +12,19 @@ var stdin = require('stdin');
 program
   .version(require('../package').version)
   .usage('[<input>] [<output>]')
+  .on('--help', function () {
+    console.log('  Examples:');
+    console.log();
+    console.log('    # pass an input and output file');
+    console.log('    $ myth input.css output.css');
+    console.log();
+    console.log('    # write to stdout');
+    console.log('    $ myth input.css');
+    console.log();
+    console.log('    # read from stdin and write to stdout');
+    console.log('    $ cat index.css | myth | grep .button');
+    console.log();
+  })
   .parse(process.argv);
 
 /**

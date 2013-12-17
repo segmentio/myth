@@ -4,6 +4,7 @@
   "scripts": ["index.js"],
   "styles": ["index.css"],
   "images": [
+    "images/favicon.png",
     "images/background.jpg",
     "images/example-background.png"
   ],
