@@ -1,0 +1,23 @@
+{
+  "name": "segmentio-logo",
+  "repo": "segmentio/segmentio-logo",
+  "description": "The Segment.io logo.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "keywords": [
+    "logo",
+    "segmentio",
+    "segment"
+  ],
+  "styles": [
+    "index.css"
+  ],
+  "images": [
+    "images/segmentio-black.svg",
+    "images/segmentio-icon-black.svg",
+    "images/segmentio-icon-white.svg",
+    "images/segmentio-icon.svg",
+    "images/segmentio-white.svg",
+    "images/segmentio.svg"
+  ]
+}

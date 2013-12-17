@@ -1,5 +1,5 @@
 
-build: components
+build: node_modules components index.js index.css
 	@./node_modules/.bin/component build --dev
 	@../bin/myth build/build.css build/build.css
 
@@ -12,4 +12,7 @@ components: component.json
 node_modules: package.json
 	@npm install
 
-.PHONY: clean
+test: build
+	@open ../index.html
+
+.PHONY: clean test

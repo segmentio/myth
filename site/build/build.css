@@ -425,52 +425,302 @@ table {
   border-spacing: 0;
 }
 
+/**
+ * Add a few more `block` elements, since they're mostly treated that way.
+ */
+
+audio,
+canvas,
+img,
+video {
+  display: block;
+}
+
+/**
+ * Reset line-height, since it makes aligning elements way easier.
+ */
+
+html {
+  line-height: 1;
+}
+
+/**
+ * Remove default heading styles.
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: 1;
+  font-weight: inherit;
+}
+
+/**
+ * Remove default link styles, since they get used for buttons, etc.
+ */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/**
+ * Remove outline for links. You should style it, but not necessarily outline.
+ */
+
+a:focus {
+  outline: 0;
+}
+
+/**
+ * Remove default paragraph styles.
+ */
+
+p,
+small {
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Remove default list styles, since they get used for navs, etc.
+ */
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Remove default blockquote and quote styles.
+ */
+
+blockquote,
+q {
+  margin: 0;
+}
+
+/**
+ * Remove default cite styles.
+ */
+
+cite {
+  font-style: inherit;
+}
+
+/**
+ * Remove default form styles.
+ */
+
+form {
+  margin: 0;
+}
+
+/**
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Remove default pre styles.
+ */
+
+pre {
+  margin: 0;
+}
+
+/**
+ * Logo.
+ *
+ * TODO: remove
+ */
+
+.logo {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  /* not baseline, so we align up _and_ down */
+  height: 1em;
+  /* keep height constant regardless of innards */
+  margin: 0;
+  /* reset */
+}
+
+.logo > * {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-indent: -9999px;
+  /* image replacement */
+  direction: ltr;
+  /* make text-indent play nice */
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: contain;
+  background-size: contain;
+}
+
+/**
+ * Myth logo.
+ */
+
+.logo[data-logo="Myth"] {
+  width: 2.425555556em;
+  /* (74/36) * (1+.18) - 0 */
+}
+
+.logo[data-logo="Myth"] > * {
+  background-image: url(".//segmentio-myth-logo/./images/myth.svg");
+  margin: 0 0 -.18em 0;
+}
+
+.logo[data-logo="Myth"][data-color="black"] > * {
+  background-image: url(".//segmentio-myth-logo/./images/myth-black.svg");
+}
+
+.logo[data-logo="Myth"][data-color="white"] > * {
+  background-image: url(".//segmentio-myth-logo/./images/myth-white.svg");
+}
+
+/**
+ * Logo.
+ *
+ * TODO: remove
+ */
+
+.logo {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  /* not baseline, so we align up _and_ down */
+  height: 1em;
+  /* keep height constant regardless of innards */
+  margin: 0;
+  /* reset */
+}
+
+.logo > * {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-indent: -9999px;
+  /* image replacement */
+  direction: ltr;
+  /* make text-indent play nice */
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: contain;
+  background-size: contain;
+}
+
+/**
+ * Logo.
+ */
+
+.logo[data-logo="Segment.io"] {
+  width: 4.966245128em;
+  /* (365.97/69.27) * (1-.02-.04) - 0 */
+}
+
+.logo[data-logo="Segment.io"] > * {
+  background-image: url(".//segmentio-segmentio-logo/./images/segmentio.svg");
+  margin: .02em 0 .04em 0;
+}
+
+.logo[data-logo="Segment.io"][data-color="black"] > * {
+  background-image: url(".//segmentio-segmentio-logo/./images/segmentio-black.svg");
+}
+
+.logo[data-logo="Segment.io"][data-color="white"] > * {
+  background-image: url(".//segmentio-segmentio-logo/./images/segmentio-white.svg");
+}
+
+/**
+ * Icon.
+ */
+
+.logo[data-logo="Segment.io"][data-variation="icon"] {
+  width: .999712em;
+  /* (199.964/200) * (1+.3+.3) - .3-.3 */
+}
+
+.logo[data-logo="Segment.io"][data-variation="icon"] > * {
+  background-image: url(".//segmentio-segmentio-logo/./images/segmentio-icon.svg");
+  margin: -.3em;
+}
+
+.logo[data-logo="Segment.io"][data-variation="icon"][data-color="black"] > * {
+  background-image: url(".//segmentio-segmentio-logo/./images/segmentio-icon-black.svg");
+}
+
+.logo[data-logo="Segment.io"][data-variation="icon"][data-color="white"] > * {
+  background-image: url(".//segmentio-segmentio-logo/./images/segmentio-icon-white.svg");
+}
+
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-extra-light/./source-sans-extra-light.eot");
-  src: url(".//typefaces-source-sans-extra-light/./source-sans-extra-light.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-extra-light/./source-sans-extra-light.woff") format('woff'),
-       url(".//typefaces-source-sans-extra-light/./source-sans-extra-light.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-extra-light/./fonts/source-sans-extra-light.eot");
+  src: url(".//typefaces-source-sans-extra-light/./fonts/source-sans-extra-light.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-extra-light/./fonts/source-sans-extra-light.woff") format('woff'),
+       url(".//typefaces-source-sans-extra-light/./fonts/source-sans-extra-light.ttf") format('truetype');
   font-weight: 200;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-extra-light-italic/./source-sans-extra-light-italic.eot");
-  src: url(".//typefaces-source-sans-extra-light-italic/./source-sans-extra-light-italic.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-extra-light-italic/./source-sans-extra-light-italic.woff") format('woff'),
-       url(".//typefaces-source-sans-extra-light-italic/./source-sans-extra-light-italic.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-extra-light-italic/./fonts/source-sans-extra-light-italic.eot");
+  src: url(".//typefaces-source-sans-extra-light-italic/./fonts/source-sans-extra-light-italic.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-extra-light-italic/./fonts/source-sans-extra-light-italic.woff") format('woff'),
+       url(".//typefaces-source-sans-extra-light-italic/./fonts/source-sans-extra-light-italic.ttf") format('truetype');
   font-weight: 200;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-light/./source-sans-light.eot");
-  src: url(".//typefaces-source-sans-light/./source-sans-light.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-light/./source-sans-light.woff") format('woff'),
-       url(".//typefaces-source-sans-light/./source-sans-light.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-light/./fonts/source-sans-light.eot");
+  src: url(".//typefaces-source-sans-light/./fonts/source-sans-light.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-light/./fonts/source-sans-light.woff") format('woff'),
+       url(".//typefaces-source-sans-light/./fonts/source-sans-light.ttf") format('truetype');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-light-italic/./source-sans-light-italic.eot");
-  src: url(".//typefaces-source-sans-light-italic/./source-sans-light-italic.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-light-italic/./source-sans-light-italic.woff") format('woff'),
-       url(".//typefaces-source-sans-light-italic/./source-sans-light-italic.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-light-italic/./fonts/source-sans-light-italic.eot");
+  src: url(".//typefaces-source-sans-light-italic/./fonts/source-sans-light-italic.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-light-italic/./fonts/source-sans-light-italic.woff") format('woff'),
+       url(".//typefaces-source-sans-light-italic/./fonts/source-sans-light-italic.ttf") format('truetype');
   font-weight: 300;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-regular/./source-sans-regular.eot");
-  src: url(".//typefaces-source-sans-regular/./source-sans-regular.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-regular/./source-sans-regular.woff") format('woff'),
-       url(".//typefaces-source-sans-regular/./source-sans-regular.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-regular/./fonts/source-sans-regular.eot");
+  src: url(".//typefaces-source-sans-regular/./fonts/source-sans-regular.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-regular/./fonts/source-sans-regular.woff") format('woff'),
+       url(".//typefaces-source-sans-regular/./fonts/source-sans-regular.ttf") format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -507,65 +757,458 @@ table {
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-bold/./source-sans-bold.eot");
-  src: url(".//typefaces-source-sans-bold/./source-sans-bold.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-bold/./source-sans-bold.woff") format('woff'),
-       url(".//typefaces-source-sans-bold/./source-sans-bold.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-bold/./fonts/source-sans-bold.eot");
+  src: url(".//typefaces-source-sans-bold/./fonts/source-sans-bold.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-bold/./fonts/source-sans-bold.woff") format('woff'),
+       url(".//typefaces-source-sans-bold/./fonts/source-sans-bold.ttf") format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-bold-italic/./source-sans-bold-italic.eot");
-  src: url(".//typefaces-source-sans-bold-italic/./source-sans-bold-italic.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-bold-italic/./source-sans-bold-italic.woff") format('woff'),
-       url(".//typefaces-source-sans-bold-italic/./source-sans-bold-italic.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-bold-italic/./fonts/source-sans-bold-italic.eot");
+  src: url(".//typefaces-source-sans-bold-italic/./fonts/source-sans-bold-italic.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-bold-italic/./fonts/source-sans-bold-italic.woff") format('woff'),
+       url(".//typefaces-source-sans-bold-italic/./fonts/source-sans-bold-italic.ttf") format('truetype');
   font-weight: 700;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-black/./source-sans-black.eot");
-  src: url(".//typefaces-source-sans-black/./source-sans-black.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-black/./source-sans-black.woff") format('woff'),
-       url(".//typefaces-source-sans-black/./source-sans-black.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-black/./fonts/source-sans-black.eot");
+  src: url(".//typefaces-source-sans-black/./fonts/source-sans-black.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-black/./fonts/source-sans-black.woff") format('woff'),
+       url(".//typefaces-source-sans-black/./fonts/source-sans-black.ttf") format('truetype');
   font-weight: 900;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Source Sans';
-  src: url(".//typefaces-source-sans-black-italic/./source-sans-black-italic.eot");
-  src: url(".//typefaces-source-sans-black-italic/./source-sans-black-italic.eot?#iefix") format('embedded-opentype'),
-       url(".//typefaces-source-sans-black-italic/./source-sans-black-italic.woff") format('woff'),
-       url(".//typefaces-source-sans-black-italic/./source-sans-black-italic.ttf") format('truetype');
+  src: url(".//typefaces-source-sans-black-italic/./fonts/source-sans-black-italic.eot");
+  src: url(".//typefaces-source-sans-black-italic/./fonts/source-sans-black-italic.eot?#iefix") format('embedded-opentype'),
+       url(".//typefaces-source-sans-black-italic/./fonts/source-sans-black-italic.woff") format('woff'),
+       url(".//typefaces-source-sans-black-italic/./fonts/source-sans-black-italic.ttf") format('truetype');
   font-weight: 900;
   font-style: italic;
 }
 
 /**
- * Myth.
+ * Variables.
+ */
+
+
+
+/**
+ * Body.
  */
 
 body {
-  font: 18px/1.4 "Helvetica Neue", "Source Sans", sans-serif;
+  font: 100 16px/1.5 "Source Sans", sans-serif;
+  color: white;
+  background-color: #1C1521;
 }
 
-h1 {
-  font-size: 2em;
-  font-weight: 300;
-  margin-bottom: .5em;
+a {
+  color: #847AD1;
+  text-decoration: underline;
+  -webkit-transition: color .2s;
+  transition: color .2s;
 }
 
-h2 {
+a:hover {
+  color: rgb(157, 149, 218);
+}
+
+pre {
+  font: 300 12px/1.2 "Source Code", monospace;
+  color: rgb(204, 207, 221);
+}
+
+/**
+ * Sections.
+ */
+
+.Header,
+.Section,
+.Footer {
+  position: relative;
+  padding: 4em 1.5em;
+}
+
+.Section-title {
   font-size: 1.5em;
-  font-weight: 300;
+  margin-bottom: .25em;
+  text-align: center;
+}
+
+.Section-description {
+  color: #989EBA;
+  margin-bottom: 1em;
+}
+
+.Section-example {
+  margin-top: 1em;
+  border-radius: .2em;
+  background: #1C1521;
+  padding: 1em;
+  overflow: hidden;
+}
+
+.Section-example-code b {
+  font-style: normal;
+  color: #847AD1;
+}
+
+.Section-example-code s {
+  font-style: normal;
+  text-decoration: none;
+  color: #605668;
+}
+
+.Section-legend {
+  text-align: center;
+  color: #989EBA;
+  margin-top: .75em;
+}
+
+/**
+ * Header.
+ */
+
+.Header {
+  background: url(".//myth-site/./images/background.jpg");
+  -webkit-background-size: cover;
+  background-size: cover;
+  text-align: center;
+  padding-bottom: 6em;
+}
+
+.Header-title {
+  font-size: 1.5em;
+  margin-bottom: 4em;
+}
+
+.Header-subtitle {
+  font-size: 2.5em;
+  margin-bottom: .6em;
+}
+
+.Header-description {
+  max-width: 30em;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.Header-github-link {
+  display: block;
+  position: absolute;
+  top: 3em;
+  right: -6.5em;
+  padding: 1em;
+  width: 20em;
+  text-align: center;
+  background-color: #847AD1;
+  text-transform: uppercase;
+  font-size: .6em;
+  color: white;
+  letter-spacing: 1px;
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+}
+
+.Header-github-link:hover {
+  font-weight: normal;
+  color: white;
+}
+
+/**
+ * Feature section.
+ */
+
+.Section--feature {
+  background-color: #26202B;
+}
+
+.Section--feature + .Section--feature {
+  padding-top: 0;
+}
+
+.animate .Section--feature .Section-title,
+.animate .Section--feature .Section-description,
+.animate .Section--feature .Section-example {
+  opacity: 0;
+}
+
+.Section--feature .Section-description {
+  text-align: center;
+}
+
+/**
+ * First and last feature.
+ */
+
+.Section--feature-variables::before,
+.Section--feature-no-prefixes::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+/**
+ * First feature.
+ */
+
+.Section--feature-variables::before {
+  height: 6em;
+  bottom: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(transparent), to(#26202B));
+  background: -webkit-linear-gradient(top, transparent, #26202B);
+  background: linear-gradient(to bottom, transparent, #26202B);
+}
+
+/**
+ * Last feature.
+ */
+
+.Section--feature-no-prefixes {
+  padding-bottom: 2em;
+}
+
+.Section--feature-no-prefixes::after {
+  height: 14em;
+  top: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#26202B), to(transparent));
+  background: -webkit-linear-gradient(top, #26202B, transparent);
+  background: linear-gradient(to bottom, #26202B, transparent);
+}
+
+/**
+ * Install section.
+ */
+
+.Section--install {
+  padding-top: 2em;
+  padding-bottom: 0;
+}
+
+.Section--install .Section-example {
+  background-color: #120C17;
+}
+
+.Section--install .Section-example-code {
+  line-height: 1.4;
+}
+
+/**
+ * Why section.
+ */
+
+.Section--why .Section-description {
+  color: #989EBA;
+}
+
+/**
+ * Footer.
+ */
+
+.Footer {
+  padding-top: 0;
+  text-align: center;
+}
+
+.Footer-title {
+  font-size: 1.5em;
+  -webkit-transition: -webkit-transform .2s;
+  transition: transform .2s;
+}
+
+.Footer-title:hover {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.Footer-subtitle {
+  color: #989EBA;
+  font-size: .7em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: .5em;
 }
 
-section {
-  text-align: center;
-  background: url(".//myth-site/./images/background.jpg") cover;
+/**
+ * Animation, only happens on first load.
+ */
+
+.Header-subtitle {
+  -webkit-transition: opacity 2s ease-in-out .5s;
+  transition: opacity 2s ease-in-out .5s;
+}
+
+.Header-description {
+  -webkit-transition: opacity 2s ease-in-out 2.5s;
+  transition: opacity 2s ease-in-out 2.5s;
+}
+
+.Header-github-link,
+.Section--feature .Section-title,
+.Section--feature .Section-description,
+.Section--feature .Section-example {
+  -webkit-transition: opacity 2s ease-in-out 4.5s;
+  transition: opacity 2s ease-in-out 4.5s;
+}
+
+.animate .Header-subtitle,
+.animate .Header-description,
+.animate .Header-github-link,
+.animate .Section--feature .Section-title,
+.animate .Section--feature .Section-description,
+.animate .Section--feature .Section-example {
+  opacity: 0;
+}
+
+/**
+ * Small screens.
+ */
+
+@media (max-width: 768px) {
+  .Section--feature .Section-example-code:last-child {
+    display: none;
+    /* keep it simpler, just show the api */
+  }
+
+  .Section--install s {
+    display: none;
+    /* breaks the line, and just not worth it */
+  }
+}
+
+/**
+ * Large screens.
+ */
+
+@media (min-width: 768px) {
+  body {
+    font-size: 18px;
+  }
+
+  pre {
+    font-size: 14px;
+  }
+
+  /**
+   * Sections.
+   */
+
+  .Header,
+  .Section,
+  .Footer {
+    padding: 6em 2em;
+  }
+
+  .Section-title {
+    font-size: 1.8em;
+  }
+
+  .Section-example {
+    margin-top: 1.5em;
+    padding: 1.5em;
+  }
+
+  /**
+   * Header.
+   */
+
+  .Header {
+    font-size: 1.2em;
+    padding-bottom: 14%;
+  }
+
+  .Header-subtitle {
+    font-size: 2.5em;
+  }
+
+  .Header-description {
+    max-width: 30em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Header-github-link {
+    top: 4em;
+    right: -5em;
+  }
+
+  /**
+   * Feature section.
+   */
+
+  .Section--feature .Section-title,
+  .Section--feature .Section-description,
+  .Section--feature .Section-example {
+    max-width: 40em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Section--feature .Section-example {
+    background-image: url(".//myth-site/./images/example-background.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .Section--feature .Section-example-code {
+    width: 50%;
+    float: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  .Section--feature .Section-example-code:first-child {
+    padding-left: 1em;
+  }
+
+  .Section--feature .Section-example-code:last-child {
+    padding-left: 3.5em;
+  }
+
+  /**
+   * Install & Why sections.
+   */
+
+  .Section--install,
+  .Section--why {
+    max-width: 26em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  /**
+   * Install section.
+   */
+
+  .Section--install {
+    padding-top: 8em;
+  }
+
+  .Section--install .Section-example {
+    width: 24em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Section--install .Section-example-code {
+    font-size: 1em;
+  }
 }

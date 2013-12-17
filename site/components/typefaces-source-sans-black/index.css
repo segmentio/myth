@@ -1,9 +1,10 @@
+
 @font-face {
   font-family: 'Source Sans';
-  src: url('source-sans-black.eot');
-  src: url('source-sans-black.eot?#iefix') format('embedded-opentype'),
-       url('source-sans-black.woff') format('woff'),
-       url('source-sans-black.ttf') format('truetype');
+  src: url('fonts/source-sans-black.eot');
+  src: url('fonts/source-sans-black.eot?#iefix') format('embedded-opentype'),
+       url('fonts/source-sans-black.woff') format('woff'),
+       url('fonts/source-sans-black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }

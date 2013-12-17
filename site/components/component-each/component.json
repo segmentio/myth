@@ -1,0 +1,21 @@
+{
+  "name": "each",
+  "repo": "component/each",
+  "description": "Array / object / string iteration utility",
+  "version": "0.1.0",
+  "keywords": [
+    "object",
+    "string",
+    "array",
+    "each",
+    "utility"
+  ],
+  "dependencies": {
+    "component/to-function": "*",
+    "component/type": "*"
+  },
+  "development": {},
+  "scripts": [
+    "index.js"
+  ]
+}

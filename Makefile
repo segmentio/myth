@@ -3,7 +3,7 @@ node_modules: package.json
 	@npm install
 
 site: node_modules
-	@cd site && make
+	@cd site && make test
 
 test: node_modules
 	@node_modules/.bin/mocha --reporter spec

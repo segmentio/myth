@@ -1,25 +1,408 @@
 
 /**
- * Myth.
+ * Variables.
+ */
+
+:root {
+  var-light-purple: #989EBA;
+  var-purple: #847AD1;
+  var-dark-purple: #26202B;
+  var-darker-purple: #1C1521;
+  var-black: #120C17;
+  var-gray: #605668;
+}
+
+/**
+ * Body.
  */
 
 body {
-  font: 18px/1.4 "Helvetica Neue", "Source Sans", sans-serif;
+  font: 100 16px/1.5 "Source Sans", sans-serif;
+  color: white;
+  background-color: var(darker-purple);
 }
 
-h1 {
-  font-size: 2em;
-  font-weight: 300;
-  margin-bottom: .5em;
+a {
+  color: var(purple);
+  text-decoration: underline;
+  transition: color .2s;
 }
 
-h2 {
+a:hover {
+  color: color(var(purple) tint(20%));
+}
+
+pre {
+  font: 300 12px/1.2 "Source Code", monospace;
+  color: color(var(light-purple) tint(50%));
+}
+
+/**
+ * Sections.
+ */
+
+.Header,
+.Section,
+.Footer {
+  position: relative;
+  padding: 4em 1.5em;
+}
+
+.Section-title {
   font-size: 1.5em;
-  font-weight: 300;
+  margin-bottom: .25em;
+  text-align: center;
+}
+
+.Section-description {
+  color: var(light-purple);
+  margin-bottom: 1em;
+}
+
+.Section-example {
+  margin-top: 1em;
+  border-radius: .2em;
+  background: var(darker-purple);
+  padding: 1em;
+  overflow: hidden;
+}
+
+.Section-example-code b {
+  font-style: normal;
+  color: var(purple);
+}
+
+.Section-example-code s {
+  font-style: normal;
+  text-decoration: none;
+  color: var(gray);
+}
+
+.Section-legend {
+  text-align: center;
+  color: var(light-purple);
+  margin-top: .75em;
+}
+
+/**
+ * Header.
+ */
+
+.Header {
+  background: url(images/background.jpg);
+  background-size: cover;
+  text-align: center;
+  padding-bottom: 6em;
+}
+
+.Header-title {
+  font-size: 1.5em;
+  margin-bottom: 4em;
+}
+
+.Header-subtitle {
+  font-size: 2.5em;
+  margin-bottom: .6em;
+}
+
+.Header-description {
+  max-width: 30em;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.Header-github-link {
+  display: block;
+  position: absolute;
+  top: 3em;
+  right: -6.5em;
+  padding: 1em;
+  width: 20em;
+  text-align: center;
+  background-color: var(purple);
+  text-transform: uppercase;
+  font-size: .6em;
+  color: white;
+  letter-spacing: 1px;
+  text-decoration: none;
+  white-space: nowrap;
+  transform: rotate(45deg);
+  transform-origin: 50% 50%;
+}
+
+.Header-github-link:hover {
+  font-weight: normal;
+  color: white;
+}
+
+/**
+ * Feature section.
+ */
+
+.Section--feature {
+  background-color: var(dark-purple);
+}
+
+.Section--feature + .Section--feature {
+  padding-top: 0;
+}
+
+.animate .Section--feature .Section-title,
+.animate .Section--feature .Section-description,
+.animate .Section--feature .Section-example {
+  opacity: 0;
+}
+
+.Section--feature .Section-description {
+  text-align: center;
+}
+
+/**
+ * First and last feature.
+ */
+
+.Section--feature-variables::before,
+.Section--feature-no-prefixes::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+/**
+ * First feature.
+ */
+
+.Section--feature-variables::before {
+  height: 6em;
+  bottom: 100%;
+  background: linear-gradient(to bottom, transparent, var(dark-purple));
+}
+
+/**
+ * Last feature.
+ */
+
+.Section--feature-no-prefixes {
+  padding-bottom: 2em;
+}
+
+.Section--feature-no-prefixes::after {
+  height: 14em;
+  top: 100%;
+  background: linear-gradient(to bottom, var(dark-purple), transparent);
+}
+
+/**
+ * Install section.
+ */
+
+.Section--install {
+  padding-top: 2em;
+  padding-bottom: 0;
+}
+
+.Section--install .Section-example {
+  background-color: var(black);
+}
+
+.Section--install .Section-example-code {
+  line-height: 1.4;
+}
+
+/**
+ * Why section.
+ */
+
+.Section--why .Section-description {
+  color: var(light-purple);
+}
+
+/**
+ * Footer.
+ */
+
+.Footer {
+  padding-top: 0;
+  text-align: center;
+}
+
+.Footer-title {
+  font-size: 1.5em;
+  transition: transform .2s;
+}
+
+.Footer-title:hover {
+  transform: scale(1.1);
+}
+
+.Footer-subtitle {
+  color: var(light-purple);
+  font-size: .7em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: .5em;
 }
 
-section {
-  text-align: center;
-  background: url(images/background.jpg) cover;
+/**
+ * Animation, only happens on first load.
+ */
+
+.Header-subtitle {
+  transition: opacity 2s ease-in-out .5s;
+}
+
+.Header-description {
+  transition: opacity 2s ease-in-out 2.5s;
+}
+
+.Header-github-link,
+.Section--feature .Section-title,
+.Section--feature .Section-description,
+.Section--feature .Section-example {
+  transition: opacity 2s ease-in-out 4.5s;
+}
+
+.animate .Header-subtitle,
+.animate .Header-description,
+.animate .Header-github-link,
+.animate .Section--feature .Section-title,
+.animate .Section--feature .Section-description,
+.animate .Section--feature .Section-example {
+  opacity: 0;
+}
+
+/**
+ * Small screens.
+ */
+
+@media (max-width: 768px) {
+
+  .Section--feature .Section-example-code:last-child {
+    display: none; /* keep it simpler, just show the api */
+  }
+
+  .Section--install s {
+    display: none; /* breaks the line, and just not worth it */
+  }
+
+}
+
+/**
+ * Large screens.
+ */
+
+@media (min-width: 768px) {
+
+  body {
+    font-size: 18px;
+  }
+
+  pre {
+    font-size: 14px;
+  }
+
+  /**
+   * Sections.
+   */
+
+  .Header,
+  .Section,
+  .Footer {
+    padding: 6em 2em;
+  }
+
+  .Section-title {
+    font-size: 1.8em;
+  }
+
+  .Section-example {
+    margin-top: 1.5em;
+    padding: 1.5em;
+  }
+
+  /**
+   * Header.
+   */
+
+  .Header {
+    font-size: 1.2em;
+    padding-bottom: 14%;
+  }
+
+  .Header-subtitle {
+    font-size: 2.5em;
+  }
+
+  .Header-description {
+    max-width: 30em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Header-github-link {
+    top: 4em;
+    right: -5em;
+  }
+
+  /**
+   * Feature section.
+   */
+
+  .Section--feature .Section-title,
+  .Section--feature .Section-description,
+  .Section--feature .Section-example {
+    max-width: 40em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Section--feature .Section-example {
+    background-image: url(images/example-background.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .Section--feature .Section-example-code {
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+  }
+
+  .Section--feature .Section-example-code:first-child {
+    padding-left: 1em;
+  }
+
+  .Section--feature .Section-example-code:last-child {
+    padding-left: 3.5em;
+  }
+
+  /**
+   * Install & Why sections.
+   */
+
+  .Section--install,
+  .Section--why {
+    max-width: 26em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  /**
+   * Install section.
+   */
+
+  .Section--install {
+    padding-top: 8em;
+  }
+
+  .Section--install .Section-example {
+    width: 24em;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Section--install .Section-example-code {
+    font-size: 1em;
+  }
+
 }

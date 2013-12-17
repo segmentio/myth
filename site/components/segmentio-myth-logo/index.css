@@ -1,0 +1,49 @@
+
+/**
+ * Logo.
+ *
+ * TODO: remove
+ */
+
+.logo {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle; /* not baseline, so we align up _and_ down */
+  height: 1em; /* keep height constant regardless of innards */
+  margin: 0; /* reset */
+}
+
+.logo > * {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-indent: -9999px; /* image replacement */
+  direction: ltr; /* make text-indent play nice */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+
+/**
+ * Myth logo.
+ */
+
+.logo[data-logo="Myth"] {
+  width: 2.425555556em; /* (74/36) * (1+.18) - 0 */
+}
+
+.logo[data-logo="Myth"] > * {
+  background-image: url(images/myth.svg);
+  margin: 0 0 -.18em 0;
+}
+
+.logo[data-logo="Myth"][data-color="black"] > * {
+  background-image: url(images/myth-black.svg);
+}
+
+
+.logo[data-logo="Myth"][data-color="white"] > * {
+  background-image: url(images/myth-white.svg);
+}

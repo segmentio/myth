@@ -3,8 +3,16 @@
   "private": true,
   "scripts": ["index.js"],
   "styles": ["index.css"],
+  "images": [
+    "images/background.jpg",
+    "images/example-background.png"
+  ],
   "dependencies": {
-    "necolas/normalize.css": "*",
-    "typefaces/source-sans": "*"
+    "ianstormtaylor/reset": "*",
+    "segmentio/myth-logo": "*",
+    "segmentio/segmentio-logo": "*",
+    "timoxley/next-tick": "*",
+    "typefaces/source-sans": "*",
+    "yields/store": "*"
   }
 }
