@@ -1,7 +1,7 @@
 {
   "name": "myth",
   "repository": "git://github.com/segmentio/myth.git",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "description": "CSS the way it was imagined.",
   "keywords": [
@@ -22,7 +22,7 @@
     "commander": "~2.1.0",
     "stdin": "0.0.1",
     "klei-rework-plugins": "~0.2.1",
-    "rework-hex-alpha": "0.0.2",
+    "rework-hex-alpha": "0.0.3",
     "rework-color-function": "0.0.3",
     "colors": "~0.6.2"
   },

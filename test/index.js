@@ -5,10 +5,10 @@ var myth = require('..');
 var path = require('path');
 
 /**
- * Test cases.
+ * Features.
  */
 
-var cases = [
+var features = [
   'calc',
   'color',
   'font-variant',
@@ -18,23 +18,38 @@ var cases = [
 ];
 
 /**
+ * Examples.
+ */
+
+var examples = [
+  'myth.io'
+];
+
+/**
  * Tests.
  */
 
 describe('myth', function () {
-  cases.forEach(test);
+  features.forEach(function (name) {
+    test(name, 'features/' + name);
+  });
+
+  examples.forEach(function (name) {
+    test(name, 'examples/' + name);
+  });
 });
 
 /**
- * Generate a test from a test case `name`.
+ * Generate a test from a test case `name` and `fixture`.
  *
  * @param {String} name
+ * @param {String} fixture
  */
 
-function test (name) {
+function test (name, fixture) {
   it('should rework ' + name, function () {
-    var input = read(name);
-    var output = read(name + '.out');
+    var input = read(fixture);
+    var output = read(fixture + '.out');
     assert.equal(myth(input).trim(), output.trim());
   });
 }
@@ -47,6 +62,6 @@ function test (name) {
  */
 
 function read (filename) {
-  var file = path.resolve(__dirname, 'fixtures', filename + '.css');
+  var file = path.resolve(__dirname, filename + '.css');
   return fs.readFileSync(file, 'utf8');
 }

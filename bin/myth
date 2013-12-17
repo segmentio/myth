@@ -35,6 +35,7 @@ program
 
 var input = program.args[0];
 var output = program.args[1];
+var watch = program.watch;
 
 /**
  * Logging.
@@ -46,29 +47,17 @@ if (output) {
 }
 
 /**
- * Watch?
+ * Run & watch?
  */
 
-if (program.watch && input && output) fs.watch(input, function () {
-  run(input, output);
-  log('Regenerated ' + output);
-});
+run();
+if (watch && input && output) fs.watch(input, run);
 
 /**
- * Transform.
+ * Run.
  */
 
-run(input, output);
-if (output) log('Generated ' + output);
-
-/**
- * Run an `input` file throught myth and write to an `output` file.
- *
- * @param {String or Undefined} input
- * @param {String or Undefined} output
- */
-
-function run (input, output) {
+function run () {
   read(input, function (err, css) {
     if (err) throw err;
     write(output, myth(css));
@@ -104,6 +93,7 @@ function read (file, callback) {
 function write (file, css) {
   if (!file) process.stdout.write(css);
   fs.writeFileSync(file, css);
+  if (output) log(output);
 }
 
 /**
