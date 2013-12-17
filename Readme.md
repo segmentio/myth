@@ -2,7 +2,7 @@
 
   _CSS the way it was imagined._
 
-  Myth is a postprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a CSS polyfill.
+  Myth is a postprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a like CSS polyfill.
 
 ## Installation
 
@@ -10,13 +10,13 @@
 
 ## Why?
 
-  Myth lets you write pure CSS while still giving you the benefits of tools like LESS and Sass. You can still use variables, math functions, etc. It's a polyfill for future versions of the spec.
+  Myth lets you write pure CSS while still giving you the benefits of tools like LESS and Sass. You can still use variables and math functions, just like you do in preprocessors. It's like a polyfill for future versions of the spec.
 
-  Since you're writing valid CSS, when browsers finally support these features you won't need to rewrite your code.
+  Some of the features in CSS require runtime calculations, which neither Myth nor preprocessors handle, but what Myth does is let you write your code today in the future syntax, so that your code is future-proof. When browsers finally support these features you won't need to rewrite anything, just start using the cascade!
 
-  Taking plain CSS as an input also means you can use Myth to <em>post-process</em> anyone else's CSS, adding the browser support you need, without having to re-write their code in a completely different syntax.
+  Taking plain CSS as an input also means you can use Myth to <em>post-process</em> anyone else's CSS (or another preprocessors output), adding the browser support you need, without having to re-write the code in a completely different syntax.
 
-  Myth is built with [Rework](https://github.com/visionmedia/rework) so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
+  Myth is built with <a href="https://github.com/visionmedia/rework">Rework</a> so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
 
 ## Example
 
