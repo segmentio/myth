@@ -8,6 +8,7 @@
   var-purple: #847AD1;
   var-dark-purple: #26202B;
   var-darker-purple: #1C1521;
+  var-blue: #5790EF;
   var-black: #120C17;
   var-gray: #605668;
 }
@@ -68,8 +69,14 @@ pre {
 }
 
 .Section-example-code b {
-  font-style: normal;
+  font-weight: 600;
   color: var(purple);
+}
+
+.Section-example-code em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(blue);
 }
 
 .Section-example-code s {
@@ -276,7 +283,7 @@ pre {
  * Small screens.
  */
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 
   .Section--feature .Section-example-code:last-child {
     display: none; /* keep it simpler, just show the api */
@@ -403,6 +410,15 @@ pre {
 
   .Section--install .Section-example-code {
     font-size: 1em;
+  }
+
+  /**
+   * Why section.
+   */
+
+  .Section--why {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
 }

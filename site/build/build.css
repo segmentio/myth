@@ -858,8 +858,14 @@ pre {
 }
 
 .Section-example-code b {
-  font-style: normal;
+  font-weight: 600;
   color: #847AD1;
+}
+
+.Section-example-code em {
+  font-style: normal;
+  font-weight: 600;
+  color: #5790EF;
 }
 
 .Section-example-code s {
@@ -1081,7 +1087,7 @@ pre {
  * Small screens.
  */
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .Section--feature .Section-example-code:last-child {
     display: none;
     /* keep it simpler, just show the api */
@@ -1210,5 +1216,14 @@ pre {
 
   .Section--install .Section-example-code {
     font-size: 1em;
+  }
+
+  /**
+   * Why section.
+   */
+
+  .Section--why {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }

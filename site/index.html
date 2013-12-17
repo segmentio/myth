@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Myth - CSS the way it was imagined.</title>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0;">
   <link rel="stylesheet" href="build/build.css">
   <script src="build/build.js"></script>
 </head>
@@ -22,29 +23,29 @@
 
   <section class="Section Section--feature Section--feature-variables">
     <h1 class="Section-title">Variables</h1>
-    <p class="Section-description">Just like in the CSS spec, using the var() function.</p>
+    <p class="Section-description">Just like in the CSS spec, using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">var() function</a>.</p>
     <figure class="Section-example">
       <pre class="Section-example-code">
 <b>:root</b> {
-  var-purple: <b>#6464C6</b>;
+  var-purple: <b>#847AD1</b>;
   var-large: <b>10px</b>;
 }
 
 <b>a</b> {
-  color: var(<b>purple</b>);
+  color: <em>var(purple)</em>;
 }
 
 <b>pre</b> {
-  padding: var(<b>large</b>);
+  padding: <em>var(large)</em>;
 }</pre>
       <pre class="Section-example-code">
 <b>:root</b> {
-  var-purple: <b>#6464C6</b>;
+  var-purple: <b>#847AD1</b>;
   var-large: <b>10px</b>;
 }
 
 <b>a</b> {
-  color: <b>#6464C6</b>;
+  color: <b>#847AD1</b>;
 }
 
 <b>pre</b> {
@@ -55,11 +56,11 @@
 
   <section class="Section Section--feature Section--feature-calculations">
     <h1 class="Section-title">Calculations</h1>
-    <p class="Section-description">Just like in the CSS spec, using the calc() function.</p>
+    <p class="Section-description">Just like in the CSS spec, using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/calc">calc() function</a>.</p>
     <figure class="Section-example">
       <pre class="Section-example-code">
 <b>pre</b> {
-  margin: calc(var(<b>large</b>) * 2);
+  margin: <em>calc(var(large) * 2)</em>;
 }</pre>
       <pre class="Section-example-code">
 <b>pre</b> {
@@ -78,15 +79,15 @@
 }
 
 <b>a:hover</b> {
-  color: color(var(<b>purple</b>) tint(<b>20%</b>));
+  color: <em>color(var(purple) tint(20%))</em>;
 }</pre>
       <pre class="Section-example-code">
 <b>a</b> {
-  color: <b>#6464C6</b>;
+  color: <b>#847AD1</b>;
 }
 
 <b>a</b> {
-  color: <b>TODOOOOO</b>;
+  color: <b>rgb(157, 149, 218)</b>;
 }</pre>
     </figure>
   </section>
@@ -120,8 +121,9 @@ $ <b>myth</b> input.css output.css
 
   <section class="Section Section--why">
     <h1 class="Section-title">Why?</h1>
-    <p class="Section-description">Myth lets you write pure CSS and still get lots of the benefits of the preprocessors you're used to. That way, when support lands for these features in browsers you don't have to change anything, just remove the preprocessing and you're good to go.</p>
-    <p class="Section-description">Myth lets you write pure CSS and still get lots of the benefits of the preprocessors you're used to. That way, when support lands for these features in browsers you don't have to change anything, just remove the preprocessing and you're good to go.</p>
+    <p class="Section-description">Myth lets you write pure CSS and still get the benefits of preprocessors you're used to like variables and math. Since you're writing valid CSS, when browsers finally support these features you need to rewrite your code, just remove the preprocessor.</p>
+    <p class="Section-description">Taking pure CSS as an input also means you can use Myth to post-process anyone else's CSS, adding the browser support you need, without having to re-write the code in a completely different syntax.</p>
+    <p class="Section-description">And finally, Myth is built with <a href="https://github.com/visionmedia/rework">Rework</a> so it's incredibly fast, and has a nice Javascript API in addition to the CLI.</p>
   </section>
 
   <footer class="Footer">
