@@ -124,7 +124,7 @@ pre {
 
 #### Color Manipulation
   
-  As defined by [Tab Atkins's draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors), soon to be submitted to the working group. Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+  As defined by [Tab Atkins's soon-to-be-proposed draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
 a {
