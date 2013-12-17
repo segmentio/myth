@@ -147,6 +147,12 @@ a:hover {
 }
 ```
 
+#### And more...
+
+* 4-digit and 8-digit hex color support. [`Spec`](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#hex-notation) - [`Thanks`](https://github.com/ianstormtaylor/rework-hex-alpha)
+* Font-variant shorthands. [`Spec`](http://www.w3.org/TR/css3-fonts/#font-variant-prop) - [`Thanks`](https://github.com/ianstormtaylor/rework-font-variant)
+
+
 ## API
 
 #### Command Line
