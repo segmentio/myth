@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
+var colors = require('colors');
 var myth = require('..');
 var program = require('commander');
 var stdin = require('stdin');
@@ -12,29 +13,67 @@ var stdin = require('stdin');
 program
   .version(require('../package').version)
   .usage('[<input>] [<output>]')
+  .option('-w, --watch', 'watch the input file')
   .on('--help', function () {
     console.log('  Examples:');
     console.log();
     console.log('    # pass an input and output file');
     console.log('    $ myth input.css output.css');
     console.log();
-    console.log('    # write to stdout');
-    console.log('    $ myth input.css');
+    console.log('    # watch for changes');
+    console.log('    $ myth --watch input.css output.css');
     console.log();
-    console.log('    # read from stdin and write to stdout');
+    console.log('    # stdin and stdout');
     console.log('    $ cat index.css | myth | grep .button');
     console.log();
   })
   .parse(process.argv);
 
 /**
+ * Settings.
+ */
+
+var input = program.args[0];
+var output = program.args[1];
+
+/**
+ * Logging.
+ */
+
+if (output) {
+  console.log();
+  process.on('exit', function () { console.log(); });
+}
+
+/**
+ * Watch?
+ */
+
+if (program.watch && input && output) fs.watch(input, function () {
+  run(input, output);
+  log('Regenerated ' + output);
+});
+
+/**
  * Transform.
  */
 
-read(program.args[0], function (err, css) {
-  if (err) throw err;
-  write(program.args[1], myth(css));
-});
+run(input, output);
+if (output) log('Generated ' + output);
+
+/**
+ * Run an `input` file throught myth and write to an `output` file.
+ *
+ * @param {String or Undefined} input
+ * @param {String or Undefined} output
+ */
+
+function run (input, output) {
+  read(input, function (err, css) {
+    if (err) throw err;
+    write(output, myth(css));
+  });
+}
 
 /**
  * Read from a `file`, falling back to stdin.
@@ -63,6 +102,16 @@ function read (file, callback) {
  */
 
 function write (file, css) {
-  if (file) return fs.writeFileSync(file, css);
-  process.stdout.write(css);
+  if (!file) process.stdout.write(css);
+  fs.writeFileSync(file, css);
+}
+
+/**
+ * Log a `string`.
+ *
+ * @param {String} string
+ */
+
+function log (string) {
+  console.log('  Myth:  '.blue + string);
 }
