@@ -101,7 +101,7 @@ a:hover {
 
 #### Variables
   
-  As defined by the [CSS spec](http://dev.w3.org/csswg/css-variables/). Thanks to [`rework-vars`](https://github.com/visionmedia/rework-vars).
+  Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-variables/). Just like future CSS, but without the cascade. Thanks to [`rework-vars`](https://github.com/visionmedia/rework-vars).
 
 ```css
 :root {
@@ -115,7 +115,7 @@ a {
 
 #### Math
   
-  As defined by the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Thanks to [`klei-rework-plugins`](https://github.com/klei-dev/rework-plugins).
+  Using the same syntax as the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Just like future CSS, but without runtime interpolation. Thanks to [`klei-rework-plugins`](https://github.com/klei-dev/rework-plugins).
 
 ```css
 pre {
@@ -125,7 +125,7 @@ pre {
 
 #### Color Manipulation
   
-  As defined by [Tab Atkins's soon-to-be-proposed draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+  Using the syntax as defined by [Tab Atkins's soon-to-be-proposed draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
 a {
@@ -139,7 +139,7 @@ a:hover {
 
 #### No Prefixes
   
-  So you never need to worry about what the current browser support landscape is. Thanks to [`autoprefixer`](https://github.com/ai/autoprefixer).
+  The prefixes from the most-common *and* most-recent browsers are supported, so you never need to worry about what the current browser support landscape is. Big thanks to [`autoprefixer`](https://github.com/ai/autoprefixer)!
 
 ```css
 .button {
@@ -152,7 +152,6 @@ a:hover {
 
 * 4-digit and 8-digit hex color support. [`Spec`](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#hex-notation) - [`Thanks`](https://github.com/ianstormtaylor/rework-hex-alpha)
 * Font-variant shorthands. [`Spec`](http://www.w3.org/TR/css3-fonts/#font-variant-prop) - [`Thanks`](https://github.com/ianstormtaylor/rework-font-variant)
-
 
 ## API
 
