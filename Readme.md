@@ -115,7 +115,7 @@ a {
 
 #### Math
   
-  Using the same syntax as the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Just like future CSS, but without runtime interpolation. Thanks to [`klei-rework-calc`](https://github.com/klei-dev/rework-calc).
+  Using the same syntax as the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Just like future CSS, but without runtime interpolation. Thanks to [`rework-calc`](https://github.com/klei-dev/rework-calc).
 
 ```css
 pre {
