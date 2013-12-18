@@ -21,7 +21,7 @@
     "autoprefixer": "~0.8.20131209",
     "commander": "~2.1.0",
     "stdin": "0.0.1",
-    "klei-rework-plugins": "~0.2.1",
+    "rework-calc": "~0.2.1",
     "rework-hex-alpha": "0.0.3",
     "rework-color-function": "0.0.3",
     "colors": "~0.6.2"
