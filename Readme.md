@@ -186,6 +186,18 @@ var css = fs.readFileSync('index.css', 'utf8');
 fs.writeFileSync('converted.css', myth(css));
 ```
 
+  Or use it directly as a Rework plugin:
+  
+```js
+var myth = require('myth')();
+var rework = require('rework');
+
+var css = fs.readFileSync('index.css', 'utf8');
+css = rework(css)
+  .use(myth)
+  .toString();
+```
+
 ## License
 
   The MIT License (MIT)
