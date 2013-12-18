@@ -1,8 +1,8 @@
 
-var calc = require('klei-rework-plugins').calc();
 var color = require('rework-color-function');
 var prefixes = require('autoprefixer')().rework;
 var rework = require('rework');
+var calc = require('rework-calc');
 var variants = require('rework-font-variant');
 var hex = require('rework-hex-alpha');
 var vars = require('rework-vars')();
