@@ -8,6 +8,12 @@
 
     $ npm install -g myth
 
+
+## Usage
+
+    $ myth input.css output.css
+    # Generated output.css from input.css
+
 ## Why?
 
   Myth lets you write pure CSS while still giving you the benefits of tools like LESS and Sass. You can still use variables and math functions, just like you do in preprocessors. It's like a polyfill for future versions of the spec.
