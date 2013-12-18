@@ -164,6 +164,8 @@ Options:
 
   -h, --help     output usage information
   -V, --version  output the version number
+  -w, --watch    watch the input file
+  -v, --verbose  write verbose output
 
 Examples:
 
@@ -174,16 +176,34 @@ Examples:
   $ myth --watch input.css output.css
   
   # stdin and stdout
-  $ cat index.css | myth | grep .button
+  $ cat input.css | myth | grep background-color
 ```
 
 #### Node.js
 
 ```js
 var myth = require('myth');
+var fs = require('fs');
 
 var css = fs.readFileSync('index.css', 'utf8');
-fs.writeFileSync('converted.css', myth(css));
+var converted = myth(css);
+
+fs.writeFileSync('converted.css', converted);
+```
+
+  Or use it directly as a Rework plugin:
+  
+```js
+var myth = require('myth');
+var rework = require('rework');
+var fs = require('fs');
+
+var css = fs.readFileSync('index.css', 'utf8');
+var converted = rework(css)
+  .use(myth())
+  .toString();
+  
+fs.writeFileSync('converted.css', converted);
 ```
 
 ## License
