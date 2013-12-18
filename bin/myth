@@ -25,7 +25,7 @@ program
     console.log('    $ myth --watch input.css output.css');
     console.log();
     console.log('    # stdin and stdout');
-    console.log('    $ cat index.css | myth | grep background-color');
+    console.log('    $ cat input.css | myth | grep background-color');
     console.log();
   })
   .parse(process.argv);
