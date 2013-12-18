@@ -76,9 +76,13 @@ if (watch && input && output) fs.watch(input, run);
 
 function read (file, callback) {
   if (file) {
-    fs.readFile(file, function (err, data) {
-      callback(err, data.toString());
-    });
+	  if(fs.existsSync(file)){
+     fs.readFile(file, function (err, data) {
+        callback(err, data.toString());
+     });
+  }else{
+  	console.log('Input file does not exist');
+  }
   } else {
     stdin(function (str) {
       callback(null, str);
