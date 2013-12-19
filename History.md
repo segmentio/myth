@@ -1,3 +1,7 @@
+0.1.6 - December 19, 2013
+-------------------------
+* add cli tests
+
 0.1.5 - December 19, 2013
 -------------------------
 * add read-file-stdin dep
