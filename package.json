@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "rework-font-variant": "0.0.3",
-    "rework-vars": "~1.1.0",
+    "rework-vars": "2.0.2",
     "rework": "~0.18.3",
     "autoprefixer": "~0.8.20131209",
     "commander": "~2.1.0",

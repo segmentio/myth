@@ -6,3 +6,7 @@
 body {
   color: var(red);
 }
+
+:root {
+  var-red: #0F0;
+}
