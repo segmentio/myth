@@ -16,7 +16,7 @@ module.exports = myth;
 /**
  * Rework a CSS `string`, or return the myth rework plugin.
  *
- * @param {String or Undefined} [string]
+ * @param {String} [string]
  * @return {String}
  */
 
