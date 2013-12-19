@@ -1,4 +1,8 @@
-0.1.2 - December 18, 2013
+0.1.4 - December 18, 2013
+-------------------------
+* update rework-vars
+
+0.1.3 - December 18, 2013
 -------------------------
 * add exists check
 
