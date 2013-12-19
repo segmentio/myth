@@ -1,34 +1,45 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
 var colors = require('colors');
+var fs = require('fs');
 var myth = require('..');
 var program = require('commander');
-var stdin = require('stdin');
+var read = require('read-file-stdin');
+var write = require('write-file-stdout');
 
 /**
- * Program.
+ * Usage.
  */
 
 program
   .version(require('../package').version)
   .usage('[<input>] [<output>]')
   .option('-w, --watch', 'watch the input file')
-  .option('-v, --verbose', 'write verbose output')
-  .on('--help', function () {
-    console.log('  Examples:');
-    console.log();
-    console.log('    # pass an input and output file');
-    console.log('    $ myth input.css output.css');
-    console.log();
-    console.log('    # watch for changes');
-    console.log('    $ myth --watch input.css output.css');
-    console.log();
-    console.log('    # stdin and stdout');
-    console.log('    $ cat input.css | myth | grep background-color');
-    console.log();
-  })
-  .parse(process.argv);
+  .option('-v, --verbose', 'write verbose output');
+
+/**
+ * Examples.
+ */
+
+program.on('--help', function () {
+  console.log('  Examples:');
+  console.log();
+  console.log('    # pass an input and output file');
+  console.log('    $ myth input.css output.css');
+  console.log();
+  console.log('    # watch for changes');
+  console.log('    $ myth --watch input.css output.css');
+  console.log();
+  console.log('    # stdin and stdout');
+  console.log('    $ cat input.css | myth | grep background-color');
+  console.log();
+});
+
+/**
+ * Parse.
+ */
+
+program.parse(process.argv);
 
 /**
  * Settings.
@@ -36,76 +47,49 @@ program
 
 var input;
 var output;
-var verbose = program.verbose;
-var watch = program.watch;
 
 if (program.args.length) {
   input = program.args[0];
   output = program.args[1];
 }
 
-/**
- * Logging.
- */
-
-if (verbose && output) {
-  console.log();
-  process.on('exit', function () { console.log(); });
-}
+var verbose = program.verbose;
+var watch = program.watch && input && output;
 
 /**
  * Run & watch?
  */
 
-function run () {
-  read(input, function (err, css) {
-    if (err) throw err;
-    write(output, myth(css));
-  });
-}
-
 run();
-if (watch && input && output) fs.watch(input, run);
+if (watch) fs.watch(input, run);
 
 /**
- * Read from a `file`, falling back to stdin.
- *
- * @param {String} file
- * @param {Function} callback
+ * Run for the given input and output.
  */
 
-function read (file, callback) {
-  if (!file) {
-    return stdin(function (str) {
-      callback(null, str);
-    });
-  }
-
-  if (!fs.existsSync(file)) return log(file + ' does not exist.', true);
-  fs.readFile(file, function (err, data) {
-    callback(err, data.toString());
+function run () {
+  read(input, function (err, buffer) {
+    if (err && err.code == 'ENOENT') return log(input + ' does not exist.');
+    if (err) throw err;
+    write(output, myth(buffer.toString()));
+    if (verbose && output) log(output + ' was written.');
   });
 }
 
 /**
- * Write `css` to a `file`, falling back to stdout.
- *
- * @param {String} file
- * @param {String} css
- */
-
-function write (file, css) {
-  if (!file) return process.stdout.write(css);
-  fs.writeFileSync(file, css);
-  if (verbose) log(file);
-}
-
-/**
- * Log a `string`.
+ * Log a `string` in style.
  *
  * @param {String} string
  */
 
+var logged;
+
 function log (string) {
-  console.log('  Myth:  '.blue + string);
+  if (!logged) {
+    console.log();
+    process.on('exit', function () { console.log(); });
+    logged = true;
+  }
+
+  console.log('  Myth: '.blue + string);
 }
