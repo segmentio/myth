@@ -75,15 +75,16 @@ if (watch && input && output) fs.watch(input, run);
  */
 
 function read (file, callback) {
-  if (file) {
-    fs.readFile(file, function (err, data) {
-      callback(err, data.toString());
-    });
-  } else {
-    stdin(function (str) {
+  if (!file) {
+    return stdin(function (str) {
       callback(null, str);
     });
   }
+
+  if (!fs.existsSync(file)) return log(file + ' does not exist.', true);
+  fs.readFile(file, function (err, data) {
+    callback(err, data.toString());
+  });
 }
 
 /**
@@ -96,7 +97,7 @@ function read (file, callback) {
 function write (file, css) {
   if (!file) return process.stdout.write(css);
   fs.writeFileSync(file, css);
-  if (output) log(output);
+  if (verbose) log(file);
 }
 
 /**
@@ -106,6 +107,5 @@ function write (file, css) {
  */
 
 function log (string) {
-  if (!verbose) return;
   console.log('  Myth:  '.blue + string);
 }
