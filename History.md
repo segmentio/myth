@@ -1,3 +1,9 @@
+0.1.5 - December 19, 2013
+-------------------------
+* add read-file-stdin dep
+* add write-file-stdout dep
+* fix exists check
+
 0.1.4 - December 18, 2013
 -------------------------
 * update rework-vars
