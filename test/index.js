@@ -84,15 +84,16 @@ describe('cli', function () {
   it('should log on verbose', function (done) {
     exec('bin/myth -v test/cli/input.css test/cli/output.css', function (err, stdout) {
       if (err) return done(err);
-      assert(-1 != stdout.indexOf('was written.'));
+      assert(-1 != stdout.indexOf('generate'));
       done();
     });
   });
 
   it('should log on non-existant file', function (done) {
-    exec('bin/myth -v test/cli/non-existant.css', function (err, stdout) {
-      if (err) return done(err);
-      assert(-1 != stdout.indexOf('does not exist.'));
+    exec('bin/myth test/cli/non-existant.css', function (err, stdout, stderr) {
+      assert(err);
+      assert(err.code == 1);
+      assert(-1 != stderr.indexOf('not found'));
       done();
     });
   });

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-var colors = require('colors');
 var fs = require('fs');
+var exists = fs.existsSync;
+var logger = require('./logger');
 var myth = require('..');
 var program = require('commander');
 var read = require('read-file-stdin');
@@ -13,10 +14,10 @@ var write = require('write-file-stdout');
  */
 
 program
-  .version(require('../package').version)
+  .version(require('../package.json').version)
   .usage('[<input>] [<output>]')
   .option('-w, --watch', 'watch the input file')
-  .option('-v, --verbose', 'write verbose output');
+  .option('-v, --verbose', 'log verbose output');
 
 /**
  * Examples.
@@ -46,23 +47,31 @@ program.parse(process.argv);
  * Settings.
  */
 
-var input;
-var output;
-
-if (program.args.length) {
-  input = program.args[0];
-  output = program.args[1];
-}
-
+var input = program.args[0];
+var output = program.args[1];
 var verbose = program.verbose;
 var regen = program.watch && input && output;
 
 /**
- * Run & regen?
+ * Exists?
+ */
+
+if (input && !exists(input)) logger.fatal('not found', input);
+
+/**
+ * Run.
  */
 
 run();
-if (regen) watch(input, run);
+
+/**
+ * Watch?
+ */
+
+if (regen) {
+  watch(input, run);
+  if (verbose) logger.info('watch', input);
+}
 
 /**
  * Run for the given input and output.
@@ -70,27 +79,8 @@ if (regen) watch(input, run);
 
 function run () {
   read(input, function (err, buffer) {
-    if (err && err.code == 'ENOENT') return log(input + ' does not exist.');
-    if (err) throw err;
+    if (err) logger.fatal('error', err.message);
     write(output, myth(buffer.toString()));
-    if (verbose && output) log(output + ' was written.');
+    if (verbose && output) logger.info('generate', output);
   });
-}
-
-/**
- * Log a `string` in style.
- *
- * @param {String} string
- */
-
-var logged;
-
-function log (string) {
-  if (!logged) {
-    console.log();
-    process.on('exit', function () { console.log(); });
-    logged = true;
-  }
-
-  console.log('  Myth: '.blue + string);
 }

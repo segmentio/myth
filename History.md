@@ -1,3 +1,7 @@
+0.1.8 - December 23, 2013
+-------------------------
+* update logger
+
 0.1.7 - December 23, 2013
 -------------------------
 * change to node-watch, by [@shanepelletier](https://github.com/shanepelletier)

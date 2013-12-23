@@ -1,7 +1,7 @@
 {
   "name": "myth",
   "repository": "git://github.com/segmentio/myth.git",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "license": "MIT",
   "description": "A CSS preprocessor that acts like a polyfill for future versions of the spec.",
   "keywords": [
@@ -15,18 +15,19 @@
     "myth": "bin/myth"
   },
   "dependencies": {
-    "rework-font-variant": "0.0.3",
-    "rework-vars": "2.0.2",
-    "rework": "~0.18.3",
     "autoprefixer": "~0.8.20131209",
-    "commander": "~2.1.0",
-    "rework-calc": "~0.2.1",
-    "rework-hex-alpha": "0.0.3",
-    "rework-color-function": "0.0.3",
     "colors": "~0.6.2",
-    "write-file-stdout": "0.0.2",
+    "commander": "~2.1.0",
+    "node-watch": "0.3.4",
+    "pad-component": "0.0.1",
     "read-file-stdin": "0.0.3",
-    "node-watch": "0.3.4"
+    "rework": "~0.18.3",
+    "rework-calc": "~0.2.1",
+    "rework-color-function": "0.0.3",
+    "rework-font-variant": "0.0.3",
+    "rework-hex-alpha": "0.0.3",
+    "rework-vars": "2.0.2",
+    "write-file-stdout": "0.0.2"
   },
   "devDependencies": {
     "mocha": "~1.15.1"
