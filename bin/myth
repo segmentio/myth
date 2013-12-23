@@ -2,10 +2,10 @@
 
 var colors = require('colors');
 var fs = require('fs');
-var watchfs = require('node-watch');
 var myth = require('..');
 var program = require('commander');
 var read = require('read-file-stdin');
+var watch = require('node-watch');
 var write = require('write-file-stdout');
 
 /**
@@ -55,14 +55,14 @@ if (program.args.length) {
 }
 
 var verbose = program.verbose;
-var watch = program.watch && input && output;
+var regen = program.watch && input && output;
 
 /**
- * Run & watch?
+ * Run & regen?
  */
 
 run();
-if (watch) watchfs(input, run);
+if (regen) watch(input, run);
 
 /**
  * Run for the given input and output.

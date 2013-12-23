@@ -1,3 +1,7 @@
+0.1.7 - December 23, 2013
+-------------------------
+* change to node-watch, by [@shanepelletier](https://github.com/shanepelletier)
+
 0.1.6 - December 19, 2013
 -------------------------
 * add cli tests
@@ -19,7 +23,7 @@
 0.1.1 - December 17, 2013
 -------------------------
 * add returning rework plugin
-* update rework-calc dependency
+* update rework-calc dependency, by [@micrypt](https://github.com/micrypt)
 
 0.1.0 - December 17, 2013
 -------------------------
