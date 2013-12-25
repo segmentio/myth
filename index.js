@@ -16,13 +16,14 @@ module.exports = myth;
 /**
  * Rework a CSS `string`, or return the myth rework plugin.
  *
- * @param {String} [string]
+ * @param {String} string (optional)
+ * @param {Object} options (optional)
  * @return {String}
  */
 
-function myth (string) {
+function myth (string, options) {
   if ('string' != typeof string) return plugin;
-  return rework(string)
+  return rework(string, options)
     .use(plugin)
     .toString();
 }

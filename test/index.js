@@ -84,7 +84,7 @@ describe('cli', function () {
   it('should log on verbose', function (done) {
     exec('bin/myth -v test/cli/input.css test/cli/output.css', function (err, stdout) {
       if (err) return done(err);
-      assert(-1 != stdout.indexOf('generate'));
+      assert(-1 != stdout.indexOf('write'));
       done();
     });
   });
@@ -94,6 +94,19 @@ describe('cli', function () {
       assert(err);
       assert(err.code == 1);
       assert(-1 != stderr.indexOf('not found'));
+      done();
+    });
+  });
+
+  it('should print a nice error', function (done) {
+    exec('bin/myth test/cli/error.css', function (err, stdout, stderr) {
+      assert(err);
+      assert(err.code == 1);
+      assert(-1 != stderr.indexOf('error'));
+      assert(-1 != stderr.indexOf('SyntaxError: Missing closing parentheses'));
+      assert(-1 != stderr.indexOf('at '));
+      assert(-1 != stderr.indexOf('248'));
+      assert(-1 != stderr.indexOf('color('));
       done();
     });
   });

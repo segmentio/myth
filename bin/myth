@@ -4,6 +4,8 @@ var fs = require('fs');
 var exists = fs.existsSync;
 var logger = require('./logger');
 var myth = require('..');
+var path = require('path');
+var resolve = path.resolve;
 var program = require('commander');
 var read = require('read-file-stdin');
 var watch = require('node-watch');
@@ -47,8 +49,8 @@ program.parse(process.argv);
  * Settings.
  */
 
-var input = program.args[0];
-var output = program.args[1];
+var input = program.args[0] ? resolve(program.args[0]) : null;
+var output = program.args[1] ? resolve(program.args[1]) : null;
 var verbose = program.verbose;
 var regen = program.watch && input && output;
 
@@ -70,7 +72,7 @@ run();
 
 if (regen) {
   watch(input, run);
-  if (verbose) logger.info('watch', input);
+  if (verbose) logger.log('watch', input);
 }
 
 /**
@@ -79,8 +81,17 @@ if (regen) {
 
 function run () {
   read(input, function (err, buffer) {
-    if (err) logger.fatal('error', err.message);
-    write(output, myth(buffer.toString()));
-    if (verbose && output) logger.info('generate', output);
+    if (err) logger.throw(err);
+    var css = buffer.toString();
+
+    try {
+      css = myth(css, { source: input });
+    } catch (e) {
+      e.css = css;
+      logger.throw(e);
+    }
+
+    write(output, css);
+    if (verbose && output) logger.log('write', output);
   });
 }
