@@ -14,6 +14,9 @@
   "bin": {
     "myth": "bin/myth"
   },
+  "scripts": {
+    "test": "make test"
+  },
   "dependencies": {
     "autoprefixer": "~0.8.20131209",
     "colors": "~0.6.2",
