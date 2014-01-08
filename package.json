@@ -11,6 +11,7 @@
     "css",
     "pure"
   ],
+  "main": "lib/index.js",
   "bin": {
     "myth": "bin/myth"
   },
@@ -33,6 +34,7 @@
     "write-file-stdout": "0.0.2"
   },
   "devDependencies": {
-    "mocha": "~1.15.1"
+    "mocha": "~1.15.1",
+    "browserify": "~3.19.1"
   }
 }

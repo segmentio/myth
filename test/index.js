@@ -5,8 +5,18 @@ var exec = child.exec;
 var spawn = child.spawn;
 var fs = require('fs');
 var myth = require('..');
+var browser = require('../myth.js');
 var path = require('path');
 var Stream = require('stream').Readable;
+
+var features = [
+  'calc',
+  'color',
+  'font-variant',
+  'hex',
+  'prefixes',
+  'vars'
+];
 
 /**
  * Myth node API tests.
@@ -27,15 +37,6 @@ describe('myth', function () {
  */
 
 describe('features', function () {
-  var features = [
-    'calc',
-    'color',
-    'font-variant',
-    'hex',
-    'prefixes',
-    'vars'
-  ];
-
   features.forEach(function (name) {
     it('should add ' + name + ' support', function () {
       var input = read('features/' + name);
@@ -44,6 +45,24 @@ describe('features', function () {
     });
   });
 });
+
+/**
+ * Browser tests.
+ */
+
+describe('browser', function () {
+  features.forEach(function (name) {
+    it('should add ' + name + ' support', function () {
+      var input = read('features/' + name);
+      var output = read('features/' + name + '.out');
+      assert.equal(browser(input).trim(), output.trim());
+    });
+  });
+});
+
+/**
+ * CLI tests.
+ */
 
 describe('cli', function () {
   var input = read('cli/input');
