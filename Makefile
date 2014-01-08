@@ -12,7 +12,9 @@ node_modules: package.json
 	@npm install
 	@touch package.json
 
+release: myth.js test
+
 test: node_modules
 	@$(mocha) --reporter spec --slow 400
 
-.PHONY: clean test
+.PHONY: clean release test
