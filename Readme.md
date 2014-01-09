@@ -172,18 +172,18 @@ Options:
 
   -h, --help     output usage information
   -V, --version  output the version number
-  -w, --watch    watch the input file
-  -v, --verbose  write verbose output
+  -w, --watch    watch the input file for changes
+  -v, --verbose  log verbose output for debugging
 
 Examples:
 
-  # pass an input and output file
+  # pass an input and output file:
   $ myth input.css output.css
   
-  # watch for changes
+  # watch the input file for changes:
   $ myth --watch input.css output.css
   
-  # stdin and stdout
+  # unix-style piping to stdin and stdout:
   $ cat input.css | myth | grep background-color
 ```
 
