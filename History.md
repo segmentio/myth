@@ -1,6 +1,7 @@
 0.3.0 - January 7, 2013
 -----------------------
 * add browser support
+* add component support
 
 0.2.0 - December 25, 2013
 -------------------------
