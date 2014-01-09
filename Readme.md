@@ -133,7 +133,7 @@ pre {
 
 #### Color Manipulation
   
-  Using the syntax as defined by [Tab Atkins's soon-to-be-proposed draft](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+  Using the syntax as defined by [Tab Atkins's soon-to-be-proposed draft](http://rawgithub.com/tabatkins/specs/gh-pages/css-color/Overview.html#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
 a {
@@ -158,7 +158,7 @@ a:hover {
 
 #### And more...
 
-* 4-digit and 8-digit hex color support. [`Spec`](http://rawgithub.com/tabatkins/specs/master/css-color/Overview.html#hex-notation) - [`Thanks`](https://github.com/ianstormtaylor/rework-hex-alpha)
+* 4-digit and 8-digit hex color support. [`Spec`](http://rawgithub.com/tabatkins/specs/gh-pages/css-color/Overview.html#hex-notation) - [`Thanks`](https://github.com/ianstormtaylor/rework-hex-alpha)
 * Font-variant shorthands. [`Spec`](http://www.w3.org/TR/css3-fonts/#font-variant-prop) - [`Thanks`](https://github.com/ianstormtaylor/rework-font-variant)
 
 ## API
