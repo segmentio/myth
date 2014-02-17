@@ -133,7 +133,7 @@ pre {
 
 #### Color Manipulation
   
-  Using the syntax as the [CSS spec](http://dev.w3.org/csswg/css-color/#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+  Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-color/#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
 a {
