@@ -3,7 +3,7 @@
 
   _CSS the way it was imagined._
 
-  Myth is a preprocess that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a like CSS polyfill.
+  Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's a like CSS polyfill.
   
   [![Build Status](https://travis-ci.org/segmentio/myth.png)](http://travis-ci.org/segmentio/myth)
 
