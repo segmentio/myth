@@ -1,3 +1,8 @@
+
+0.3.1 - March 4, 2013
+---------------------
+* bump color plugins to fix media query support
+
 0.3.0 - January 7, 2013
 -----------------------
 * add browser support
