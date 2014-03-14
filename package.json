@@ -27,9 +27,9 @@
     "read-file-stdin": "0.0.3",
     "rework": "~0.20.1",
     "rework-calc": "~0.2.1",
-    "rework-color-function": "0.1.2",
+    "rework-color-function": "^1.0.0",
     "rework-font-variant": "0.0.3",
-    "rework-hex-alpha": "0.0.3",
+    "rework-hex-alpha": "^1.0.0",
     "rework-vars": "2.0.2",
     "write-file-stdout": "0.0.2"
   },
