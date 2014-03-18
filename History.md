@@ -1,4 +1,8 @@
 
+0.3.3 - March 18, 2013
+----------------------
+* pass options to `rework.toString`
+
 0.3.2 - March 18, 2013
 ----------------------
 * add bower support

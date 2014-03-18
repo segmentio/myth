@@ -1,7 +1,7 @@
 {
   "name": "myth",
   "repository": "segmentio/myth",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "description": "A CSS preprocessor that acts like a polyfill for future versions of the spec.",
   "keywords": [
