@@ -26,7 +26,7 @@ function myth (string, options) {
   if ('string' != typeof string) return plugin;
   return rework(string, options)
     .use(plugin)
-    .toString();
+    .toString(options);
 }
 
 /**
