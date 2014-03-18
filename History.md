@@ -1,4 +1,8 @@
 
+0.3.2 - March 18, 2013
+----------------------
+* add bower support
+
 0.3.1 - March 4, 2013
 ---------------------
 * bump color plugins to fix media query support
