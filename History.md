@@ -1,17 +1,21 @@
 
-0.3.3 - March 18, 2013
+0.3.4 - March 31, 2014
+----------------------
+* update to `rework-vars#2.0.3` to properly clear variables
+
+0.3.3 - March 18, 2014
 ----------------------
 * pass options to `rework.toString`
 
-0.3.2 - March 18, 2013
+0.3.2 - March 18, 2014
 ----------------------
 * add bower support
 
-0.3.1 - March 4, 2013
+0.3.1 - March 4, 2014
 ---------------------
 * bump color plugins to fix media query support
 
-0.3.0 - January 7, 2013
+0.3.0 - January 7, 2014
 -----------------------
 * add browser support
 * add component support
