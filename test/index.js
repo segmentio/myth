@@ -129,6 +129,14 @@ describe('cli', function () {
       done();
     });
   });
+
+  it('should compress css with -c option', function (done) {
+    exec('bin/myth -c test/cli/compress.css', function (err, stdout, stderr) {
+      if (err) return done(err);
+      assert.equal(stdout, 'body{color:red;}');
+      done();
+    });
+  });
 });
 
 /**
