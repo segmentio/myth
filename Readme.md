@@ -32,17 +32,17 @@
 
 ```css
 :root {
-  var-green: #a6c776;
+  --green: #a6c776;
 }
 
 a {
-  color: var(green);
+  color: var(--green);
   font-variant: all-small-caps;
   transition: color 1s;
 }
 
 a:hover {
-  color: color(var(green) shade(20%));
+  color: color(var(--green) shade(20%));
 }
 
 ::placeholder {
@@ -59,7 +59,7 @@ a:hover {
 
 ```css
 :root {
-  var-green: #a6c776;
+  --green: #a6c776;
 }
 
 a {
@@ -113,11 +113,11 @@ a:hover {
 
 ```css
 :root {
-  var-purple: #847AD1;
+  --purple: #847AD1;
 }
 
 a {
-  color: var(purple);
+  color: var(--purple);
 }
 ```
 
