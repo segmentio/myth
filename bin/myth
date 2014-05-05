@@ -18,6 +18,7 @@ var write = require('write-file-stdout');
 program
   .version(require('../package.json').version)
   .usage('[<input>] [<output>]')
+  .option('-c, --compress', 'compress output')
   .option('-w, --watch', 'watch the input file for changes')
   .option('-v, --verbose', 'log verbose output for debugging');
 
@@ -85,7 +86,7 @@ function run(){
     var css = buffer.toString();
 
     try {
-      css = myth(css, { source: input });
+      css = myth(css, { source: input, compress: program.compress });
     } catch (e) {
       e.css = css;
       logger.throw(e);
