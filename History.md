@@ -1,4 +1,11 @@
 
+1.0.0 - May 5, 2014
+-------------------
+* add `@import` support
+* add support for new CSS variables syntax
+* add `compress` option
+* add `browsers` option
+
 0.3.4 - March 31, 2014
 ----------------------
 * update to `rework-vars#2.0.3` to properly clear variables
