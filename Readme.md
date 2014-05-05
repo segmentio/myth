@@ -170,10 +170,11 @@ Usage: myth [<input>] [<output>]
 
 Options:
 
-  -h, --help     output usage information
-  -V, --version  output the version number
-  -w, --watch    watch the input file for changes
-  -v, --verbose  log verbose output for debugging
+  -c, --compress   compress the css output
+  -h, --help       output usage information
+  -v, --verbose    log verbose output for debugging
+  -V, --version    output the version number
+  -w, --watch      watch the input file for changes
 
 Examples:
 
@@ -213,6 +214,12 @@ var converted = rework(css)
   
 fs.writeFileSync('converted.css', converted);
 ```
+
+  Options:
+
+  - `browsers` (`Array`) - an array of [browsers and versions to support](https://github.com/ai/autoprefixer#browsers).
+  - `compress` (`Boolean`) - whether to compress the CSS output.
+  - `source` (`String`) - the full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
 
 ## License
 
