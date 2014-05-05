@@ -31,7 +31,8 @@
     "rework-font-variant": "0.0.3",
     "rework-hex-alpha": "^1.0.0",
     "rework-vars": "2.0.3",
-    "write-file-stdout": "0.0.2"
+    "write-file-stdout": "0.0.2",
+    "rework-inline": "~0.1.4"
   },
   "devDependencies": {
     "mocha": "~1.15.1",

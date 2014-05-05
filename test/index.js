@@ -14,6 +14,7 @@ var features = [
   'color',
   'font-variant',
   'hex',
+  'import',
   'prefixes',
   'vars'
 ];
