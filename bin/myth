@@ -25,7 +25,7 @@ program
  * Examples.
  */
 
-program.on('--help', function () {
+program.on('--help', function(){
   console.log('  Examples:');
   console.log();
   console.log('    # pass an input and output file:');
@@ -79,8 +79,8 @@ if (regen) {
  * Run for the given input and output.
  */
 
-function run () {
-  read(input, function (err, buffer) {
+function run(){
+  read(input, function(err, buffer){
     if (err) logger.throw(err);
     var css = buffer.toString();
 

@@ -13,12 +13,12 @@ var Stream = require('stream').Readable;
  * Myth node API tests.
  */
 
-describe('myth', function () {
-  it('should return a css string', function () {
+describe('myth', function(){
+  it('should return a css string', function(){
     assert('string' == typeof myth('body {}'));
   });
 
-  it('should return a rework plugin', function () {
+  it('should return a rework plugin', function(){
     assert('function' == typeof myth());
   });
 });
@@ -37,9 +37,9 @@ var features = [
   'vars'
 ];
 
-describe('features', function () {
-  features.forEach(function (name) {
-    it('should add ' + name + ' support', function () {
+describe('features', function(){
+  features.forEach(function(name){
+    it('should add ' + name + ' support', function(){
       var input = read('features/' + name);
       var output = read('features/' + name + '.out');
       var options = { source: resolve('features/' + name) };
@@ -62,9 +62,9 @@ var browsers = [
   'vars'
 ];
 
-describe('browser', function () {
-  browsers.forEach(function (name) {
-    it('should add ' + name + ' support', function () {
+describe('browser', function(){
+  browsers.forEach(function(name){
+    it('should add ' + name + ' support', function(){
       var input = read('features/' + name);
       var output = read('features/' + name + '.out');
       var options = { source: resolve('features/' + name) };
@@ -78,16 +78,16 @@ describe('browser', function () {
  * CLI tests.
  */
 
-describe('cli', function () {
+describe('cli', function(){
   var input = read('cli/input');
   var output = read('cli/input.out');
 
-  afterEach(function () {
+  afterEach(function(){
     remove('cli/output');
   });
 
-  it('should read from a file and write to a file', function (done) {
-    exec('bin/myth test/cli/input.css test/cli/output.css', function (err, stdout) {
+  it('should read from a file and write to a file', function(done){
+    exec('bin/myth test/cli/input.css test/cli/output.css', function(err, stdout){
       if (err) return done(err);
       var res = read('cli/output');
       assert.equal(res, output);
@@ -95,16 +95,16 @@ describe('cli', function () {
     });
   });
 
-  it('should read from a file and write to stdout', function (done) {
-    exec('bin/myth test/cli/input.css', function (err, stdout) {
+  it('should read from a file and write to stdout', function(done){
+    exec('bin/myth test/cli/input.css', function(err, stdout){
       if (err) return done(err);
       assert.equal(stdout, output);
       done();
     });
   });
 
-  it('should read from stdin and write to stdout', function (done) {
-    var child = exec('bin/myth', function (err, stdout) {
+  it('should read from stdin and write to stdout', function(done){
+    var child = exec('bin/myth', function(err, stdout){
       if (err) return done(err);
       assert.equal(stdout, output);
       done();
@@ -114,16 +114,16 @@ describe('cli', function () {
     child.stdin.end();
   });
 
-  it('should log on verbose', function (done) {
-    exec('bin/myth -v test/cli/input.css test/cli/output.css', function (err, stdout) {
+  it('should log on verbose', function(done){
+    exec('bin/myth -v test/cli/input.css test/cli/output.css', function(err, stdout){
       if (err) return done(err);
       assert(-1 != stdout.indexOf('write'));
       done();
     });
   });
 
-  it('should log on non-existant file', function (done) {
-    exec('bin/myth test/cli/non-existant.css', function (err, stdout, stderr) {
+  it('should log on non-existant file', function(done){
+    exec('bin/myth test/cli/non-existant.css', function(err, stdout, stderr){
       assert(err);
       assert(err.code == 1);
       assert(-1 != stderr.indexOf('not found'));
@@ -131,8 +131,8 @@ describe('cli', function () {
     });
   });
 
-  it('should print a nice error', function (done) {
-    exec('bin/myth test/cli/error.css', function (err, stdout, stderr) {
+  it('should print a nice error', function(done){
+    exec('bin/myth test/cli/error.css', function(err, stdout, stderr){
       assert(err);
       assert(err.code == 1);
       assert(-1 != stderr.indexOf('error'));
@@ -149,13 +149,13 @@ describe('cli', function () {
  * A few real-life test cases.
  */
 
-describe('cases', function () {
+describe('cases', function(){
   var cases = [
     'myth.io'
   ];
 
-  cases.forEach(function (name) {
-    it('should convert ' + name + '\'s css', function () {
+  cases.forEach(function(name){
+    it('should convert ' + name + '\'s css', function(){
       var input = read('cases/' + name);
       var output = read('cases/' + name + '.out');
       assert.equal(myth(input).trim(), output.trim());
@@ -170,7 +170,7 @@ describe('cases', function () {
  * @return {String}
  */
 
-function read (filename) {
+function read(filename){
   var file = resolve(filename);
   return fs.readFileSync(file, 'utf8');
 }
@@ -181,7 +181,7 @@ function read (filename) {
  * @param {String} filename
  */
 
-function remove (filename) {
+function remove(filename){
   var file = resolve(filename);
   if (!fs.existsSync(file)) return;
   fs.unlinkSync(file);
@@ -194,6 +194,6 @@ function remove (filename) {
  * @return {String}
  */
 
-function resolve (filename) {
+function resolve(filename){
   return path.resolve(__dirname, filename + '.css');
 }

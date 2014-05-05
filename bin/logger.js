@@ -9,7 +9,7 @@ var pad = require('pad-component').left;
  * @param {String} message
  */
 
-exports.log = function (type, message) {
+exports.log = function(type, message){
   padding();
   log(type, message);
 };
@@ -21,7 +21,7 @@ exports.log = function (type, message) {
  * @param {String} message
  */
 
-exports.fatal = function (type, message) {
+exports.fatal = function(type, message){
   if (padded) console.log();
   padding();
   error(type, message, 'red');
@@ -34,14 +34,14 @@ exports.fatal = function (type, message) {
  * @param {Error} err
  */
 
-exports.throw = function (err) {
+exports.throw = function(err){
   if (padded) console.log();
   padding();
 
   // node errors (or faulty plugins)
   if (!err.position) {
     error('error', err.toString(), 'red', 'red');
-    err.stack.split('\n').slice(1).forEach(function (line) {
+    err.stack.split('\n').slice(1).forEach(function(line){
       error('', line.slice(2));
     });
   }
@@ -72,7 +72,7 @@ exports.throw = function (err) {
  * Log to stdout.
  */
 
-function log () {
+function log(){
   var msg = format.apply(this, arguments);
   console.log(msg);
 }
@@ -81,7 +81,7 @@ function log () {
  * Log to stderr.
  */
 
-function error () {
+function error(){
   var msg = format.apply(this, arguments);
   console.error(msg);
 }
@@ -95,7 +95,7 @@ function error () {
  * @param {String} msgColor (optional)
  */
 
-function format (type, msg, typeColor, msgColor) {
+function format(type, msg, typeColor, msgColor){
   type = type || '';
   msg = msg || '';
   typeColor = typeColor || 'blue';
@@ -110,9 +110,9 @@ function format (type, msg, typeColor, msgColor) {
 
 var padded = false;
 
-function padding () {
+function padding(){
   if (padded) return;
   console.log();
-  process.on('exit', function () { console.log(); });
+  process.on('exit', function(){ console.log(); });
   padded = true;
 }
