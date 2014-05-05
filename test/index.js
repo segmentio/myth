@@ -24,11 +24,11 @@ var features = [
 
 describe('myth', function () {
   it('should return a css string', function () {
-    assert('string' == typeof myth('body {}'));
+    assert('string' === typeof myth('body {}'));
   });
 
   it('should return a rework plugin', function () {
-    assert('function' == typeof myth());
+    assert('function' === typeof myth());
   });
 });
 
@@ -43,6 +43,19 @@ describe('features', function () {
       var output = read('features/' + name + '.out');
       assert.equal(myth(input).trim(), output.trim());
     });
+  });
+});
+
+/**
+ * Rework autoprefix browsers option tests.
+ */
+
+describe('autoprefix browser options', function () {
+  it('Firefox 28 only version should not add webkit- support', function () {
+    var input = read('features/prefixes');
+    var output = read('features/prefixes_ff24.out');
+    assert.equal(myth(input, {browsers: ['ff 24']}).trim(),
+      output.trim());
   });
 });
 
@@ -103,7 +116,7 @@ describe('cli', function () {
   it('should log on verbose', function (done) {
     exec('bin/myth -v test/cli/input.css test/cli/output.css', function (err, stdout) {
       if (err) return done(err);
-      assert(-1 != stdout.indexOf('write'));
+      assert(-1 !== stdout.indexOf('write'));
       done();
     });
   });
@@ -111,8 +124,8 @@ describe('cli', function () {
   it('should log on non-existant file', function (done) {
     exec('bin/myth test/cli/non-existant.css', function (err, stdout, stderr) {
       assert(err);
-      assert(err.code == 1);
-      assert(-1 != stderr.indexOf('not found'));
+      assert(err.code === 1);
+      assert(-1 !== stderr.indexOf('not found'));
       done();
     });
   });
@@ -120,12 +133,12 @@ describe('cli', function () {
   it('should print a nice error', function (done) {
     exec('bin/myth test/cli/error.css', function (err, stdout, stderr) {
       assert(err);
-      assert(err.code == 1);
-      assert(-1 != stderr.indexOf('error'));
-      assert(-1 != stderr.indexOf('SyntaxError: Missing closing parentheses'));
-      assert(-1 != stderr.indexOf('at '));
-      assert(-1 != stderr.indexOf('248'));
-      assert(-1 != stderr.indexOf('color('));
+      assert(err.code === 1);
+      assert(-1 !== stderr.indexOf('error'));
+      assert(-1 !== stderr.indexOf('SyntaxError: Missing closing parentheses'));
+      assert(-1 !== stderr.indexOf('at '));
+      assert(-1 !== stderr.indexOf('248'));
+      assert(-1 !== stderr.indexOf('color('));
       done();
     });
   });
