@@ -1,4 +1,8 @@
 
+1.0.1 - May 5, 2014
+-------------------
+* add `compress` CLI flag
+
 1.0.0 - May 5, 2014
 -------------------
 * add `@import` support
