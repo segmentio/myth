@@ -7797,7 +7797,7 @@ module.exports = require('./lib/calc');
  * Useful in combination with the [rework-vars](https://npmjs.org/package/rework-vars) plugin, e.g:
  *
  *   :root {
- *     var-base-font-size: 16px;
+ *     --base-font-size: 16px;
  *   }
  *   body {
  *     font-size: var(base-font-size);
@@ -7809,7 +7809,7 @@ module.exports = require('./lib/calc');
  * Yields:
  *
  *   :root {
- *     var-base-font-size: 16px;
+ *     --base-font-size: 16px;
  *   }
  *   body {
  *     font-size: 16px;
@@ -10062,14 +10062,14 @@ module.exports = function(map){
           // only variables declared for `:root` are supported
           if (rule.selectors.length === 1 && rule.selectors[0] === ':root') {
             rule.declarations.forEach(function(decl, idx){
-              if (decl.property && /\bvar\-/.test(decl.property)) {
-                name = decl.property.replace('var-', '');
+              if (decl.property && /\-\-/.test(decl.property)) {
+                name = decl.property;
                 map[name] = decl.value;
                 varNameIndices.push(idx);
               }
             });
 
-            // remove `var-*` properties from the rule
+            // remove `--*` properties from the rule
             for (i = varNameIndices.length - 1; i >= 0; i -= 1) {
               rule.declarations.splice(varNameIndices[i], 1);
             }
