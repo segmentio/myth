@@ -1,7 +1,5 @@
 
-:root {
-  var-red: #F00;
-}
+@import "import.include.css";
 
 body {
   color: var(red);

@@ -1,12 +1,15 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.myth=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
-var color = require('rework-color-function');
-var prefixes = require('autoprefixer')().rework;
-var rework = require('rework');
+var autoprefixer = require('autoprefixer');
 var calc = require('rework-calc');
-var variants = require('rework-font-variant');
+var color = require('rework-color-function');
+var dirname = require('path').dirname;
 var hex = require('rework-hex-alpha');
-var vars = require('rework-vars')();
+var inline = require('rework-inline');
+var noop = function(){};
+var rework = require('rework');
+var variants = require('rework-font-variant');
+var vars = require('rework-vars');
 
 /**
  * Expose `myth`.
@@ -15,37 +18,56 @@ var vars = require('rework-vars')();
 module.exports = myth;
 
 /**
- * Rework a CSS `string`, or return the myth rework plugin.
+ * Rework a CSS `string`, or return the Myth rework plugin.
  *
  * @param {String} string (optional)
  * @param {Object} options (optional)
  * @return {String}
  */
 
-function myth (string, options) {
-  if ('string' != typeof string) return plugin;
+function myth(string, options){
+  if ('object' == typeof string) options = string, string = null;
+  options = options || {};
+
+  if (!string) return plugin(options);
+
   return rework(string, options)
-    .use(plugin)
+    .use(plugin(options))
     .toString(options);
 }
 
 /**
- * Plugin.
+ * Generate a Myth rework plugin with `options`.
  *
- * @param {Object} stylesheet
- * @param {Rework} rework
+ * @param {Object} options
+ * @return {Function}
  */
 
-function plugin (stylesheet, rework) {
-  rework
-    .use(vars)
-    .use(hex)
-    .use(color)
-    .use(calc)
-    .use(variants)
-    .use(prefixes);
+function plugin(options){
+  return function(stylesheet, rework){
+    var source = options.source;
+    var browsers = options.browsers;
+    var variables = vars();
+
+    var prefixes = browsers
+      ? autoprefixer().rework
+      : autoprefixer(browsers).rework;
+
+    var imports = source
+      ? inline({ path: dirname(source) })
+      : noop;
+
+    rework
+      .use(imports)
+      .use(variables)
+      .use(hex)
+      .use(color)
+      .use(calc)
+      .use(variants)
+      .use(prefixes);
+  };
 }
-},{"autoprefixer":4,"rework":79,"rework-calc":60,"rework-color-function":62,"rework-font-variant":73,"rework-hex-alpha":75,"rework-vars":77}],2:[function(require,module,exports){
+},{"autoprefixer":4,"path":59,"rework":99,"rework-calc":60,"rework-color-function":62,"rework-font-variant":73,"rework-hex-alpha":75,"rework-inline":77,"rework-vars":97}],2:[function(require,module,exports){
 (function() {
   module.exports = {
     android: {
@@ -10036,1382 +10058,121 @@ color.matches = function(string){
 module.exports = color
 
 },{}],77:[function(require,module,exports){
+var process=require("__browserify_process");'use strict';
+
+var css = require('css');
+var findFile = require('find-file');
+var fs = require('fs');
+var parseImport = require('parse-import');
 
 /**
- * Module dependencies.
+ * Inline stylesheet using `@import`
+ *
+ * @param {Object} style
+ * @param {Object} opts
+ * @api public
  */
 
-var visit = require('rework-visit');
+function Import(style, opts) {
+    debugger;
+    opts = opts || {};
+    this.opts = opts;
+    this.path = opts.path || process.cwd();
+    this.rules = style.rules || [];
+}
 
 /**
- * Module export.
+ * Process stylesheet
+ *
+ * @api public
  */
 
-module.exports = function(map){
-  map = map || {};
+Import.prototype.process = function () {
+    var rules = [];
+    var self = this;
 
-  return function vars(style){
-    visit(style, function(declarations, node){
-      // define variables
-      style.rules.forEach(function (rule) {
-        var i;
-        var name;
-        var varNameIndices = [];
-
-        if (rule.type === 'rule') {
-          // only variables declared for `:root` are supported
-          if (rule.selectors.length === 1 && rule.selectors[0] === ':root') {
-            rule.declarations.forEach(function(decl, idx){
-              if (decl.property && /\bvar\-/.test(decl.property)) {
-                name = decl.property.replace('var-', '');
-                map[name] = decl.value;
-                varNameIndices.push(idx);
-              }
-            });
-
-            // remove `var-*` properties from the rule
-            for (i = varNameIndices.length - 1; i >= 0; i -= 1) {
-              rule.declarations.splice(varNameIndices[i], 1);
-            }
-          }
+    this.rules.forEach(function (rule) {
+        if (rule.type !== 'import') {
+            return rules.push(rule);
         }
-      });
+        debugger;
 
-      // resolve variables
-      declarations.forEach(function(decl, idx){
-        if (decl.value && /\bvar\(/.test(decl.value)) {
-          decl.value = replaceValue(decl.value, map);
-        }
-      });
-    });
-  };
-};
 
-/**
- * Resolve CSS variables in a value
- *
- * The second argument to a CSS variable function, if provided, is a fallback
- * value, which is used as the substitution value when the referenced variable
- * is invalid.
- *
- * var(name[, fallback])
- *
- * Since the fallback can be *any* value, the value needs to be parsed
- * character-by-character to deduce the contents of a variable function.
- *
- * @param {String} value A property value known to contain CSS variable functions
- * @param {Object} map A map of variable names and values
- * @return {String} A property value with all CSS variables substituted.
- */
+        var content;
+        var data = parseImport(rule.import);
+        var file = self._check(data.path);
+        var media = data.condition;
+        var res;
 
-function replaceValue(value, map){
-  // matches `var(name[, fallback])`, captures 'name' and 'fallback'
-  var RE_VAR = /\bvar\(([\w-]+)(?:\s*,\s*)?(.*)?\)/;
-  // matches `var()`
-  var RE_EMPTY_VAR = /\bvar\(\s*\)/;
 
-  var valueLen = value.length;
-  var beginSlice = value.indexOf('var(');
-  var endSlice = beginSlice + 'var('.length;
-  var depth = 1;
-  var currentChar;
-  var cssVariable;
+        content = self._read(file);
 
-  // find the closing `)` of the CSS variable function,
-  // accounting for nested functions
-  while (endSlice < valueLen && depth > 0) {
-    currentChar = value.charAt(endSlice);
-    if (currentChar == '(') depth += 1;
-    if (currentChar == ')') depth -= 1;
-    endSlice += 1;
-  }
-
-  if (depth > 0) throw new Error('rework-vars: missing closing ")" in the value "' + value + '"');
-
-  cssVariable = value.slice(beginSlice, endSlice);
-
-  if (RE_EMPTY_VAR.test(cssVariable)) throw new Error('rework-vars: var() must contain a non-whitespace string');
-
-  cssReplacement = cssVariable.replace(RE_VAR, function(_, name, fallback){
-    var replacement = map[name];
-    if (!replacement && !fallback) throw new Error('rework-vars: variable "' + name + '" is undefined');
-    if (!replacement && fallback) return fallback;
-    return replacement;
-  });
-
-  // resolve the variable
-  value = value.split(cssVariable).join(cssReplacement);
-
-  // recursively resolve any remaining variables
-  if (/\bvar\(/.test(value)) {
-    value = replaceValue(value, map);
-  }
-
-  return value;
-}
-
-},{"rework-visit":78}],78:[function(require,module,exports){
-
-/**
- * Expose `visit()`.
- */
-
-module.exports = visit;
-
-/**
- * Visit `node`'s declarations recursively and
- * invoke `fn(declarations, node)`.
- *
- * @param {Object} node
- * @param {Function} fn
- * @api private
- */
-
-function visit(node, fn){
-  node.rules.forEach(function(rule){
-    // @media etc
-    if (rule.rules) {
-      visit(rule, fn);
-      return;
-    }
-
-    // keyframes
-    if (rule.keyframes) {
-      rule.keyframes.forEach(function(keyframe){
-        fn(keyframe.declarations, rule);
-      });
-      return;
-    }
-
-    // @charset, @import etc
-    if (!rule.declarations) return;
-
-    fn(rule.declarations, node);
-  });
-};
-
-},{}],79:[function(require,module,exports){
-
-module.exports = require('./lib/rework');
-},{"./lib/rework":89}],80:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var utils = require('../utils');
-var path = require('path');
-var stripQuotes = utils.stripQuotes;
-
-/**
- * Vendor crap.
- */
-
-var query = [
-  '(min--moz-device-pixel-ratio: 1.5)',
-  '(-o-min-device-pixel-ratio: 3/2)',
-  '(-webkit-min-device-pixel-ratio: 1.5)',
-  '(min-device-pixel-ratio: 1.5)',
-  '(min-resolution: 144dpi)',
-  '(min-resolution: 1.5dppx)'
-].join(', ');
-
-/**
- * Translate
- *
- *   .logo {
- *     background-image: url('/public/images/logo.png')
- *   }
- *
- * yields:
- *
- *   .logo {
- *     background-image: url('/public/images/logo.png')
- *   }
- *
- *   @media all and (-webkit-min-device-pixel-ratio : 1.5) {
- *     .logo {
- *       background-image: url("/public/images/logo@2x.png");
- *       background-size: contain
- *     }
- *   }
- *
- */
-
-module.exports = function() {
-  return function(style){
-    style.rules.forEach(function(rule){
-      if (!rule.declarations) return;
-
-      var backgroundSize = rule.declarations.filter(backgroundWithSize).map(value)[0] || 'contain';
-
-      rule.declarations.filter(backgroundWithHiResURL).forEach(function(decl){
-        if ('comment' == decl.type) return;
-
-        // parse url
-        var val = decl.value.replace(/\s+(at-2x)\s*(;|$)/, '$2');
-        decl.value = val;
-        var i = val.indexOf('url(');
-        var url = stripQuotes(val.slice(i + 4, val.indexOf(')', i)));
-        var ext = path.extname(url);
-
-        // ignore .svg
-        if ('.svg' == ext) return;
-
-        // @2x value
-        url = path.join(path.dirname(url), path.basename(url, ext) + '@2x' + ext);
-
-        // wrap in @media
-        style.rules.push({
-          type: 'media',
-          media: query,
-          rules: [
-            {
-              type: 'rule',
-              selectors: rule.selectors,
-              declarations: [
-                {
-                  type: 'declaration',
-                  property: 'background-image',
-                  value: 'url("' + url + '")'
-                },
-                {
-                  type: 'declaration',
-                  property: 'background-size',
-                  value: backgroundSize
-                }
-              ]
-            }
-          ]
-        });
-      });
-    });
-  };
-};
-
-/**
- * Filter background[-image] with url().
- */
-
-function backgroundWithHiResURL(decl) {
-  return ('background' == decl.property
-    || 'background-image' == decl.property)
-    && ~decl.value.indexOf('url(')
-    && ~decl.value.indexOf('at-2x');
-}
-
-/**
- * Predicate on background-size property.
- */
-
-function backgroundWithSize(decl) {
-  return 'background-size' == decl.property;
-}
-
-/**
- * Return value atribute of a declaration.
- */
-
-function value(decl) {
-  return decl.value;
-}
-
-},{"../utils":90,"path":59}],81:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var parse = require('color-parser');
-var hsb2rgb = require('hsb2rgb');
-var functions = require('./function');
-
-/**
- * Provide color manipulation helpers.
- */
-
-module.exports = function() {
-  return functions({
-
-    /**
-     * Converts RGBA(color, alpha) to the corrosponding RGBA(r, g, b, a) equivalent.
-     *
-     *    background: rgba(#eee, .5)
-     *    background: rgba(white, .2)
-     *
-     */
-
-    rgba: function(color, alpha){
-      var args;
-      if (2 == arguments.length) {
-        var c = parse(color.trim());
-        args = [c.r, c.g, c.b, alpha];
-      } else {
-        args = [].slice.call(arguments);
-      }
-
-      return 'rgba(' + args.join(', ') + ')';
-    },
-
-    /**
-     * Converts HSV (HSB) color values to RGB.
-     * Saturation and brightness can be expressed as floats or percentages.
-     *
-     *     color: hsb(220, 45%, .3);
-     *     color: hsb(220deg, 0.45, 30%);
-     *
-     */
-
-    hsb: function (hue, saturation, value) {
-      var rgb = hsb2rgb(hue, saturation, value);
-      return 'rgb(' + rgb.join(', ') + ')';
-    },
-
-
-    /**
-     * Converts HSV (HSB) color values with alpha specified to RGBa.
-     * Saturation, brightness and alpha can be expressed as floats or
-     * percentages.
-     *
-     *     color: hsba(220, 45%, .3, .4);
-     *     color: hsba(220deg, 0.45, 30%, 40%);
-     *
-     */
-
-    hsba: function (hue, saturation, value, alpha) {
-      alpha = /%/.test(alpha)
-        ? parseInt(alpha, 10) / 100
-        : parseFloat(alpha, 10);
-
-      alpha = String(alpha).replace(/^0+\./, '.');
-
-      var rgb = hsb2rgb(hue, saturation, value);
-      return 'rgba(' + rgb.join(', ') + ', ' + alpha + ')';
-    }
-  });
-};
-
-},{"./function":83,"color-parser":93,"hsb2rgb":113}],82:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var visit = require('../visit');
-
-/**
- * Easing functions.
- */
-
-var ease = {
-  'ease-in-out-back': 'cubic-bezier(0.680, -0.550, 0.265, 1.550)',
-  'ease-in-out-circ': 'cubic-bezier(0.785, 0.135, 0.150, 0.860)',
-  'ease-in-out-expo': 'cubic-bezier(1.000, 0.000, 0.000, 1.000)',
-  'ease-in-out-sine': 'cubic-bezier(0.445, 0.050, 0.550, 0.950)',
-  'ease-in-out-quint': 'cubic-bezier(0.860, 0.000, 0.070, 1.000)',
-  'ease-in-out-quart': 'cubic-bezier(0.770, 0.000, 0.175, 1.000)',
-  'ease-in-out-cubic': 'cubic-bezier(0.645, 0.045, 0.355, 1.000)',
-  'ease-in-out-quad': 'cubic-bezier(0.455, 0.030, 0.515, 0.955)',
-  'ease-out-back': 'cubic-bezier(0.175, 0.885, 0.320, 1.275)',
-  'ease-out-circ': 'cubic-bezier(0.075, 0.820, 0.165, 1.000)',
-  'ease-out-expo': 'cubic-bezier(0.190, 1.000, 0.220, 1.000)',
-  'ease-out-sine': 'cubic-bezier(0.390, 0.575, 0.565, 1.000)',
-  'ease-out-quint': 'cubic-bezier(0.230, 1.000, 0.320, 1.000)',
-  'ease-out-quart': 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
-  'ease-out-cubic': 'cubic-bezier(0.215, 0.610, 0.355, 1.000)',
-  'ease-out-quad': 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
-  'ease-in-back': 'cubic-bezier(0.600, -0.280, 0.735, 0.045)',
-  'ease-in-circ': 'cubic-bezier(0.600, 0.040, 0.980, 0.335)',
-  'ease-in-expo': 'cubic-bezier(0.950, 0.050, 0.795, 0.035)',
-  'ease-in-sine': 'cubic-bezier(0.470, 0.000, 0.745, 0.715)',
-  'ease-in-quint': 'cubic-bezier(0.755, 0.050, 0.855, 0.060)',
-  'ease-in-quart': 'cubic-bezier(0.895, 0.030, 0.685, 0.220)',
-  'ease-in-cubic': 'cubic-bezier(0.550, 0.055, 0.675, 0.190)',
-  'ease-in-quad': 'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
-};
-
-/**
- * Keys.
- */
-
-var keys = Object.keys(ease);
-
-/**
- * Provide additional easing functions:
- *
- *    #logo {
- *      transition: all 500ms ease-out-back;
- *    }
- *
- * yields:
- *
- *    #logo {
- *      transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275)
- *    }
- *
- */
-
-module.exports = function() {
-  return function(style){
-    visit.declarations(style, substitute);
-  }
-};
-
-/**
- * Substitute easing functions.
- *
- * @api private
- */
-
-function substitute(declarations) {
-  for (var i = 0, len = declarations.length; i < len; ++i) {
-    var decl = declarations[i];
-    if ('comment' == decl.type) continue;
-    if (!decl.property.match(/transition|animation|timing/)) continue;
-    for (var k = 0; k < keys.length; ++k) {
-      var key = keys[k];
-      if (~decl.value.indexOf(key)) {
-        decl.value = decl.value.replace(key, ease[key]);
-        break;
-      }
-    }
-  }
-}
-
-},{"../visit":91}],83:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var visit = require('../visit');
-var utils = require('../utils');
-var strip = utils.stripQuotes;
-
-/**
- * Define custom function.
- */
-
-module.exports = function(functions, args) {
-  if (!functions) throw new Error('functions object required');
-  return function(style){
-    var functionMatcher = functionMatcherBuilder(Object.keys(functions).join('|'));
-
-    visit.declarations(style, function(declarations){
-      func(declarations, functions, functionMatcher, args);
-    });
-  }
-};
-
-/**
- * Visit declarations and apply functions.
- *
- * @param {Array} declarations
- * @param {Object} functions
- * @param {RegExp} functionMatcher
- * @param {Boolean} [parseArgs]
- * @api private
- */
-
-function func(declarations, functions, functionMatcher, parseArgs) {
-  if (false !== parseArgs) parseArgs = true;
-
-  declarations.forEach(function(decl){
-    if ('comment' == decl.type) return;
-    var generatedFuncs = [], result, generatedFunc;
-
-    while (decl.value.match(functionMatcher)) {
-      decl.value = decl.value.replace(functionMatcher, function(_, name, args){
-        if (parseArgs) {
-          args = args.split(/\s*,\s*/).map(strip);
+        if (!media || !media.length) {
+            res = content.rules;
         } else {
-          args = [strip(args)];
+            res = {
+                type: 'media',
+                media: media,
+                rules: content.rules
+            };
         }
-        // Ensure result is string
-        result = '' + functions[name].apply(decl, args);
 
-        // Prevent fall into infinite loop like this:
-        //
-        // {
-        //   url: function(path) {
-        //     return 'url(' + '/some/prefix' + path + ')'
-        //   }
-        // }
-        //
-        generatedFunc = {from: name, to: name + getRandomString()};
-        result = result.replace(functionMatcherBuilder(name), generatedFunc.to + '($2)');
-        generatedFuncs.push(generatedFunc);
-        return result;
-      });
-    }
+        rules = rules.concat(res);
+    });
 
-    generatedFuncs.forEach(function(func) {
-      decl.value = decl.value.replace(func.to, func.from);
-    })
-  });
-}
+    return rules;
+};
 
 /**
- * Build function regexp
+ * Read the contents of a file
+ *
+ * @param {String} file
+ * @api private
+ */
+
+Import.prototype._read = function (file) {
+    var data = fs.readFileSync(file, this.opts.encoding || 'utf8');
+    var style = css.parse(data).stylesheet;
+
+    return style;
+};
+
+/**
+ * Check if a file exists
  *
  * @param {String} name
  * @api private
  */
 
-function functionMatcherBuilder(name) {
-  // /(?!\W+)(\w+)\(([^()]+)\)/
-  return new RegExp("(?!\\W+)(" + name + ")\\(([^\(\)]+)\\)");
-}
+Import.prototype._check = function (name) {
+    var file = findFile(name, { path: this.path, global: false })[0];
 
-/**
- * get random string
- *
- * @api private
- */
-
-function getRandomString() {
-  return Math.random().toString(36).slice(2);
-}
-
-
-},{"../utils":90,"../visit":91}],84:[function(require,module,exports){
-var Buffer=require("__browserify_Buffer");
-/**
- * Module dependencies.
- */
-
-var func = require('./function');
-var path = require('path');
-var mime = require('mime');
-var fs = require('fs');
-var read = fs.readFileSync;
-var exists = fs.existsSync;
-
-/**
- * Inline images and fonts.
- *
- *    .logo {
- *      background: inline(icons/logo.png);
- *    }
- *
- * yields:
- *
- *    .logo {
- *      background: url("data:image/png;base64,iVBORw0…");
- *    }
- *
- */
-
-module.exports = function(dirs) {
-  if (!Array.isArray(dirs)) {
-    dirs = Array.prototype.slice.call(arguments);
-  }
-
-  function inline(filename){
-    var file = dirs.map(function(dir) {
-      return path.join(dir, filename);
-    }).filter(exists)[0];
-
-    if (!file) throw new Error('inline(): failed to find "' + filename + '"');
-
-    var type = mime.lookup(file);
-    var base64 = new Buffer(read(file)).toString('base64');
-    return 'url("data:' + type + ';base64,' + base64 + '")';
-  }
-
-  return func({ inline: inline });
-};
-
-},{"./function":83,"__browserify_Buffer":58,"fs":56,"mime":114,"path":59}],85:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var visit = require('../visit');
-
-/**
- * Define custom mixins.
- */
-
-module.exports = function(mixins) {
-  if (!mixins) throw new Error('mixins object required');
-  return function(style, rework){
-    visit.declarations(style, function(declarations){
-      mixin(rework, declarations, mixins);
-    });
-  }
-};
-
-/**
- * Visit declarations and apply mixins.
- *
- * @param {Rework} rework
- * @param {Array} declarations
- * @param {Object} mixins
- * @api private
- */
-
-function mixin(rework, declarations, mixins) {
-  for (var i = 0; i < declarations.length; ++i) {
-    var decl = declarations[i];
-    if ('comment' == decl.type) continue;
-
-    var key = decl.property;
-    var val = decl.value;
-    var fn = mixins[key];
-    if (!fn) continue;
-
-    // invoke mixin
-    var ret = fn.call(rework, val);
-
-    // apply properties
-    for (var key in ret) {
-      var val = ret[key];
-      if (Array.isArray(val)) {
-        val.forEach(function(val){
-          declarations.splice(i++, 0, {
-            type: 'declaration',
-            property: key,
-            value: val
-          });
-        });
-      } else {
-        declarations.splice(i++, 0, {
-          type: 'declaration',
-          property: key,
-          value: val
-        });
-      }
+    if (!file) {
+        throw new Error('failed to find ' + name);
     }
 
-    // remove original
-    declarations.splice(i--, 1);
-  }
-}
-
-},{"../visit":91}],86:[function(require,module,exports){
-
-/**
- * Prefix selectors with `str`.
- *
- *    button {
- *      color: red;
- *    }
- *
- * yields:
- *
- *    #dialog button {
- *      color: red;
- *    }
- *
- */
-
-module.exports = function(str) {
-  return function(style){
-    style.rules = style.rules.map(function(rule){
-      if (!rule.selectors) return rule;
-      rule.selectors = rule.selectors.map(function(selector){
-        if (':root' == selector) return str;
-        selector = selector.replace(/^\:root\s?/, '');
-        return str + ' ' + selector;
-      });
-      return rule;
-    });
-  }
-};
-
-},{}],87:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var visit = require('../visit');
-
-/**
- * Provide property reference support.
- *
- *    button {
- *      width: 50px;
- *      height: @width;
- *      line-height: @height;
- *    }
- *
- * yields:
- *
- *    button {
- *      width: 50px;
-*       height: 50px;
-*       line-height: 50px;
- *    }
- *
- */
-
-module.exports = function() {
-  return function(style){
-    visit.declarations(style, substitute);
-  }
+    return file;
 };
 
 /**
- * Substitute easing functions.
- *
- * @api private
+ * Module exports
  */
 
-function substitute(declarations) {
-  var map = {};
+module.exports = function (opts) {
+    return function (style) {
+        var inline = new Import(style, opts);
+        var rules = inline.process();
 
-  for (var i = 0, len = declarations.length; i < len; ++i) {
-    var decl = declarations[i];
-    var key = decl.property;
-    var val = decl.value;
-
-    if ('comment' == decl.type) continue;
-
-    decl.value = val.replace(/@([-\w]+)/g, function(_, name){
-      // TODO: fix this problem for real with visionmedia/css-value
-      if ('2x' == name) return '@' + name;
-      if (null == map[name]) throw new Error('@' + name + ' is not defined in this scope');
-      return map[name];
-    });
-
-    map[key] = decl.value;
-  }
-}
-
-},{"../visit":91}],88:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var func = require('./function');
-
-/**
- * Map `url()` calls.
- *
- *   body {
- *     background: url(/images/bg.png);
- *   }
- *
- * yields:
- *
- *   body {
- *     background: url(http://example.com/images/bg.png);
- *   }
- *
- */
-
-module.exports = function(fn) {
-  return func({
-    url: function(path){
-      return 'url("' + fn(path) + '")';
-    }
-  }, false);
+        style.rules = rules;
+    };
 };
 
-},{"./function":83}],89:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var css = require('css');
-
-/**
- * Expose `rework`.
- */
-
-exports = module.exports = rework;
-
-/**
- * Expose `visit` helpers.
- */
-
-exports.visit = require('./visit');
-
-/**
- * Expose prefix properties.
- */
-
-exports.__defineGetter__('properties', function () {
-  console.warn('rework.properties has been removed.');
-  return [];
-})
-
-/**
- * Initialize a new stylesheet `Rework` with `str`.
- *
- * @param {String} str
- * @param {Object} options
- * @return {Rework}
- * @api public
- */
-
-function rework(str, options) {
-  options = options || {};
-  options.position = true; // we need this for sourcemaps
-  return new Rework(css.parse(str, options));
-}
-
-/**
- * Initialize a new stylesheet `Rework` with `obj`.
- *
- * @param {Object} obj
- * @api private
- */
-
-function Rework(obj) {
-  this.obj = obj;
-}
-
-/**
- * Use the given plugin `fn(style, rework)`.
- *
- * @param {Function} fn
- * @return {Rework}
- * @api public
- */
-
-Rework.prototype.use = function(fn){
-  fn(this.obj.stylesheet, this);
-  return this;
-};
-
-/**
- * Specify global vendor `prefixes`,
- * explicit ones may still be passed
- * to most plugins.
- *
- * Deprecated as of https://github.com/visionmedia/rework/issues/126.
- *
- * @param {Array} prefixes
- * @return {Rework}
- * @api public
- */
-
-Rework.prototype.vendors = function(prefixes){
-  console.warn('rework.vendors() is deprecated. Please see: https://github.com/visionmedia/rework/issues/126.');
-  this.prefixes = prefixes;
-  return this;
-};
-
-/**
- * Stringify the stylesheet.
- *
- * @param {Object} options
- * @return {String}
- * @api public
- */
-
-Rework.prototype.toString = function(options){
-  options = options || {};
-  var result = css.stringify(this.obj, options);
-  if (options.sourcemap && !options.sourcemapAsObject) {
-    result = result.code + '\n' + sourcemapToComment(result.map);
-  }
-  return result;
-};
-
-/**
- * Convert sourcemap to base64-encoded comment
- *
- * @param {Object} map
- * @return {String}
- * @api private
- */
-
-function sourcemapToComment(map) {
-  var convertSourceMap = require('convert-source-map');
-  var content = convertSourceMap.fromObject(map).toBase64();
-  return '/*# sourceMappingURL=data:application/json;base64,' + content + ' */';
-}
-
-/**
- * Expose plugins.
- */
-
-exports.mixin = exports.mixins = require('./plugins/mixin');
-exports.function = exports.functions = require('./plugins/function');
-exports.colors = require('./plugins/colors');
-exports.extend = require('rework-inherit');
-exports.references = require('./plugins/references');
-exports.prefixSelectors = require('./plugins/prefix-selectors');
-exports.at2x = require('./plugins/at2x');
-exports.url = require('./plugins/url');
-exports.ease = require('./plugins/ease');
-
-/**
- * Warn if users try to use removed components.
- * This will be removed in v1.
- */
-
-[
-  'vars',
-  'keyframes',
-  'prefix',
-  'prefixValue',
-].forEach(function (plugin) {
-  exports[plugin] = function () {
-    console.warn('rework.' + plugin + '() has been removed from rework core. Please view https://github.com/visionmedia/rework or https://github.com/visionmedia/rework/wiki/Plugins-and-Utilities.');
-    return noop;
-  };
-});
-
-/**
- * Try/catch plugins unavailable in component.
- */
-
- try {
-  exports.inline = require('./plugins/inline');
-} catch (err) {}
-
-function noop(){}
-
-},{"./plugins/at2x":80,"./plugins/colors":81,"./plugins/ease":82,"./plugins/function":83,"./plugins/inline":84,"./plugins/mixin":85,"./plugins/prefix-selectors":86,"./plugins/references":87,"./plugins/url":88,"./visit":91,"convert-source-map":94,"css":95,"rework-inherit":115}],90:[function(require,module,exports){
-
-/**
- * Strip `str` quotes.
- *
- * @param {String} str
- * @return {String}
- * @api private
- */
-
-exports.stripQuotes = function(str) {
-  if ('"' == str[0] || "'" == str[0]) return str.slice(1, -1);
-  return str;
-};
-},{}],91:[function(require,module,exports){
-
-// TODO: require() directly in plugins...
-exports.declarations = require('rework-visit');
-
-},{"rework-visit":116}],92:[function(require,module,exports){
-
-module.exports = {
-    aliceblue: [240, 248, 255]
-  , antiquewhite: [250, 235, 215]
-  , aqua: [0, 255, 255]
-  , aquamarine: [127, 255, 212]
-  , azure: [240, 255, 255]
-  , beige: [245, 245, 220]
-  , bisque: [255, 228, 196]
-  , black: [0, 0, 0]
-  , blanchedalmond: [255, 235, 205]
-  , blue: [0, 0, 255]
-  , blueviolet: [138, 43, 226]
-  , brown: [165, 42, 42]
-  , burlywood: [222, 184, 135]
-  , cadetblue: [95, 158, 160]
-  , chartreuse: [127, 255, 0]
-  , chocolate: [210, 105, 30]
-  , coral: [255, 127, 80]
-  , cornflowerblue: [100, 149, 237]
-  , cornsilk: [255, 248, 220]
-  , crimson: [220, 20, 60]
-  , cyan: [0, 255, 255]
-  , darkblue: [0, 0, 139]
-  , darkcyan: [0, 139, 139]
-  , darkgoldenrod: [184, 132, 11]
-  , darkgray: [169, 169, 169]
-  , darkgreen: [0, 100, 0]
-  , darkgrey: [169, 169, 169]
-  , darkkhaki: [189, 183, 107]
-  , darkmagenta: [139, 0, 139]
-  , darkolivegreen: [85, 107, 47]
-  , darkorange: [255, 140, 0]
-  , darkorchid: [153, 50, 204]
-  , darkred: [139, 0, 0]
-  , darksalmon: [233, 150, 122]
-  , darkseagreen: [143, 188, 143]
-  , darkslateblue: [72, 61, 139]
-  , darkslategray: [47, 79, 79]
-  , darkslategrey: [47, 79, 79]
-  , darkturquoise: [0, 206, 209]
-  , darkviolet: [148, 0, 211]
-  , deeppink: [255, 20, 147]
-  , deepskyblue: [0, 191, 255]
-  , dimgray: [105, 105, 105]
-  , dimgrey: [105, 105, 105]
-  , dodgerblue: [30, 144, 255]
-  , firebrick: [178, 34, 34]
-  , floralwhite: [255, 255, 240]
-  , forestgreen: [34, 139, 34]
-  , fuchsia: [255, 0, 255]
-  , gainsboro: [220, 220, 220]
-  , ghostwhite: [248, 248, 255]
-  , gold: [255, 215, 0]
-  , goldenrod: [218, 165, 32]
-  , gray: [128, 128, 128]
-  , green: [0, 128, 0]
-  , greenyellow: [173, 255, 47]
-  , grey: [128, 128, 128]
-  , honeydew: [240, 255, 240]
-  , hotpink: [255, 105, 180]
-  , indianred: [205, 92, 92]
-  , indigo: [75, 0, 130]
-  , ivory: [255, 255, 240]
-  , khaki: [240, 230, 140]
-  , lavender: [230, 230, 250]
-  , lavenderblush: [255, 240, 245]
-  , lawngreen: [124, 252, 0]
-  , lemonchiffon: [255, 250, 205]
-  , lightblue: [173, 216, 230]
-  , lightcoral: [240, 128, 128]
-  , lightcyan: [224, 255, 255]
-  , lightgoldenrodyellow: [250, 250, 210]
-  , lightgray: [211, 211, 211]
-  , lightgreen: [144, 238, 144]
-  , lightgrey: [211, 211, 211]
-  , lightpink: [255, 182, 193]
-  , lightsalmon: [255, 160, 122]
-  , lightseagreen: [32, 178, 170]
-  , lightskyblue: [135, 206, 250]
-  , lightslategray: [119, 136, 153]
-  , lightslategrey: [119, 136, 153]
-  , lightsteelblue: [176, 196, 222]
-  , lightyellow: [255, 255, 224]
-  , lime: [0, 255, 0]
-  , limegreen: [50, 205, 50]
-  , linen: [250, 240, 230]
-  , magenta: [255, 0, 255]
-  , maroon: [128, 0, 0]
-  , mediumaquamarine: [102, 205, 170]
-  , mediumblue: [0, 0, 205]
-  , mediumorchid: [186, 85, 211]
-  , mediumpurple: [147, 112, 219]
-  , mediumseagreen: [60, 179, 113]
-  , mediumslateblue: [123, 104, 238]
-  , mediumspringgreen: [0, 250, 154]
-  , mediumturquoise: [72, 209, 204]
-  , mediumvioletred: [199, 21, 133]
-  , midnightblue: [25, 25, 112]
-  , mintcream: [245, 255, 250]
-  , mistyrose: [255, 228, 225]
-  , moccasin: [255, 228, 181]
-  , navajowhite: [255, 222, 173]
-  , navy: [0, 0, 128]
-  , oldlace: [253, 245, 230]
-  , olive: [128, 128, 0]
-  , olivedrab: [107, 142, 35]
-  , orange: [255, 165, 0]
-  , orangered: [255, 69, 0]
-  , orchid: [218, 112, 214]
-  , palegoldenrod: [238, 232, 170]
-  , palegreen: [152, 251, 152]
-  , paleturquoise: [175, 238, 238]
-  , palevioletred: [219, 112, 147]
-  , papayawhip: [255, 239, 213]
-  , peachpuff: [255, 218, 185]
-  , peru: [205, 133, 63]
-  , pink: [255, 192, 203]
-  , plum: [221, 160, 203]
-  , powderblue: [176, 224, 230]
-  , purple: [128, 0, 128]
-  , red: [255, 0, 0]
-  , rosybrown: [188, 143, 143]
-  , royalblue: [65, 105, 225]
-  , saddlebrown: [139, 69, 19]
-  , salmon: [250, 128, 114]
-  , sandybrown: [244, 164, 96]
-  , seagreen: [46, 139, 87]
-  , seashell: [255, 245, 238]
-  , sienna: [160, 82, 45]
-  , silver: [192, 192, 192]
-  , skyblue: [135, 206, 235]
-  , slateblue: [106, 90, 205]
-  , slategray: [119, 128, 144]
-  , slategrey: [119, 128, 144]
-  , snow: [255, 255, 250]
-  , springgreen: [0, 255, 127]
-  , steelblue: [70, 130, 180]
-  , tan: [210, 180, 140]
-  , teal: [0, 128, 128]
-  , thistle: [216, 191, 216]
-  , tomato: [255, 99, 71]
-  , turquoise: [64, 224, 208]
-  , violet: [238, 130, 238]
-  , wheat: [245, 222, 179]
-  , white: [255, 255, 255]
-  , whitesmoke: [245, 245, 245]
-  , yellow: [255, 255, 0]
-  , yellowgreen: [154, 205, 5]
-};
-},{}],93:[function(require,module,exports){
-
-/**
- * Module dependencies.
- */
-
-var colors = require('./colors');
-
-/**
- * Expose `parse`.
- */
-
-module.exports = parse;
-
-/**
- * Parse `str`.
- *
- * @param {String} str
- * @return {Object}
- * @api public
- */
-
-function parse(str) {
-  return named(str)
-    || hex3(str)
-    || hex6(str)
-    || rgb(str)
-    || rgba(str);
-}
-
-/**
- * Parse named css color `str`.
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function named(str) {
-  var c = colors[str.toLowerCase()];
-  if (!c) return;
-  return {
-    r: c[0],
-    g: c[1],
-    b: c[2]
-  }
-}
-
-/**
- * Parse rgb(n, n, n)
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function rgb(str) {
-  if (0 == str.indexOf('rgb(')) {
-    str = str.match(/rgb\(([^)]+)\)/)[1];
-    var parts = str.split(/ *, */).map(Number);
-    return {
-      r: parts[0],
-      g: parts[1],
-      b: parts[2],
-      a: 1
-    }
-  }
-}
-
-/**
- * Parse rgba(n, n, n, n)
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function rgba(str) {
-  if (0 == str.indexOf('rgba(')) {
-    str = str.match(/rgba\(([^)]+)\)/)[1];
-    var parts = str.split(/ *, */).map(Number);
-    return {
-      r: parts[0],
-      g: parts[1],
-      b: parts[2],
-      a: parts[3]
-    }
-  }
-}
-
-/**
- * Parse #nnnnnn
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function hex6(str) {
-  if ('#' == str[0] && 7 == str.length) {
-    return {
-      r: parseInt(str.slice(1, 3), 16),
-      g: parseInt(str.slice(3, 5), 16),
-      b: parseInt(str.slice(5, 7), 16),
-      a: 1
-    }
-  }
-}
-
-/**
- * Parse #nnn
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function hex3(str) {
-  if ('#' == str[0] && 4 == str.length) {
-    return {
-      r: parseInt(str[1] + str[1], 16),
-      g: parseInt(str[2] + str[2], 16),
-      b: parseInt(str[3] + str[3], 16),
-      a: 1
-    }
-  }
-}
-
-
-},{"./colors":92}],94:[function(require,module,exports){
-var Buffer=require("__browserify_Buffer");'use strict';
-var fs = require('fs');
-var path = require('path');
-
-var commentRx = /^[ \t]*\/\/[@#][ \t]+sourceMappingURL=data:(?:application|text)\/json;base64,(.+)/mg;
-var mapFileCommentRx = 
-  // //# sourceMappingURL=foo.js.map                       /*# sourceMappingURL=foo.js.map */
-  /(?:^[ \t]*\/\/[@|#][ \t]+sourceMappingURL=(.+?)[ \t]*$)|(?:^[ \t]*\/\*[@#][ \t]+sourceMappingURL=(.+?)[ \t]*\*\/[ \t]*$)/mg
-
-function decodeBase64(base64) {
-  return new Buffer(base64, 'base64').toString();
-}
-
-function stripComment(sm) {
-  return sm.split(',').pop();
-}
-
-function readFromFileMap(sm, dir) {
-  // NOTE: this will only work on the server since it attempts to read the map file
-
-  var r = mapFileCommentRx.exec(sm);
-  mapFileCommentRx.lastIndex = 0;
-  
-  // for some odd reason //# .. captures in 1 and /* .. */ in 2
-  var filename = r[1] || r[2];
-  var filepath = path.join(dir, filename);
-
-  try {
-    return fs.readFileSync(filepath, 'utf8');
-  } catch (e) {
-    throw new Error('An error occurred while trying to read the map file at ' + filepath + '\n' + e);
-  }
-}
-
-function Converter (sm, opts) {
-  opts = opts || {};
-  try {
-    if (opts.isFileComment) sm = readFromFileMap(sm, opts.commentFileDir);
-    if (opts.hasComment) sm = stripComment(sm);
-    if (opts.isEncoded) sm = decodeBase64(sm);
-    if (opts.isJSON || opts.isEncoded) sm = JSON.parse(sm);
-
-    this.sourcemap = sm;
-  } catch(e) {
-    console.error(e);
-    return null;
-  }
-}
-
-Converter.prototype.toJSON = function (space) {
-  return JSON.stringify(this.sourcemap, null, space);
-};
-
-Converter.prototype.toBase64 = function () {
-  var json = this.toJSON();
-  return new Buffer(json).toString('base64');
-};
-
-Converter.prototype.toComment = function () {
-  var base64 = this.toBase64();
-  return '//# sourceMappingURL=data:application/json;base64,' + base64;
-};
-
-// returns copy instead of original
-Converter.prototype.toObject = function () {
-  return JSON.parse(this.toJSON());
-};
-
-Converter.prototype.addProperty = function (key, value) {
-  if (this.sourcemap.hasOwnProperty(key)) throw new Error('property %s already exists on the sourcemap, use set property instead');
-  return this.setProperty(key, value);
-};
-
-Converter.prototype.setProperty = function (key, value) {
-  this.sourcemap[key] = value;
-  return this;
-};
-
-Converter.prototype.getProperty = function (key) {
-  return this.sourcemap[key];
-};
-
-exports.fromObject = function (obj) {
-  return new Converter(obj);
-};
-
-exports.fromJSON = function (json) {
-  return new Converter(json, { isJSON: true });
-};
-
-exports.fromBase64 = function (base64) {
-  return new Converter(base64, { isEncoded: true });
-};
-
-exports.fromComment = function (comment) {
-  return new Converter(comment, { isEncoded: true, hasComment: true });
-};
-
-exports.fromMapFileComment = function (comment, dir) {
-  return new Converter(comment, { commentFileDir: dir, isFileComment: true, isJSON: true });
-};
-
-// Finds last sourcemap comment in file or returns null if none was found
-exports.fromSource = function (content) {
-  var m = content.match(commentRx);
-  commentRx.lastIndex = 0;
-  return m ? exports.fromComment(m.pop()) : null;
-};
-
-// Finds last sourcemap comment in file or returns null if none was found
-exports.fromMapFileSource = function (content, dir) {
-  var m = content.match(mapFileCommentRx);
-  mapFileCommentRx.lastIndex = 0;
-  return m ? exports.fromMapFileComment(m.pop(), dir) : null;
-};
-
-exports.removeComments = function (src) {
-  commentRx.lastIndex = 0;
-  return src.replace(commentRx, '');
-};
-
-exports.removeMapFileComments = function (src) {
-  mapFileCommentRx.lastIndex = 0;
-  return src.replace(mapFileCommentRx, '');
-};
-
-exports.__defineGetter__('commentRegex', function () {
-  commentRx.lastIndex = 0;
-  return commentRx; 
-});
-
-exports.__defineGetter__('mapFileCommentRegex', function () {
-  mapFileCommentRx.lastIndex = 0;
-  return mapFileCommentRx; 
-});
-
-},{"__browserify_Buffer":58,"fs":56,"path":59}],95:[function(require,module,exports){
+},{"__browserify_process":57,"css":78,"find-file":95,"fs":56,"parse-import":96}],78:[function(require,module,exports){
 
 exports.parse = require('css-parse');
 exports.stringify = require('css-stringify');
 
-},{"css-parse":96,"css-stringify":97}],96:[function(require,module,exports){
+},{"css-parse":79,"css-stringify":80}],79:[function(require,module,exports){
 
 module.exports = function(css, options){
   options = options || {};
@@ -11907,35 +10668,1830 @@ function trim(str) {
   return str ? str.replace(/^\s+|\s+$/g, '') : '';
 }
 
-},{}],97:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 arguments[4][41][0].apply(exports,arguments)
-},{"./lib/compress":99,"./lib/identity":100,"./lib/source-map-support":101}],98:[function(require,module,exports){
+},{"./lib/compress":82,"./lib/identity":83,"./lib/source-map-support":84}],81:[function(require,module,exports){
 module.exports=require(42)
-},{}],99:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 module.exports=require(43)
-},{"./compiler":98}],100:[function(require,module,exports){
+},{"./compiler":81}],83:[function(require,module,exports){
 module.exports=require(44)
-},{"./compiler":98}],101:[function(require,module,exports){
+},{"./compiler":81}],84:[function(require,module,exports){
 arguments[4][45][0].apply(exports,arguments)
-},{"source-map":102}],102:[function(require,module,exports){
+},{"source-map":85}],85:[function(require,module,exports){
 arguments[4][46][0].apply(exports,arguments)
-},{"./source-map/source-map-consumer":107,"./source-map/source-map-generator":108,"./source-map/source-node":109}],103:[function(require,module,exports){
+},{"./source-map/source-map-consumer":90,"./source-map/source-map-generator":91,"./source-map/source-node":92}],86:[function(require,module,exports){
 arguments[4][47][0].apply(exports,arguments)
-},{"./util":110,"amdefine":111}],104:[function(require,module,exports){
+},{"./util":93,"amdefine":94}],87:[function(require,module,exports){
 arguments[4][48][0].apply(exports,arguments)
-},{"./base64":105,"amdefine":111}],105:[function(require,module,exports){
+},{"./base64":88,"amdefine":94}],88:[function(require,module,exports){
 arguments[4][49][0].apply(exports,arguments)
-},{"amdefine":111}],106:[function(require,module,exports){
+},{"amdefine":94}],89:[function(require,module,exports){
 arguments[4][50][0].apply(exports,arguments)
-},{"amdefine":111}],107:[function(require,module,exports){
+},{"amdefine":94}],90:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"./array-set":103,"./base64-vlq":104,"./binary-search":106,"./util":110,"amdefine":111}],108:[function(require,module,exports){
+},{"./array-set":86,"./base64-vlq":87,"./binary-search":89,"./util":93,"amdefine":94}],91:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
-},{"./array-set":103,"./base64-vlq":104,"./util":110,"amdefine":111}],109:[function(require,module,exports){
+},{"./array-set":86,"./base64-vlq":87,"./util":93,"amdefine":94}],92:[function(require,module,exports){
 arguments[4][53][0].apply(exports,arguments)
-},{"./source-map-generator":108,"./util":110,"amdefine":111}],110:[function(require,module,exports){
+},{"./source-map-generator":91,"./util":93,"amdefine":94}],93:[function(require,module,exports){
 arguments[4][54][0].apply(exports,arguments)
-},{"amdefine":111}],111:[function(require,module,exports){
+},{"amdefine":94}],94:[function(require,module,exports){
+var process=require("__browserify_process"),__filename="/../node_modules/rework-inline/node_modules/css/node_modules/css-stringify/node_modules/source-map/node_modules/amdefine/amdefine.js";/** vim: et:ts=4:sw=4:sts=4
+ * @license amdefine 0.1.0 Copyright (c) 2011, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/amdefine for details
+ */
+
+/*jslint node: true */
+/*global module, process */
+'use strict';
+
+/**
+ * Creates a define for node.
+ * @param {Object} module the "module" object that is defined by Node for the
+ * current module.
+ * @param {Function} [requireFn]. Node's require function for the current module.
+ * It only needs to be passed in Node versions before 0.5, when module.require
+ * did not exist.
+ * @returns {Function} a define function that is usable for the current node
+ * module.
+ */
+function amdefine(module, requireFn) {
+    'use strict';
+    var defineCache = {},
+        loaderCache = {},
+        alreadyCalled = false,
+        path = require('path'),
+        makeRequire, stringRequire;
+
+    /**
+     * Trims the . and .. from an array of path segments.
+     * It will keep a leading path segment if a .. will become
+     * the first path segment, to help with module name lookups,
+     * which act like paths, but can be remapped. But the end result,
+     * all paths that use this function should look normalized.
+     * NOTE: this method MODIFIES the input array.
+     * @param {Array} ary the array of path segments.
+     */
+    function trimDots(ary) {
+        var i, part;
+        for (i = 0; ary[i]; i+= 1) {
+            part = ary[i];
+            if (part === '.') {
+                ary.splice(i, 1);
+                i -= 1;
+            } else if (part === '..') {
+                if (i === 1 && (ary[2] === '..' || ary[0] === '..')) {
+                    //End of the line. Keep at least one non-dot
+                    //path segment at the front so it can be mapped
+                    //correctly to disk. Otherwise, there is likely
+                    //no path mapping for a path starting with '..'.
+                    //This can still fail, but catches the most reasonable
+                    //uses of ..
+                    break;
+                } else if (i > 0) {
+                    ary.splice(i - 1, 2);
+                    i -= 2;
+                }
+            }
+        }
+    }
+
+    function normalize(name, baseName) {
+        var baseParts;
+
+        //Adjust any relative paths.
+        if (name && name.charAt(0) === '.') {
+            //If have a base name, try to normalize against it,
+            //otherwise, assume it is a top-level require that will
+            //be relative to baseUrl in the end.
+            if (baseName) {
+                baseParts = baseName.split('/');
+                baseParts = baseParts.slice(0, baseParts.length - 1);
+                baseParts = baseParts.concat(name.split('/'));
+                trimDots(baseParts);
+                name = baseParts.join('/');
+            }
+        }
+
+        return name;
+    }
+
+    /**
+     * Create the normalize() function passed to a loader plugin's
+     * normalize method.
+     */
+    function makeNormalize(relName) {
+        return function (name) {
+            return normalize(name, relName);
+        };
+    }
+
+    function makeLoad(id) {
+        function load(value) {
+            loaderCache[id] = value;
+        }
+
+        load.fromText = function (id, text) {
+            //This one is difficult because the text can/probably uses
+            //define, and any relative paths and requires should be relative
+            //to that id was it would be found on disk. But this would require
+            //bootstrapping a module/require fairly deeply from node core.
+            //Not sure how best to go about that yet.
+            throw new Error('amdefine does not implement load.fromText');
+        };
+
+        return load;
+    }
+
+    makeRequire = function (systemRequire, exports, module, relId) {
+        function amdRequire(deps, callback) {
+            if (typeof deps === 'string') {
+                //Synchronous, single module require('')
+                return stringRequire(systemRequire, exports, module, deps, relId);
+            } else {
+                //Array of dependencies with a callback.
+
+                //Convert the dependencies to modules.
+                deps = deps.map(function (depName) {
+                    return stringRequire(systemRequire, exports, module, depName, relId);
+                });
+
+                //Wait for next tick to call back the require call.
+                process.nextTick(function () {
+                    callback.apply(null, deps);
+                });
+            }
+        }
+
+        amdRequire.toUrl = function (filePath) {
+            if (filePath.indexOf('.') === 0) {
+                return normalize(filePath, path.dirname(module.filename));
+            } else {
+                return filePath;
+            }
+        };
+
+        return amdRequire;
+    };
+
+    //Favor explicit value, passed in if the module wants to support Node 0.4.
+    requireFn = requireFn || function req() {
+        return module.require.apply(module, arguments);
+    };
+
+    function runFactory(id, deps, factory) {
+        var r, e, m, result;
+
+        if (id) {
+            e = loaderCache[id] = {};
+            m = {
+                id: id,
+                uri: __filename,
+                exports: e
+            };
+            r = makeRequire(requireFn, e, m, id);
+        } else {
+            //Only support one define call per file
+            if (alreadyCalled) {
+                throw new Error('amdefine with no module ID cannot be called more than once per file.');
+            }
+            alreadyCalled = true;
+
+            //Use the real variables from node
+            //Use module.exports for exports, since
+            //the exports in here is amdefine exports.
+            e = module.exports;
+            m = module;
+            r = makeRequire(requireFn, e, m, module.id);
+        }
+
+        //If there are dependencies, they are strings, so need
+        //to convert them to dependency values.
+        if (deps) {
+            deps = deps.map(function (depName) {
+                return r(depName);
+            });
+        }
+
+        //Call the factory with the right dependencies.
+        if (typeof factory === 'function') {
+            result = factory.apply(m.exports, deps);
+        } else {
+            result = factory;
+        }
+
+        if (result !== undefined) {
+            m.exports = result;
+            if (id) {
+                loaderCache[id] = m.exports;
+            }
+        }
+    }
+
+    stringRequire = function (systemRequire, exports, module, id, relId) {
+        //Split the ID by a ! so that
+        var index = id.indexOf('!'),
+            originalId = id,
+            prefix, plugin;
+
+        if (index === -1) {
+            id = normalize(id, relId);
+
+            //Straight module lookup. If it is one of the special dependencies,
+            //deal with it, otherwise, delegate to node.
+            if (id === 'require') {
+                return makeRequire(systemRequire, exports, module, relId);
+            } else if (id === 'exports') {
+                return exports;
+            } else if (id === 'module') {
+                return module;
+            } else if (loaderCache.hasOwnProperty(id)) {
+                return loaderCache[id];
+            } else if (defineCache[id]) {
+                runFactory.apply(null, defineCache[id]);
+                return loaderCache[id];
+            } else {
+                if(systemRequire) {
+                    return systemRequire(originalId);
+                } else {
+                    throw new Error('No module with ID: ' + id);
+                }
+            }
+        } else {
+            //There is a plugin in play.
+            prefix = id.substring(0, index);
+            id = id.substring(index + 1, id.length);
+
+            plugin = stringRequire(systemRequire, exports, module, prefix, relId);
+
+            if (plugin.normalize) {
+                id = plugin.normalize(id, makeNormalize(relId));
+            } else {
+                //Normalize the ID normally.
+                id = normalize(id, relId);
+            }
+
+            if (loaderCache[id]) {
+                return loaderCache[id];
+            } else {
+                plugin.load(id, makeRequire(systemRequire, exports, module, relId), makeLoad(id), {});
+
+                return loaderCache[id];
+            }
+        }
+    };
+
+    //Create a define function specific to the module asking for amdefine.
+    function define(id, deps, factory) {
+        if (Array.isArray(id)) {
+            factory = deps;
+            deps = id;
+            id = undefined;
+        } else if (typeof id !== 'string') {
+            factory = id;
+            id = deps = undefined;
+        }
+
+        if (deps && !Array.isArray(deps)) {
+            factory = deps;
+            deps = undefined;
+        }
+
+        if (!deps) {
+            deps = ['require', 'exports', 'module'];
+        }
+
+        //Set up properties for this module. If an ID, then use
+        //internal cache. If no ID, then use the external variables
+        //for this node module.
+        if (id) {
+            //Put the module in deep freeze until there is a
+            //require call for it.
+            defineCache[id] = [id, deps, factory];
+        } else {
+            runFactory(id, deps, factory);
+        }
+    }
+
+    //define.require, which has access to all the values in the
+    //cache. Useful for AMD modules that all have IDs in the file,
+    //but need to finally export a value to node based on one of those
+    //IDs.
+    define.require = function (id) {
+        if (loaderCache[id]) {
+            return loaderCache[id];
+        }
+
+        if (defineCache[id]) {
+            runFactory.apply(null, defineCache[id]);
+            return loaderCache[id];
+        }
+    };
+
+    define.amd = {};
+
+    return define;
+}
+
+module.exports = amdefine;
+
+},{"__browserify_process":57,"path":59}],95:[function(require,module,exports){
+var process=require("__browserify_process");'use strict';
+
+var fs = require('fs');
+var path = require('path');
+
+/**
+ * Search for a file in an array of paths
+ *
+ * Options:
+ *
+ *   - `path` Paths to search in
+ *   - `exclude` Paths to exclude
+ *   - `global` Whether to search in `PATH`
+ *
+ * @param {String} name
+ * @param {Object} opts
+ * @api public
+ */
+
+module.exports = function (name, opts) {
+    var file;
+
+    opts = opts || {};
+    opts.path = Array.isArray(opts.path) ? opts.path : [opts.path];
+    opts.global = opts.global !== false;
+
+    if (opts.global) {
+        opts.path = opts.path.concat(process.env.PATH.split(path.delimiter));
+    }
+
+    if (opts.exclude) {
+        opts.exclude = Array.isArray(opts.exclude) ? opts.exclude : [opts.exclude];
+    }
+
+    file = opts.path.map(function (dir) {
+        if (dir && opts.exclude) {
+            if (dir.indexOf(opts.exclude) === -1) {
+                return path.join(dir, name);
+            }
+        } else if (dir) {
+            return path.join(dir, name);
+        }
+    }).filter(fs.existsSync);
+
+    if (!file.length) {
+        return null;
+    }
+
+    return file;
+};
+
+},{"__browserify_process":57,"fs":56,"path":59}],96:[function(require,module,exports){
+'use strict';
+
+/**
+ * Trim string
+ *
+ * @param {String} str
+ * @api private
+ */
+
+function trim(str) {
+    str = str
+        .replace(/^url\s?\(/, '')
+        .replace(/\)$/, '')
+        .replace(/^("|\')/, '')
+        .replace(/("|\')$/, '');
+
+    return str;
+}
+
+/**
+ * Get @import statements from a string
+ *
+ * @param {String} str
+ * @api public
+ */
+
+module.exports = function (str) {
+    var regex = /(url\s?\()?(\'|")(.*)(\'|")(\))?/gi;
+    var ret = {};
+
+    ret.path = trim(str.match(regex).toString());
+    ret.condition = str.replace(/(^|\s)@import(\s|$)/gi, '').replace(regex, '').replace(' ', '');
+    ret.rule = str;
+
+    return ret;
+};
+
+},{}],97:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var visit = require('rework-visit');
+
+/**
+ * Module export.
+ */
+
+module.exports = function(jsmap) {
+
+  return function vars(style){
+    var map = jsmap || {};
+
+    // define variables
+    style.rules.forEach(function (rule) {
+      var i;
+      var name;
+      var varNameIndices = [];
+
+      if (rule.type === 'rule') {
+        // only variables declared for `:root` are supported
+        if (rule.selectors.length === 1 && rule.selectors[0] === ':root') {
+          rule.declarations.forEach(function(decl, idx){
+            if (decl.property && /\bvar\-/.test(decl.property)) {
+              name = decl.property.replace('var-', '');
+              map[name] = decl.value;
+              varNameIndices.push(idx);
+            }
+          });
+
+          // remove `var-*` properties from the rule
+          for (i = varNameIndices.length - 1; i >= 0; i -= 1) {
+            rule.declarations.splice(varNameIndices[i], 1);
+          }
+        }
+      }
+    });
+
+    visit(style, function(declarations, node){
+      // resolve variables
+      declarations.forEach(function(decl, idx){
+        if (decl.value && /\bvar\(/.test(decl.value)) {
+          decl.value = replaceValue(decl.value, map);
+        }
+      });
+    });
+  };
+};
+
+/**
+ * Resolve CSS variables in a value
+ *
+ * The second argument to a CSS variable function, if provided, is a fallback
+ * value, which is used as the substitution value when the referenced variable
+ * is invalid.
+ *
+ * var(name[, fallback])
+ *
+ * Since the fallback can be *any* value, the value needs to be parsed
+ * character-by-character to deduce the contents of a variable function.
+ *
+ * @param {String} value A property value known to contain CSS variable functions
+ * @param {Object} map A map of variable names and values
+ * @return {String} A property value with all CSS variables substituted.
+ */
+
+function replaceValue(value, map){
+  // matches `var(name[, fallback])`, captures 'name' and 'fallback'
+  var RE_VAR = /\bvar\(([\w-]+)(?:\s*,\s*)?(.*)?\)/;
+  // matches `var()`
+  var RE_EMPTY_VAR = /\bvar\(\s*\)/;
+
+  var valueLen = value.length;
+  var beginSlice = value.indexOf('var(');
+  var endSlice = beginSlice + 'var('.length;
+  var depth = 1;
+  var currentChar;
+  var cssVariable;
+
+  // find the closing `)` of the CSS variable function,
+  // accounting for nested functions
+  while (endSlice < valueLen && depth > 0) {
+    currentChar = value.charAt(endSlice);
+    if (currentChar == '(') depth += 1;
+    if (currentChar == ')') depth -= 1;
+    endSlice += 1;
+  }
+
+  if (depth > 0) throw new Error('rework-vars: missing closing ")" in the value "' + value + '"');
+
+  cssVariable = value.slice(beginSlice, endSlice);
+
+  if (RE_EMPTY_VAR.test(cssVariable)) throw new Error('rework-vars: var() must contain a non-whitespace string');
+
+  cssReplacement = cssVariable.replace(RE_VAR, function(_, name, fallback){
+    var replacement = map[name];
+    if (!replacement && !fallback) throw new Error('rework-vars: variable "' + name + '" is undefined');
+    if (!replacement && fallback) return fallback;
+    return replacement;
+  });
+
+  // resolve the variable
+  value = value.split(cssVariable).join(cssReplacement);
+
+  // recursively resolve any remaining variables
+  if (/\bvar\(/.test(value)) {
+    value = replaceValue(value, map);
+  }
+
+  return value;
+}
+
+},{"rework-visit":98}],98:[function(require,module,exports){
+
+/**
+ * Expose `visit()`.
+ */
+
+module.exports = visit;
+
+/**
+ * Visit `node`'s declarations recursively and
+ * invoke `fn(declarations, node)`.
+ *
+ * @param {Object} node
+ * @param {Function} fn
+ * @api private
+ */
+
+function visit(node, fn){
+  node.rules.forEach(function(rule){
+    // @media etc
+    if (rule.rules) {
+      visit(rule, fn);
+      return;
+    }
+
+    // keyframes
+    if (rule.keyframes) {
+      rule.keyframes.forEach(function(keyframe){
+        fn(keyframe.declarations, rule);
+      });
+      return;
+    }
+
+    // @charset, @import etc
+    if (!rule.declarations) return;
+
+    fn(rule.declarations, node);
+  });
+};
+
+},{}],99:[function(require,module,exports){
+
+module.exports = require('./lib/rework');
+},{"./lib/rework":109}],100:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var utils = require('../utils');
+var path = require('path');
+var stripQuotes = utils.stripQuotes;
+
+/**
+ * Vendor crap.
+ */
+
+var query = [
+  '(min--moz-device-pixel-ratio: 1.5)',
+  '(-o-min-device-pixel-ratio: 3/2)',
+  '(-webkit-min-device-pixel-ratio: 1.5)',
+  '(min-device-pixel-ratio: 1.5)',
+  '(min-resolution: 144dpi)',
+  '(min-resolution: 1.5dppx)'
+].join(', ');
+
+/**
+ * Translate
+ *
+ *   .logo {
+ *     background-image: url('/public/images/logo.png')
+ *   }
+ *
+ * yields:
+ *
+ *   .logo {
+ *     background-image: url('/public/images/logo.png')
+ *   }
+ *
+ *   @media all and (-webkit-min-device-pixel-ratio : 1.5) {
+ *     .logo {
+ *       background-image: url("/public/images/logo@2x.png");
+ *       background-size: contain
+ *     }
+ *   }
+ *
+ */
+
+module.exports = function() {
+  return function(style){
+    style.rules.forEach(function(rule){
+      if (!rule.declarations) return;
+
+      var backgroundSize = rule.declarations.filter(backgroundWithSize).map(value)[0] || 'contain';
+
+      rule.declarations.filter(backgroundWithHiResURL).forEach(function(decl){
+        if ('comment' == decl.type) return;
+
+        // parse url
+        var val = decl.value.replace(/\s+(at-2x)\s*(;|$)/, '$2');
+        decl.value = val;
+        var i = val.indexOf('url(');
+        var url = stripQuotes(val.slice(i + 4, val.indexOf(')', i)));
+        var ext = path.extname(url);
+
+        // ignore .svg
+        if ('.svg' == ext) return;
+
+        // @2x value
+        url = path.join(path.dirname(url), path.basename(url, ext) + '@2x' + ext);
+
+        // wrap in @media
+        style.rules.push({
+          type: 'media',
+          media: query,
+          rules: [
+            {
+              type: 'rule',
+              selectors: rule.selectors,
+              declarations: [
+                {
+                  type: 'declaration',
+                  property: 'background-image',
+                  value: 'url("' + url + '")'
+                },
+                {
+                  type: 'declaration',
+                  property: 'background-size',
+                  value: backgroundSize
+                }
+              ]
+            }
+          ]
+        });
+      });
+    });
+  };
+};
+
+/**
+ * Filter background[-image] with url().
+ */
+
+function backgroundWithHiResURL(decl) {
+  return ('background' == decl.property
+    || 'background-image' == decl.property)
+    && ~decl.value.indexOf('url(')
+    && ~decl.value.indexOf('at-2x');
+}
+
+/**
+ * Predicate on background-size property.
+ */
+
+function backgroundWithSize(decl) {
+  return 'background-size' == decl.property;
+}
+
+/**
+ * Return value atribute of a declaration.
+ */
+
+function value(decl) {
+  return decl.value;
+}
+
+},{"../utils":110,"path":59}],101:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var parse = require('color-parser');
+var hsb2rgb = require('hsb2rgb');
+var functions = require('./function');
+
+/**
+ * Provide color manipulation helpers.
+ */
+
+module.exports = function() {
+  return functions({
+
+    /**
+     * Converts RGBA(color, alpha) to the corrosponding RGBA(r, g, b, a) equivalent.
+     *
+     *    background: rgba(#eee, .5)
+     *    background: rgba(white, .2)
+     *
+     */
+
+    rgba: function(color, alpha){
+      var args;
+      if (2 == arguments.length) {
+        var c = parse(color.trim());
+        args = [c.r, c.g, c.b, alpha];
+      } else {
+        args = [].slice.call(arguments);
+      }
+
+      return 'rgba(' + args.join(', ') + ')';
+    },
+
+    /**
+     * Converts HSV (HSB) color values to RGB.
+     * Saturation and brightness can be expressed as floats or percentages.
+     *
+     *     color: hsb(220, 45%, .3);
+     *     color: hsb(220deg, 0.45, 30%);
+     *
+     */
+
+    hsb: function (hue, saturation, value) {
+      var rgb = hsb2rgb(hue, saturation, value);
+      return 'rgb(' + rgb.join(', ') + ')';
+    },
+
+
+    /**
+     * Converts HSV (HSB) color values with alpha specified to RGBa.
+     * Saturation, brightness and alpha can be expressed as floats or
+     * percentages.
+     *
+     *     color: hsba(220, 45%, .3, .4);
+     *     color: hsba(220deg, 0.45, 30%, 40%);
+     *
+     */
+
+    hsba: function (hue, saturation, value, alpha) {
+      alpha = /%/.test(alpha)
+        ? parseInt(alpha, 10) / 100
+        : parseFloat(alpha, 10);
+
+      alpha = String(alpha).replace(/^0+\./, '.');
+
+      var rgb = hsb2rgb(hue, saturation, value);
+      return 'rgba(' + rgb.join(', ') + ', ' + alpha + ')';
+    }
+  });
+};
+
+},{"./function":103,"color-parser":113,"hsb2rgb":133}],102:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var visit = require('../visit');
+
+/**
+ * Easing functions.
+ */
+
+var ease = {
+  'ease-in-out-back': 'cubic-bezier(0.680, -0.550, 0.265, 1.550)',
+  'ease-in-out-circ': 'cubic-bezier(0.785, 0.135, 0.150, 0.860)',
+  'ease-in-out-expo': 'cubic-bezier(1.000, 0.000, 0.000, 1.000)',
+  'ease-in-out-sine': 'cubic-bezier(0.445, 0.050, 0.550, 0.950)',
+  'ease-in-out-quint': 'cubic-bezier(0.860, 0.000, 0.070, 1.000)',
+  'ease-in-out-quart': 'cubic-bezier(0.770, 0.000, 0.175, 1.000)',
+  'ease-in-out-cubic': 'cubic-bezier(0.645, 0.045, 0.355, 1.000)',
+  'ease-in-out-quad': 'cubic-bezier(0.455, 0.030, 0.515, 0.955)',
+  'ease-out-back': 'cubic-bezier(0.175, 0.885, 0.320, 1.275)',
+  'ease-out-circ': 'cubic-bezier(0.075, 0.820, 0.165, 1.000)',
+  'ease-out-expo': 'cubic-bezier(0.190, 1.000, 0.220, 1.000)',
+  'ease-out-sine': 'cubic-bezier(0.390, 0.575, 0.565, 1.000)',
+  'ease-out-quint': 'cubic-bezier(0.230, 1.000, 0.320, 1.000)',
+  'ease-out-quart': 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+  'ease-out-cubic': 'cubic-bezier(0.215, 0.610, 0.355, 1.000)',
+  'ease-out-quad': 'cubic-bezier(0.250, 0.460, 0.450, 0.940)',
+  'ease-in-back': 'cubic-bezier(0.600, -0.280, 0.735, 0.045)',
+  'ease-in-circ': 'cubic-bezier(0.600, 0.040, 0.980, 0.335)',
+  'ease-in-expo': 'cubic-bezier(0.950, 0.050, 0.795, 0.035)',
+  'ease-in-sine': 'cubic-bezier(0.470, 0.000, 0.745, 0.715)',
+  'ease-in-quint': 'cubic-bezier(0.755, 0.050, 0.855, 0.060)',
+  'ease-in-quart': 'cubic-bezier(0.895, 0.030, 0.685, 0.220)',
+  'ease-in-cubic': 'cubic-bezier(0.550, 0.055, 0.675, 0.190)',
+  'ease-in-quad': 'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
+};
+
+/**
+ * Keys.
+ */
+
+var keys = Object.keys(ease);
+
+/**
+ * Provide additional easing functions:
+ *
+ *    #logo {
+ *      transition: all 500ms ease-out-back;
+ *    }
+ *
+ * yields:
+ *
+ *    #logo {
+ *      transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275)
+ *    }
+ *
+ */
+
+module.exports = function() {
+  return function(style){
+    visit.declarations(style, substitute);
+  }
+};
+
+/**
+ * Substitute easing functions.
+ *
+ * @api private
+ */
+
+function substitute(declarations) {
+  for (var i = 0, len = declarations.length; i < len; ++i) {
+    var decl = declarations[i];
+    if ('comment' == decl.type) continue;
+    if (!decl.property.match(/transition|animation|timing/)) continue;
+    for (var k = 0; k < keys.length; ++k) {
+      var key = keys[k];
+      if (~decl.value.indexOf(key)) {
+        decl.value = decl.value.replace(key, ease[key]);
+        break;
+      }
+    }
+  }
+}
+
+},{"../visit":111}],103:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var visit = require('../visit');
+var utils = require('../utils');
+var strip = utils.stripQuotes;
+
+/**
+ * Define custom function.
+ */
+
+module.exports = function(functions, args) {
+  if (!functions) throw new Error('functions object required');
+  return function(style){
+    var functionMatcher = functionMatcherBuilder(Object.keys(functions).join('|'));
+
+    visit.declarations(style, function(declarations){
+      func(declarations, functions, functionMatcher, args);
+    });
+  }
+};
+
+/**
+ * Visit declarations and apply functions.
+ *
+ * @param {Array} declarations
+ * @param {Object} functions
+ * @param {RegExp} functionMatcher
+ * @param {Boolean} [parseArgs]
+ * @api private
+ */
+
+function func(declarations, functions, functionMatcher, parseArgs) {
+  if (false !== parseArgs) parseArgs = true;
+
+  declarations.forEach(function(decl){
+    if ('comment' == decl.type) return;
+    var generatedFuncs = [], result, generatedFunc;
+
+    while (decl.value.match(functionMatcher)) {
+      decl.value = decl.value.replace(functionMatcher, function(_, name, args){
+        if (parseArgs) {
+          args = args.split(/\s*,\s*/).map(strip);
+        } else {
+          args = [strip(args)];
+        }
+        // Ensure result is string
+        result = '' + functions[name].apply(decl, args);
+
+        // Prevent fall into infinite loop like this:
+        //
+        // {
+        //   url: function(path) {
+        //     return 'url(' + '/some/prefix' + path + ')'
+        //   }
+        // }
+        //
+        generatedFunc = {from: name, to: name + getRandomString()};
+        result = result.replace(functionMatcherBuilder(name), generatedFunc.to + '($2)');
+        generatedFuncs.push(generatedFunc);
+        return result;
+      });
+    }
+
+    generatedFuncs.forEach(function(func) {
+      decl.value = decl.value.replace(func.to, func.from);
+    })
+  });
+}
+
+/**
+ * Build function regexp
+ *
+ * @param {String} name
+ * @api private
+ */
+
+function functionMatcherBuilder(name) {
+  // /(?!\W+)(\w+)\(([^()]+)\)/
+  return new RegExp("(?!\\W+)(" + name + ")\\(([^\(\)]+)\\)");
+}
+
+/**
+ * get random string
+ *
+ * @api private
+ */
+
+function getRandomString() {
+  return Math.random().toString(36).slice(2);
+}
+
+
+},{"../utils":110,"../visit":111}],104:[function(require,module,exports){
+var Buffer=require("__browserify_Buffer");
+/**
+ * Module dependencies.
+ */
+
+var func = require('./function');
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
+var read = fs.readFileSync;
+var exists = fs.existsSync;
+
+/**
+ * Inline images and fonts.
+ *
+ *    .logo {
+ *      background: inline(icons/logo.png);
+ *    }
+ *
+ * yields:
+ *
+ *    .logo {
+ *      background: url("data:image/png;base64,iVBORw0…");
+ *    }
+ *
+ */
+
+module.exports = function(dirs) {
+  if (!Array.isArray(dirs)) {
+    dirs = Array.prototype.slice.call(arguments);
+  }
+
+  function inline(filename){
+    var file = dirs.map(function(dir) {
+      return path.join(dir, filename);
+    }).filter(exists)[0];
+
+    if (!file) throw new Error('inline(): failed to find "' + filename + '"');
+
+    var type = mime.lookup(file);
+    var base64 = new Buffer(read(file)).toString('base64');
+    return 'url("data:' + type + ';base64,' + base64 + '")';
+  }
+
+  return func({ inline: inline });
+};
+
+},{"./function":103,"__browserify_Buffer":58,"fs":56,"mime":134,"path":59}],105:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var visit = require('../visit');
+
+/**
+ * Define custom mixins.
+ */
+
+module.exports = function(mixins) {
+  if (!mixins) throw new Error('mixins object required');
+  return function(style, rework){
+    visit.declarations(style, function(declarations){
+      mixin(rework, declarations, mixins);
+    });
+  }
+};
+
+/**
+ * Visit declarations and apply mixins.
+ *
+ * @param {Rework} rework
+ * @param {Array} declarations
+ * @param {Object} mixins
+ * @api private
+ */
+
+function mixin(rework, declarations, mixins) {
+  for (var i = 0; i < declarations.length; ++i) {
+    var decl = declarations[i];
+    if ('comment' == decl.type) continue;
+
+    var key = decl.property;
+    var val = decl.value;
+    var fn = mixins[key];
+    if (!fn) continue;
+
+    // invoke mixin
+    var ret = fn.call(rework, val);
+
+    // apply properties
+    for (var key in ret) {
+      var val = ret[key];
+      if (Array.isArray(val)) {
+        val.forEach(function(val){
+          declarations.splice(i++, 0, {
+            type: 'declaration',
+            property: key,
+            value: val
+          });
+        });
+      } else {
+        declarations.splice(i++, 0, {
+          type: 'declaration',
+          property: key,
+          value: val
+        });
+      }
+    }
+
+    // remove original
+    declarations.splice(i--, 1);
+  }
+}
+
+},{"../visit":111}],106:[function(require,module,exports){
+
+/**
+ * Prefix selectors with `str`.
+ *
+ *    button {
+ *      color: red;
+ *    }
+ *
+ * yields:
+ *
+ *    #dialog button {
+ *      color: red;
+ *    }
+ *
+ */
+
+module.exports = function(str) {
+  return function(style){
+    style.rules = style.rules.map(function(rule){
+      if (!rule.selectors) return rule;
+      rule.selectors = rule.selectors.map(function(selector){
+        if (':root' == selector) return str;
+        selector = selector.replace(/^\:root\s?/, '');
+        return str + ' ' + selector;
+      });
+      return rule;
+    });
+  }
+};
+
+},{}],107:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var visit = require('../visit');
+
+/**
+ * Provide property reference support.
+ *
+ *    button {
+ *      width: 50px;
+ *      height: @width;
+ *      line-height: @height;
+ *    }
+ *
+ * yields:
+ *
+ *    button {
+ *      width: 50px;
+*       height: 50px;
+*       line-height: 50px;
+ *    }
+ *
+ */
+
+module.exports = function() {
+  return function(style){
+    visit.declarations(style, substitute);
+  }
+};
+
+/**
+ * Substitute easing functions.
+ *
+ * @api private
+ */
+
+function substitute(declarations) {
+  var map = {};
+
+  for (var i = 0, len = declarations.length; i < len; ++i) {
+    var decl = declarations[i];
+    var key = decl.property;
+    var val = decl.value;
+
+    if ('comment' == decl.type) continue;
+
+    decl.value = val.replace(/@([-\w]+)/g, function(_, name){
+      // TODO: fix this problem for real with visionmedia/css-value
+      if ('2x' == name) return '@' + name;
+      if (null == map[name]) throw new Error('@' + name + ' is not defined in this scope');
+      return map[name];
+    });
+
+    map[key] = decl.value;
+  }
+}
+
+},{"../visit":111}],108:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var func = require('./function');
+
+/**
+ * Map `url()` calls.
+ *
+ *   body {
+ *     background: url(/images/bg.png);
+ *   }
+ *
+ * yields:
+ *
+ *   body {
+ *     background: url(http://example.com/images/bg.png);
+ *   }
+ *
+ */
+
+module.exports = function(fn) {
+  return func({
+    url: function(path){
+      return 'url("' + fn(path) + '")';
+    }
+  }, false);
+};
+
+},{"./function":103}],109:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var css = require('css');
+
+/**
+ * Expose `rework`.
+ */
+
+exports = module.exports = rework;
+
+/**
+ * Expose `visit` helpers.
+ */
+
+exports.visit = require('./visit');
+
+/**
+ * Expose prefix properties.
+ */
+
+exports.__defineGetter__('properties', function () {
+  console.warn('rework.properties has been removed.');
+  return [];
+})
+
+/**
+ * Initialize a new stylesheet `Rework` with `str`.
+ *
+ * @param {String} str
+ * @param {Object} options
+ * @return {Rework}
+ * @api public
+ */
+
+function rework(str, options) {
+  options = options || {};
+  options.position = true; // we need this for sourcemaps
+  return new Rework(css.parse(str, options));
+}
+
+/**
+ * Initialize a new stylesheet `Rework` with `obj`.
+ *
+ * @param {Object} obj
+ * @api private
+ */
+
+function Rework(obj) {
+  this.obj = obj;
+}
+
+/**
+ * Use the given plugin `fn(style, rework)`.
+ *
+ * @param {Function} fn
+ * @return {Rework}
+ * @api public
+ */
+
+Rework.prototype.use = function(fn){
+  fn(this.obj.stylesheet, this);
+  return this;
+};
+
+/**
+ * Specify global vendor `prefixes`,
+ * explicit ones may still be passed
+ * to most plugins.
+ *
+ * Deprecated as of https://github.com/visionmedia/rework/issues/126.
+ *
+ * @param {Array} prefixes
+ * @return {Rework}
+ * @api public
+ */
+
+Rework.prototype.vendors = function(prefixes){
+  console.warn('rework.vendors() is deprecated. Please see: https://github.com/visionmedia/rework/issues/126.');
+  this.prefixes = prefixes;
+  return this;
+};
+
+/**
+ * Stringify the stylesheet.
+ *
+ * @param {Object} options
+ * @return {String}
+ * @api public
+ */
+
+Rework.prototype.toString = function(options){
+  options = options || {};
+  var result = css.stringify(this.obj, options);
+  if (options.sourcemap && !options.sourcemapAsObject) {
+    result = result.code + '\n' + sourcemapToComment(result.map);
+  }
+  return result;
+};
+
+/**
+ * Convert sourcemap to base64-encoded comment
+ *
+ * @param {Object} map
+ * @return {String}
+ * @api private
+ */
+
+function sourcemapToComment(map) {
+  var convertSourceMap = require('convert-source-map');
+  var content = convertSourceMap.fromObject(map).toBase64();
+  return '/*# sourceMappingURL=data:application/json;base64,' + content + ' */';
+}
+
+/**
+ * Expose plugins.
+ */
+
+exports.mixin = exports.mixins = require('./plugins/mixin');
+exports.function = exports.functions = require('./plugins/function');
+exports.colors = require('./plugins/colors');
+exports.extend = require('rework-inherit');
+exports.references = require('./plugins/references');
+exports.prefixSelectors = require('./plugins/prefix-selectors');
+exports.at2x = require('./plugins/at2x');
+exports.url = require('./plugins/url');
+exports.ease = require('./plugins/ease');
+
+/**
+ * Warn if users try to use removed components.
+ * This will be removed in v1.
+ */
+
+[
+  'vars',
+  'keyframes',
+  'prefix',
+  'prefixValue',
+].forEach(function (plugin) {
+  exports[plugin] = function () {
+    console.warn('rework.' + plugin + '() has been removed from rework core. Please view https://github.com/visionmedia/rework or https://github.com/visionmedia/rework/wiki/Plugins-and-Utilities.');
+    return noop;
+  };
+});
+
+/**
+ * Try/catch plugins unavailable in component.
+ */
+
+ try {
+  exports.inline = require('./plugins/inline');
+} catch (err) {}
+
+function noop(){}
+
+},{"./plugins/at2x":100,"./plugins/colors":101,"./plugins/ease":102,"./plugins/function":103,"./plugins/inline":104,"./plugins/mixin":105,"./plugins/prefix-selectors":106,"./plugins/references":107,"./plugins/url":108,"./visit":111,"convert-source-map":114,"css":115,"rework-inherit":135}],110:[function(require,module,exports){
+
+/**
+ * Strip `str` quotes.
+ *
+ * @param {String} str
+ * @return {String}
+ * @api private
+ */
+
+exports.stripQuotes = function(str) {
+  if ('"' == str[0] || "'" == str[0]) return str.slice(1, -1);
+  return str;
+};
+},{}],111:[function(require,module,exports){
+
+// TODO: require() directly in plugins...
+exports.declarations = require('rework-visit');
+
+},{"rework-visit":136}],112:[function(require,module,exports){
+
+module.exports = {
+    aliceblue: [240, 248, 255]
+  , antiquewhite: [250, 235, 215]
+  , aqua: [0, 255, 255]
+  , aquamarine: [127, 255, 212]
+  , azure: [240, 255, 255]
+  , beige: [245, 245, 220]
+  , bisque: [255, 228, 196]
+  , black: [0, 0, 0]
+  , blanchedalmond: [255, 235, 205]
+  , blue: [0, 0, 255]
+  , blueviolet: [138, 43, 226]
+  , brown: [165, 42, 42]
+  , burlywood: [222, 184, 135]
+  , cadetblue: [95, 158, 160]
+  , chartreuse: [127, 255, 0]
+  , chocolate: [210, 105, 30]
+  , coral: [255, 127, 80]
+  , cornflowerblue: [100, 149, 237]
+  , cornsilk: [255, 248, 220]
+  , crimson: [220, 20, 60]
+  , cyan: [0, 255, 255]
+  , darkblue: [0, 0, 139]
+  , darkcyan: [0, 139, 139]
+  , darkgoldenrod: [184, 132, 11]
+  , darkgray: [169, 169, 169]
+  , darkgreen: [0, 100, 0]
+  , darkgrey: [169, 169, 169]
+  , darkkhaki: [189, 183, 107]
+  , darkmagenta: [139, 0, 139]
+  , darkolivegreen: [85, 107, 47]
+  , darkorange: [255, 140, 0]
+  , darkorchid: [153, 50, 204]
+  , darkred: [139, 0, 0]
+  , darksalmon: [233, 150, 122]
+  , darkseagreen: [143, 188, 143]
+  , darkslateblue: [72, 61, 139]
+  , darkslategray: [47, 79, 79]
+  , darkslategrey: [47, 79, 79]
+  , darkturquoise: [0, 206, 209]
+  , darkviolet: [148, 0, 211]
+  , deeppink: [255, 20, 147]
+  , deepskyblue: [0, 191, 255]
+  , dimgray: [105, 105, 105]
+  , dimgrey: [105, 105, 105]
+  , dodgerblue: [30, 144, 255]
+  , firebrick: [178, 34, 34]
+  , floralwhite: [255, 255, 240]
+  , forestgreen: [34, 139, 34]
+  , fuchsia: [255, 0, 255]
+  , gainsboro: [220, 220, 220]
+  , ghostwhite: [248, 248, 255]
+  , gold: [255, 215, 0]
+  , goldenrod: [218, 165, 32]
+  , gray: [128, 128, 128]
+  , green: [0, 128, 0]
+  , greenyellow: [173, 255, 47]
+  , grey: [128, 128, 128]
+  , honeydew: [240, 255, 240]
+  , hotpink: [255, 105, 180]
+  , indianred: [205, 92, 92]
+  , indigo: [75, 0, 130]
+  , ivory: [255, 255, 240]
+  , khaki: [240, 230, 140]
+  , lavender: [230, 230, 250]
+  , lavenderblush: [255, 240, 245]
+  , lawngreen: [124, 252, 0]
+  , lemonchiffon: [255, 250, 205]
+  , lightblue: [173, 216, 230]
+  , lightcoral: [240, 128, 128]
+  , lightcyan: [224, 255, 255]
+  , lightgoldenrodyellow: [250, 250, 210]
+  , lightgray: [211, 211, 211]
+  , lightgreen: [144, 238, 144]
+  , lightgrey: [211, 211, 211]
+  , lightpink: [255, 182, 193]
+  , lightsalmon: [255, 160, 122]
+  , lightseagreen: [32, 178, 170]
+  , lightskyblue: [135, 206, 250]
+  , lightslategray: [119, 136, 153]
+  , lightslategrey: [119, 136, 153]
+  , lightsteelblue: [176, 196, 222]
+  , lightyellow: [255, 255, 224]
+  , lime: [0, 255, 0]
+  , limegreen: [50, 205, 50]
+  , linen: [250, 240, 230]
+  , magenta: [255, 0, 255]
+  , maroon: [128, 0, 0]
+  , mediumaquamarine: [102, 205, 170]
+  , mediumblue: [0, 0, 205]
+  , mediumorchid: [186, 85, 211]
+  , mediumpurple: [147, 112, 219]
+  , mediumseagreen: [60, 179, 113]
+  , mediumslateblue: [123, 104, 238]
+  , mediumspringgreen: [0, 250, 154]
+  , mediumturquoise: [72, 209, 204]
+  , mediumvioletred: [199, 21, 133]
+  , midnightblue: [25, 25, 112]
+  , mintcream: [245, 255, 250]
+  , mistyrose: [255, 228, 225]
+  , moccasin: [255, 228, 181]
+  , navajowhite: [255, 222, 173]
+  , navy: [0, 0, 128]
+  , oldlace: [253, 245, 230]
+  , olive: [128, 128, 0]
+  , olivedrab: [107, 142, 35]
+  , orange: [255, 165, 0]
+  , orangered: [255, 69, 0]
+  , orchid: [218, 112, 214]
+  , palegoldenrod: [238, 232, 170]
+  , palegreen: [152, 251, 152]
+  , paleturquoise: [175, 238, 238]
+  , palevioletred: [219, 112, 147]
+  , papayawhip: [255, 239, 213]
+  , peachpuff: [255, 218, 185]
+  , peru: [205, 133, 63]
+  , pink: [255, 192, 203]
+  , plum: [221, 160, 203]
+  , powderblue: [176, 224, 230]
+  , purple: [128, 0, 128]
+  , red: [255, 0, 0]
+  , rosybrown: [188, 143, 143]
+  , royalblue: [65, 105, 225]
+  , saddlebrown: [139, 69, 19]
+  , salmon: [250, 128, 114]
+  , sandybrown: [244, 164, 96]
+  , seagreen: [46, 139, 87]
+  , seashell: [255, 245, 238]
+  , sienna: [160, 82, 45]
+  , silver: [192, 192, 192]
+  , skyblue: [135, 206, 235]
+  , slateblue: [106, 90, 205]
+  , slategray: [119, 128, 144]
+  , slategrey: [119, 128, 144]
+  , snow: [255, 255, 250]
+  , springgreen: [0, 255, 127]
+  , steelblue: [70, 130, 180]
+  , tan: [210, 180, 140]
+  , teal: [0, 128, 128]
+  , thistle: [216, 191, 216]
+  , tomato: [255, 99, 71]
+  , turquoise: [64, 224, 208]
+  , violet: [238, 130, 238]
+  , wheat: [245, 222, 179]
+  , white: [255, 255, 255]
+  , whitesmoke: [245, 245, 245]
+  , yellow: [255, 255, 0]
+  , yellowgreen: [154, 205, 5]
+};
+},{}],113:[function(require,module,exports){
+
+/**
+ * Module dependencies.
+ */
+
+var colors = require('./colors');
+
+/**
+ * Expose `parse`.
+ */
+
+module.exports = parse;
+
+/**
+ * Parse `str`.
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api public
+ */
+
+function parse(str) {
+  return named(str)
+    || hex3(str)
+    || hex6(str)
+    || rgb(str)
+    || rgba(str);
+}
+
+/**
+ * Parse named css color `str`.
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+function named(str) {
+  var c = colors[str.toLowerCase()];
+  if (!c) return;
+  return {
+    r: c[0],
+    g: c[1],
+    b: c[2]
+  }
+}
+
+/**
+ * Parse rgb(n, n, n)
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+function rgb(str) {
+  if (0 == str.indexOf('rgb(')) {
+    str = str.match(/rgb\(([^)]+)\)/)[1];
+    var parts = str.split(/ *, */).map(Number);
+    return {
+      r: parts[0],
+      g: parts[1],
+      b: parts[2],
+      a: 1
+    }
+  }
+}
+
+/**
+ * Parse rgba(n, n, n, n)
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+function rgba(str) {
+  if (0 == str.indexOf('rgba(')) {
+    str = str.match(/rgba\(([^)]+)\)/)[1];
+    var parts = str.split(/ *, */).map(Number);
+    return {
+      r: parts[0],
+      g: parts[1],
+      b: parts[2],
+      a: parts[3]
+    }
+  }
+}
+
+/**
+ * Parse #nnnnnn
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+function hex6(str) {
+  if ('#' == str[0] && 7 == str.length) {
+    return {
+      r: parseInt(str.slice(1, 3), 16),
+      g: parseInt(str.slice(3, 5), 16),
+      b: parseInt(str.slice(5, 7), 16),
+      a: 1
+    }
+  }
+}
+
+/**
+ * Parse #nnn
+ *
+ * @param {String} str
+ * @return {Object}
+ * @api private
+ */
+
+function hex3(str) {
+  if ('#' == str[0] && 4 == str.length) {
+    return {
+      r: parseInt(str[1] + str[1], 16),
+      g: parseInt(str[2] + str[2], 16),
+      b: parseInt(str[3] + str[3], 16),
+      a: 1
+    }
+  }
+}
+
+
+},{"./colors":112}],114:[function(require,module,exports){
+var Buffer=require("__browserify_Buffer");'use strict';
+var fs = require('fs');
+var path = require('path');
+
+var commentRx = /^[ \t]*\/\/[@#][ \t]+sourceMappingURL=data:(?:application|text)\/json;base64,(.+)/mg;
+var mapFileCommentRx = 
+  // //# sourceMappingURL=foo.js.map                       /*# sourceMappingURL=foo.js.map */
+  /(?:^[ \t]*\/\/[@|#][ \t]+sourceMappingURL=(.+?)[ \t]*$)|(?:^[ \t]*\/\*[@#][ \t]+sourceMappingURL=(.+?)[ \t]*\*\/[ \t]*$)/mg
+
+function decodeBase64(base64) {
+  return new Buffer(base64, 'base64').toString();
+}
+
+function stripComment(sm) {
+  return sm.split(',').pop();
+}
+
+function readFromFileMap(sm, dir) {
+  // NOTE: this will only work on the server since it attempts to read the map file
+
+  var r = mapFileCommentRx.exec(sm);
+  mapFileCommentRx.lastIndex = 0;
+  
+  // for some odd reason //# .. captures in 1 and /* .. */ in 2
+  var filename = r[1] || r[2];
+  var filepath = path.join(dir, filename);
+
+  try {
+    return fs.readFileSync(filepath, 'utf8');
+  } catch (e) {
+    throw new Error('An error occurred while trying to read the map file at ' + filepath + '\n' + e);
+  }
+}
+
+function Converter (sm, opts) {
+  opts = opts || {};
+  try {
+    if (opts.isFileComment) sm = readFromFileMap(sm, opts.commentFileDir);
+    if (opts.hasComment) sm = stripComment(sm);
+    if (opts.isEncoded) sm = decodeBase64(sm);
+    if (opts.isJSON || opts.isEncoded) sm = JSON.parse(sm);
+
+    this.sourcemap = sm;
+  } catch(e) {
+    console.error(e);
+    return null;
+  }
+}
+
+Converter.prototype.toJSON = function (space) {
+  return JSON.stringify(this.sourcemap, null, space);
+};
+
+Converter.prototype.toBase64 = function () {
+  var json = this.toJSON();
+  return new Buffer(json).toString('base64');
+};
+
+Converter.prototype.toComment = function () {
+  var base64 = this.toBase64();
+  return '//# sourceMappingURL=data:application/json;base64,' + base64;
+};
+
+// returns copy instead of original
+Converter.prototype.toObject = function () {
+  return JSON.parse(this.toJSON());
+};
+
+Converter.prototype.addProperty = function (key, value) {
+  if (this.sourcemap.hasOwnProperty(key)) throw new Error('property %s already exists on the sourcemap, use set property instead');
+  return this.setProperty(key, value);
+};
+
+Converter.prototype.setProperty = function (key, value) {
+  this.sourcemap[key] = value;
+  return this;
+};
+
+Converter.prototype.getProperty = function (key) {
+  return this.sourcemap[key];
+};
+
+exports.fromObject = function (obj) {
+  return new Converter(obj);
+};
+
+exports.fromJSON = function (json) {
+  return new Converter(json, { isJSON: true });
+};
+
+exports.fromBase64 = function (base64) {
+  return new Converter(base64, { isEncoded: true });
+};
+
+exports.fromComment = function (comment) {
+  return new Converter(comment, { isEncoded: true, hasComment: true });
+};
+
+exports.fromMapFileComment = function (comment, dir) {
+  return new Converter(comment, { commentFileDir: dir, isFileComment: true, isJSON: true });
+};
+
+// Finds last sourcemap comment in file or returns null if none was found
+exports.fromSource = function (content) {
+  var m = content.match(commentRx);
+  commentRx.lastIndex = 0;
+  return m ? exports.fromComment(m.pop()) : null;
+};
+
+// Finds last sourcemap comment in file or returns null if none was found
+exports.fromMapFileSource = function (content, dir) {
+  var m = content.match(mapFileCommentRx);
+  mapFileCommentRx.lastIndex = 0;
+  return m ? exports.fromMapFileComment(m.pop(), dir) : null;
+};
+
+exports.removeComments = function (src) {
+  commentRx.lastIndex = 0;
+  return src.replace(commentRx, '');
+};
+
+exports.removeMapFileComments = function (src) {
+  mapFileCommentRx.lastIndex = 0;
+  return src.replace(mapFileCommentRx, '');
+};
+
+exports.__defineGetter__('commentRegex', function () {
+  commentRx.lastIndex = 0;
+  return commentRx; 
+});
+
+exports.__defineGetter__('mapFileCommentRegex', function () {
+  mapFileCommentRx.lastIndex = 0;
+  return mapFileCommentRx; 
+});
+
+},{"__browserify_Buffer":58,"fs":56,"path":59}],115:[function(require,module,exports){
+arguments[4][78][0].apply(exports,arguments)
+},{"css-parse":116,"css-stringify":117}],116:[function(require,module,exports){
+module.exports=require(79)
+},{}],117:[function(require,module,exports){
+arguments[4][41][0].apply(exports,arguments)
+},{"./lib/compress":119,"./lib/identity":120,"./lib/source-map-support":121}],118:[function(require,module,exports){
+module.exports=require(42)
+},{}],119:[function(require,module,exports){
+module.exports=require(43)
+},{"./compiler":118}],120:[function(require,module,exports){
+module.exports=require(44)
+},{"./compiler":118}],121:[function(require,module,exports){
+arguments[4][45][0].apply(exports,arguments)
+},{"source-map":122}],122:[function(require,module,exports){
+arguments[4][46][0].apply(exports,arguments)
+},{"./source-map/source-map-consumer":127,"./source-map/source-map-generator":128,"./source-map/source-node":129}],123:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"./util":130,"amdefine":131}],124:[function(require,module,exports){
+arguments[4][48][0].apply(exports,arguments)
+},{"./base64":125,"amdefine":131}],125:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"amdefine":131}],126:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"amdefine":131}],127:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"./array-set":123,"./base64-vlq":124,"./binary-search":126,"./util":130,"amdefine":131}],128:[function(require,module,exports){
+arguments[4][52][0].apply(exports,arguments)
+},{"./array-set":123,"./base64-vlq":124,"./util":130,"amdefine":131}],129:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"./source-map-generator":128,"./util":130,"amdefine":131}],130:[function(require,module,exports){
+arguments[4][54][0].apply(exports,arguments)
+},{"amdefine":131}],131:[function(require,module,exports){
 var process=require("__browserify_process"),__filename="/../node_modules/rework/node_modules/css/node_modules/css-stringify/node_modules/source-map/node_modules/amdefine/amdefine.js";/** vim: et:ts=4:sw=4:sts=4
  * @license amdefine 0.1.0 Copyright (c) 2011, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -12236,9 +12792,9 @@ function amdefine(module, requireFn) {
 
 module.exports = amdefine;
 
-},{"__browserify_process":57,"path":59}],112:[function(require,module,exports){
+},{"__browserify_process":57,"path":59}],132:[function(require,module,exports){
 module.exports=require(72)
-},{}],113:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 
 function hsb2rgb(hue, saturation, value) {
   hue = (parseInt(hue, 10) || 0) % 360;
@@ -12288,7 +12844,7 @@ function hsb2rgb(hue, saturation, value) {
 
 module.exports = hsb2rgb;
 
-},{}],114:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 var process=require("__browserify_process"),__dirname="/../node_modules/rework/node_modules/mime";var path = require('path');
 var fs = require('fs');
 
@@ -12404,7 +12960,7 @@ mime.charsets = {
 
 module.exports = mime;
 
-},{"__browserify_process":57,"fs":56,"path":59}],115:[function(require,module,exports){
+},{"__browserify_process":57,"fs":56,"path":59}],135:[function(require,module,exports){
 var debug = require('debug')('rework-inherit')
 
 exports = module.exports = function (options) {
@@ -12630,8 +13186,8 @@ function getRule(x) {
   return x.rule
 }
 
-},{"debug":112}],116:[function(require,module,exports){
-module.exports=require(78)
+},{"debug":132}],136:[function(require,module,exports){
+module.exports=require(98)
 },{}]},{},[1])
 (1)
 });

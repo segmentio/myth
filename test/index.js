@@ -9,16 +9,6 @@ var browser = require('../myth.js');
 var path = require('path');
 var Stream = require('stream').Readable;
 
-var features = [
-  'calc',
-  'color',
-  'font-variant',
-  'hex',
-  'import',
-  'prefixes',
-  'vars'
-];
-
 /**
  * Myth node API tests.
  */
@@ -37,12 +27,24 @@ describe('myth', function () {
  * Rework feature tests.
  */
 
+var features = [
+  'calc',
+  'color',
+  'font-variant',
+  'hex',
+  'import',
+  'prefixes',
+  'vars'
+];
+
 describe('features', function () {
   features.forEach(function (name) {
     it('should add ' + name + ' support', function () {
       var input = read('features/' + name);
       var output = read('features/' + name + '.out');
-      assert.equal(myth(input).trim(), output.trim());
+      var options = { source: resolve('features/' + name) };
+      var css = myth(input, options);
+      assert.equal(css.trim(), output.trim());
     });
   });
 });
@@ -51,12 +53,23 @@ describe('features', function () {
  * Browser tests.
  */
 
+var browsers = [
+  'calc',
+  'color',
+  'font-variant',
+  'hex',
+  'prefixes',
+  'vars'
+];
+
 describe('browser', function () {
-  features.forEach(function (name) {
+  browsers.forEach(function (name) {
     it('should add ' + name + ' support', function () {
       var input = read('features/' + name);
       var output = read('features/' + name + '.out');
-      assert.equal(browser(input).trim(), output.trim());
+      var options = { source: resolve('features/' + name) };
+      var css = browser(input, options);
+      assert.equal(css.trim(), output.trim());
     });
   });
 });
