@@ -4,13 +4,13 @@
  */
 
 :root {
-  var-light-purple: #989EBA;
-  var-purple: #847AD1;
-  var-dark-purple: #26202B;
-  var-darker-purple: #1C1521;
-  var-blue: #5790EF;
-  var-black: #120C17;
-  var-gray: #605668;
+  --light-purple: #989EBA;
+  --purple: #847AD1;
+  --dark-purple: #26202B;
+  --darker-purple: #1C1521;
+  --blue: #5790EF;
+  --black: #120C17;
+  --gray: #605668;
 }
 
 /**
@@ -20,22 +20,22 @@
 body {
   font: 100 16px/1.5 "Source Sans", sans-serif;
   color: white;
-  background-color: var(darker-purple);
+  background-color: var(--darker-purple);
 }
 
 a {
-  color: var(purple);
+  color: var(--purple);
   text-decoration: underline;
   transition: color .2s;
 }
 
 a:hover {
-  color: color(var(purple) tint(20%));
+  color: color(var(--purple) tint(20%));
 }
 
 pre {
   font: 300 12px/1.2 "Source Code", monospace;
-  color: color(var(light-purple) tint(50%));
+  color: color(var(--light-purple) tint(50%));
 }
 
 /**
@@ -56,38 +56,38 @@ pre {
 }
 
 .Section-description {
-  color: var(light-purple);
+  color: var(--light-purple);
   margin-bottom: 1em;
 }
 
 .Section-example {
   margin-top: 1em;
   border-radius: .2em;
-  background: var(darker-purple);
+  background: var(--darker-purple);
   padding: 1em;
   overflow: hidden;
 }
 
 .Section-example-code b {
   font-weight: 600;
-  color: var(purple);
+  color: var(--purple);
 }
 
 .Section-example-code em {
   font-style: normal;
   font-weight: 600;
-  color: var(blue);
+  color: var(--blue);
 }
 
 .Section-example-code s {
   font-style: normal;
   text-decoration: none;
-  color: var(gray);
+  color: var(--gray);
 }
 
 .Section-legend {
   text-align: center;
-  color: var(light-purple);
+  color: var(--light-purple);
   margin-top: .75em;
 }
 
@@ -126,7 +126,7 @@ pre {
   padding: 1em;
   width: 20em;
   text-align: center;
-  background-color: var(purple);
+  background-color: var(--purple);
   text-transform: uppercase;
   font-size: .6em;
   color: white;
@@ -147,7 +147,7 @@ pre {
  */
 
 .Section--feature {
-  background-color: var(dark-purple);
+  background-color: var(--dark-purple);
 }
 
 .Section--feature + .Section--feature {
@@ -183,7 +183,7 @@ pre {
 .Section--feature-variables::before {
   height: 6em;
   bottom: 100%;
-  background: linear-gradient(to bottom, transparent, var(dark-purple));
+  background: linear-gradient(to bottom, transparent, var(--dark-purple));
 }
 
 /**
@@ -197,7 +197,7 @@ pre {
 .Section--feature-no-prefixes::after {
   height: 14em;
   top: 100%;
-  background: linear-gradient(to bottom, var(dark-purple), transparent);
+  background: linear-gradient(to bottom, var(--dark-purple), transparent);
 }
 
 /**
@@ -210,7 +210,7 @@ pre {
 }
 
 .Section--install .Section-example {
-  background-color: var(black);
+  background-color: var(--black);
 }
 
 .Section--install .Section-example-code {
@@ -222,7 +222,7 @@ pre {
  */
 
 .Section--why .Section-description {
-  color: var(light-purple);
+  color: var(--light-purple);
 }
 
 /**
@@ -245,7 +245,7 @@ pre {
 
 .Footer-subtitle {
   font-size: .7em;
-  color: color(var(light-purple) tint(50%);
+  color: color(var(--light-purple) tint(50%);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: .5em;

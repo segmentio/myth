@@ -5,7 +5,6 @@ var exec = child.exec;
 var spawn = child.spawn;
 var fs = require('fs');
 var myth = require('..');
-var browser = require('../myth.js');
 var path = require('path');
 var Stream = require('stream').Readable;
 
@@ -44,31 +43,6 @@ describe('features', function(){
       var output = read('features/' + name + '.out');
       var options = { source: resolve('features/' + name) };
       var css = myth(input, options);
-      assert.equal(css.trim(), output.trim());
-    });
-  });
-});
-
-/**
- * Browser tests.
- */
-
-var browsers = [
-  'calc',
-  'color',
-  'font-variant',
-  'hex',
-  'prefixes',
-  'vars'
-];
-
-describe('browser', function(){
-  browsers.forEach(function(name){
-    it('should add ' + name + ' support', function(){
-      var input = read('features/' + name);
-      var output = read('features/' + name + '.out');
-      var options = { source: resolve('features/' + name) };
-      var css = browser(input, options);
       assert.equal(css.trim(), output.trim());
     });
   });

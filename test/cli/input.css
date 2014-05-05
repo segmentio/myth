@@ -1,10 +1,10 @@
 
 :root {
-  var-red: #f00;
+  --red: #f00;
 }
 
 ::placeholder {
-  color: var(red);
+  color: var(--red);
   width: calc(50px * 2);
   font-variant: small-caps;
   transition: all 1s;

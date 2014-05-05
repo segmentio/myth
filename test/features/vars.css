@@ -1,12 +1,12 @@
 
 :root {
-  var-red: #F00;
+  --red: #F00;
 }
 
 body {
-  color: var(red);
+  color: var(--red);
 }
 
 :root {
-  var-red: #0F0;
+  --red: #0F0;
 }
