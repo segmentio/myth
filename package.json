@@ -1,7 +1,7 @@
 {
   "name": "myth",
   "repository": "git://github.com/segmentio/myth.git",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "description": "A CSS preprocessor that acts like a polyfill for future versions of the spec.",
   "keywords": [
@@ -24,7 +24,7 @@
     "commander": "~2.1.0",
     "node-watch": "0.3.4",
     "pad-component": "0.0.1",
-    "read-file-stdin": "0.0.3",
+    "read-file-stdin": "0.0.4",
     "rework": "~0.20.1",
     "rework-calc": "~0.2.1",
     "rework-color-function": "^1.0.0",

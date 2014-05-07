@@ -56,7 +56,7 @@ function plugin(options){
       ? autoprefixer().rework
       : autoprefixer(browsers).rework;
 
-    var imports = 'undefined' != typeof window && source
+    var imports = 'undefined' == typeof window && source
       ? inline({ path: dirname(source) })
       : noop;
 

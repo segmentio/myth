@@ -1,4 +1,8 @@
 
+1.0.2 - May 7, 2014
+-------------------
+* upgrade to `read-file-stdin` version `0.0.4`
+
 1.0.1 - May 5, 2014
 -------------------
 * add `compress` CLI flag
