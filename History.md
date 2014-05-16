@@ -1,4 +1,8 @@
 
+1.0.3 - May 16, 2014
+--------------------
+* fix returning plugin on empty string
+
 1.0.2 - May 7, 2014
 -------------------
 * upgrade to `read-file-stdin` version `0.0.4`
