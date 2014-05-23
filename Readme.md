@@ -58,22 +58,26 @@ a:hover {
   ... Myth will transform it for you, into browser-compliant CSS:
 
 ```css
-:root {
-  --green: #a6c776;
-}
+
 
 a {
   color: #a6c776;
   -webkit-font-feature-settings: "smcp", "c2sc";
   -moz-font-feature-settings: "smcp", "c2sc";
   font-feature-settings: "smcp", "c2sc";
-  font-variant-caps: all-small-caps;
+  font-variant: all-small-caps;
   -webkit-transition: color 1s;
   transition: color 1s;
 }
 
 a:hover {
   color: rgb(133, 159, 94);
+}
+
+::-webkit-input-placeholder {
+  opacity: .4;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
 }
 
 ::-moz-placeholder {
@@ -86,10 +90,14 @@ a:hover {
   transition: opacity 1s;
 }
 
-::-webkit-input-placeholder {
+::placeholder {
   opacity: .4;
   -webkit-transition: opacity 1s;
   transition: opacity 1s;
+}
+
+:focus::-webkit-input-placeholder {
+  opacity: .2;
 }
 
 :focus::-moz-placeholder {
@@ -100,7 +108,7 @@ a:hover {
   opacity: .2;
 }
 
-:focus::-webkit-input-placeholder {
+:focus::placeholder {
   opacity: .2;
 }
 ```
