@@ -1,4 +1,8 @@
 
+1.0.4 - June 3, 2014
+--------------------
+* bump `rework-inline` to `0.2.0` fix import bugs
+
 1.0.3 - May 16, 2014
 --------------------
 * fix returning plugin on empty string

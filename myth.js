@@ -32,7 +32,7 @@ function myth(string, options){
   if ('object' == typeof string) options = string, string = null;
   options = options || {};
 
-  if (!string) return plugin(options);
+  if ('string' != typeof string) return plugin(options);
 
   return rework(string, options)
     .use(plugin(options))
@@ -70,6 +70,7 @@ function plugin(options){
       .use(prefixes);
   };
 }
+
 },{"autoprefixer":4,"path":61,"rework":101,"rework-calc":62,"rework-color-function":64,"rework-font-variant":75,"rework-hex-alpha":77,"rework-inline":79,"rework-vars":99}],2:[function(_dereq_,module,exports){
 (function() {
   module.exports = {
@@ -10175,13 +10176,13 @@ Import.prototype.process = function () {
             return rules.push(rule);
         }
 
-        var content;
         var data = parseImport(rule.import);
         var file = self._check(data.path);
         var media = data.condition;
         var res;
+        var content = self._read(file);
 
-        content = self._read(file);
+        parseStyle(content, self.opts)
 
         if (!media || !media.length) {
             res = content.rules;
@@ -10221,14 +10222,28 @@ Import.prototype._read = function (file) {
  */
 
 Import.prototype._check = function (name) {
-    var file = findFile(name, { path: this.path, global: false })[0];
+    var file = findFile(name, { path: this.path, global: false });
 
     if (!file) {
         throw new Error('failed to find ' + name);
     }
 
-    return file;
+    return file[0];
 };
+
+/**
+ * Parse @import in given style
+ *
+ * @param {Object} style
+ * @param {Object} opts
+ */
+function parseStyle(style, opts) {
+    var inline = new Import(style, opts);
+    var rules = inline.process();
+
+    style.rules = rules;
+}
+
 
 /**
  * Module exports
@@ -10236,10 +10251,7 @@ Import.prototype._check = function (name) {
 
 module.exports = function (opts) {
     return function (style) {
-        var inline = new Import(style, opts);
-        var rules = inline.process();
-
-        style.rules = rules;
+        parseStyle(style, opts)
     };
 };
 
