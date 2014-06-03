@@ -32,7 +32,7 @@
     "rework-hex-alpha": "^1.0.0",
     "rework-vars": "3.0.0",
     "write-file-stdout": "0.0.2",
-    "rework-inline": "~0.1.4",
+    "rework-inline": "~0.2.0",
     "is-browser": "~2.0.0"
   },
   "devDependencies": {
