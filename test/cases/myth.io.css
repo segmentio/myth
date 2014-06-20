@@ -8,6 +8,7 @@
   --purple: #847AD1;
   --dark-purple: #26202B;
   --darker-purple: #1C1521;
+  --meyer-purple: rebeccapurple;
   --blue: #5790EF;
   --black: #120C17;
   --gray: #605668;
@@ -27,6 +28,10 @@ a {
   color: var(--purple);
   text-decoration: underline;
   transition: color .2s;
+}
+
+a:visited {
+  color: var(--meyer-purple);
 }
 
 a:hover {
@@ -420,5 +425,4 @@ pre {
     padding-top: 0;
     padding-bottom: 0;
   }
-
 }
