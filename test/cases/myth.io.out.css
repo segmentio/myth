@@ -21,6 +21,10 @@ a {
   transition: color .2s;
 }
 
+a:visited {
+  color: #663399;
+}
+
 a:hover {
   color: rgb(157, 149, 218);
 }
