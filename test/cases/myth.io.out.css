@@ -2,8 +2,6 @@
  * Variables.
  */
 
-
-
 /**
  * Body.
  */
@@ -93,7 +91,7 @@ pre {
 
 .Header {
   background: url(images/background.jpg);
-  -webkit-background-size: cover;
+  -webkit-background-size: cover cover;
   background-size: cover;
   text-align: center;
   padding-bottom: 6em;
