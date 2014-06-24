@@ -135,11 +135,10 @@ describe('cli', function(){
     exec('bin/myth test/cli/error.css', function(err, stdout, stderr){
       assert(err);
       assert(err.code == 1);
-      assert(-1 != stderr.indexOf('error'));
-      assert(-1 != stderr.indexOf('SyntaxError: Missing closing parentheses'));
-      assert(-1 != stderr.indexOf('at '));
-      assert(-1 != stderr.indexOf('248'));
+      assert(-1 != stderr.indexOf('Error'));
+      assert(-1 != stderr.indexOf('rework-vars: missing closing ")"'));
       assert(-1 != stderr.indexOf('color('));
+      assert(-1 != stderr.indexOf('at '));
       done();
     });
   });
