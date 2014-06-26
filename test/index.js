@@ -30,6 +30,7 @@ describe('myth', function(){
 var features = [
   'calc',
   'color',
+  'custom-media',
   'font-variant',
   'hex',
   'import',
@@ -56,6 +57,7 @@ describe('features', function(){
 var browsers = [
   'calc',
   'color',
+  'custom-media',
   'font-variant',
   'hex',
   'prefixes',
