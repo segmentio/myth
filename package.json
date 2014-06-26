@@ -33,7 +33,7 @@
     "rework-vars": "^3.0.0",
     "rework-rebeccapurple": "1.0.1",
     "write-file-stdout": "0.0.2",
-    "rework-import": "^1.0.0",
+    "rework-import": "^1.1.2",
     "is-browser": "~2.0.0"
   },
   "devDependencies": {
