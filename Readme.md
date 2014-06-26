@@ -4,7 +4,7 @@
   _CSS the way it was imagined._
 
   Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's like a CSS polyfill.
-  
+
   [![Build Status](https://travis-ci.org/segmentio/myth.png)](http://travis-ci.org/segmentio/myth)
 
 ## Installation
@@ -41,6 +41,14 @@
   --green: #a6c776;
 }
 
+@custom-media --narrow-window screen and (max-width: 30em);
+
+@media (--narrow-window) {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
 a {
   color: var(--green);
   font-variant: all-small-caps;
@@ -64,7 +72,11 @@ a:hover {
   ... Myth will transform it for you, into browser-compliant CSS:
 
 ```css
-
+@media screen and (max-width: 30em) {
+  html {
+    font-size: 1.2rem;
+  }
+}
 
 a {
   color: #a6c776;
@@ -122,7 +134,7 @@ a:hover {
 ## Features
 
 #### Variables
-  
+
   Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-variables/). Just like future CSS, but without the cascade. Thanks to [`rework-vars`](https://github.com/visionmedia/rework-vars).
 
 ```css
@@ -136,7 +148,7 @@ a {
 ```
 
 #### Math
-  
+
   Using the same syntax as the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Just like future CSS, but without runtime interpolation. Thanks to [`rework-calc`](https://github.com/klei-dev/rework-calc).
 
 ```css
@@ -145,8 +157,24 @@ pre {
 }
 ```
 
+#### Custom media queries
+
+  Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/mediaqueries/#custom-mq). Thanks to [`rework-custom-media`](https://github.com/reworkcss/rework-custom-media).
+
+```css
+@custom-media --narrow-window (max-width: 30em);
+
+@media (--narrow-window) {
+  /* narrow window styles */
+}
+
+@media (--narrow-window) and (script) {
+  /* special styles for when script is allowed */
+}
+```
+
 #### Color Manipulation
-  
+
   Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-color/#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
@@ -160,7 +188,7 @@ a:hover {
 ```
 
 #### No Prefixes
-  
+
   The prefixes from the most-common *and* most-recent browsers are supported, so you never need to worry about what the current browser support landscape is. Big thanks to [`autoprefixer`](https://github.com/ai/autoprefixer)!
 
 ```css
@@ -194,10 +222,10 @@ Examples:
 
   # pass an input and output file:
   $ myth input.css output.css
-  
+
   # watch the input file for changes:
   $ myth --watch input.css output.css
-  
+
   # unix-style piping to stdin and stdout:
   $ cat input.css | myth | grep background-color
 ```
@@ -215,7 +243,7 @@ fs.writeFileSync('converted.css', converted);
 ```
 
   Or use it directly as a Rework plugin:
-  
+
 ```js
 var myth = require('myth');
 var rework = require('rework');
@@ -225,7 +253,7 @@ var css = fs.readFileSync('index.css', 'utf8');
 var converted = rework(css)
   .use(myth())
   .toString();
-  
+
 fs.writeFileSync('converted.css', converted);
 ```
 
