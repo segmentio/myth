@@ -4,6 +4,11 @@ body {
 }
 
 @keyframes moving-gradient {
-  0%{ background-position: left bottom;}
-  100%{ background-position: right bottom;}
+  0% {
+    background-position: left bottom;
+  }
+
+  100% {
+    background-position: right bottom;
+  }
 }

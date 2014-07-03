@@ -7,10 +7,11 @@ var fs = require('fs');
 var myth = require('..');
 var browser = require('../myth.js');
 var path = require('path');
+var slugify = require('to-slug-case');
 var Stream = require('stream').Readable;
 
 /**
- * Myth node API tests.
+ * Myth tests.
  */
 
 describe('myth', function(){
@@ -24,54 +25,44 @@ describe('myth', function(){
 });
 
 /**
- * Rework feature tests.
+ * Feature tests.
  */
-
-var features = [
-  'calc',
-  'color',
-  'custom-media',
-  'font-variant',
-  'hex',
-  'import',
-  'prefixes',
-  'vars'
-];
 
 describe('features', function(){
-  features.forEach(function(name){
-    it('should add ' + name + ' support', function(){
-      var input = read('features/' + name);
-      var output = read('features/' + name + '.out');
-      var options = { source: resolve('features/' + name) };
-      var css = myth(input, options);
-      assert.equal(css.trim(), output.trim());
-    });
-  });
-});
+  myth.features.forEach(function(name){
+    var slug = slugify(name);
+    var source = resolve('features/' + slug);
+    var input = read('features/' + slug);
+    var expected = read('features/' + slug + '.out');
 
-/**
- * Browser tests.
- */
+    describe(slug, function(){
+      it('should add ' + slug + ' node support', function(){
+        var css = myth(input, { source: source });
+        assert.equal(css.trim(), expected.trim());
+      });
 
-var browsers = [
-  'calc',
-  'color',
-  'custom-media',
-  'font-variant',
-  'hex',
-  'prefixes',
-  'vars'
-];
+      it('should be able to disable ' + slug + ' node support', function(){
+        var options = { source: source, features: {} };
+        options.features[name] = false;
+        var css = myth(input, options);
+        assert.notEqual(css.trim(), expected.trim());
+        assert.equal(css.trim(), input.trim());
+      });
 
-describe('browser', function(){
-  browsers.forEach(function(name){
-    it('should add ' + name + ' support', function(){
-      var input = read('features/' + name);
-      var output = read('features/' + name + '.out');
-      var options = { source: resolve('features/' + name) };
-      var css = browser(input, options);
-      assert.equal(css.trim(), output.trim());
+      if ('import' == name) return;
+
+      it('should add ' + slug + ' browser support', function(){
+        var css = browser(input);
+        assert.equal(css.trim(), expected.trim());
+      });
+
+      it('should be able to disable ' + slug + ' browser support', function(){
+        var options = { features: {} };
+        options.features[name] = false;
+        var css = browser(input, options);
+        assert.notEqual(css.trim(), expected.trim());
+        assert.equal(css.trim(), input.trim());
+      });
     });
   });
 });

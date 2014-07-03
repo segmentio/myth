@@ -32,14 +32,14 @@
     "rework-custom-media": "^0.1.1",
     "rework-font-variant": "1.0.1",
     "rework-hex-alpha": "^1.0.0",
-    "rework-vars": "^3.0.0",
-    "rework-rebeccapurple": "1.0.1",
-    "write-file-stdout": "0.0.2",
     "rework-import": "^1.2.0",
-    "is-browser": "~2.0.0"
+    "rework-rebeccapurple": "1.0.1",
+    "rework-vars": "^3.0.0",
+    "write-file-stdout": "0.0.2"
   },
   "devDependencies": {
+    "browserify": "~3.46.0",
     "mocha": "~1.15.1",
-    "browserify": "~3.46.0"
+    "to-slug-case": "^0.1.2"
   }
 }

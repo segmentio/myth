@@ -2,5 +2,5 @@
 @import "import.include.css";
 
 body {
-  color: var(--red);
+  color: red;
 }
