@@ -19,7 +19,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "autoprefixer": "~0.8.20131209",
+    "autoprefixer": "^2.0.0",
     "colors": "~0.6.2",
     "commander": "~2.1.0",
     "is-browser": "~2.0.0",
