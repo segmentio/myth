@@ -261,6 +261,7 @@ fs.writeFileSync('converted.css', converted);
 
   - `browsers` - `Array` - an array of [browsers and versions to support](https://github.com/ai/autoprefixer#browsers).
   - `compress` - `Boolean` - whether to compress the CSS output.
+  - `features` - `Object` - list of features to enable/disable. By default all features are enabled.
   - `source` - `String` - the full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
 
 ## License
