@@ -27,7 +27,7 @@
     "pad-component": "0.0.1",
     "read-file-stdin": "0.0.4",
     "rework": "^1.0.0",
-    "rework-calc": "~0.2.1",
+    "rework-calc": "^1.1.0",
     "rework-color-function": "^1.0.0",
     "rework-custom-media": "^0.1.1",
     "rework-font-variant": "1.0.1",
