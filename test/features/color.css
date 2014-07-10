@@ -1,12 +1,12 @@
 
 p {
   color: color(black tint(10%));
-  background-color: color(#fffa alpha(100%));
+  background-color: color(rgba(255, 255, 255, .5) alpha(100%));
 }
 
 @media (min-width: 10px) {
   p {
     color: color(black tint(10%));
-    background-color: color(#fffa alpha(100%));
+    background-color: color(rgba(255, 255, 255, .5) alpha(100%));
   }
 }

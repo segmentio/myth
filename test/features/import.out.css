@@ -1,4 +1,8 @@
 
+html {
+  color: black;
+}
+
 body {
-  color: #F00;
+  color: red;
 }
