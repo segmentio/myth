@@ -7,8 +7,8 @@
 * improved `@import`
 * update autoprefixer to 2.x
 * sourcemap support thanks to rework 1.x
-* fixed `maximum call stack` issue ([#91](https://github.com/segmentio/myth/issues/91)
-* fixed empty `font-feature` value issue [#79](https://github.com/segmentio/myth/issues/79))
+* fixed `maximum call stack` issue ([#91](https://github.com/segmentio/myth/issues/91))
+* fixed empty `font-feature` value issue ([#79](https://github.com/segmentio/myth/issues/79))
 
 1.0.4 - June 3, 2014
 --------------------
