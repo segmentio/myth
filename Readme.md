@@ -1,11 +1,11 @@
-# Myth
 
+# Myth [![Build Status](https://travis-ci.org/segmentio/myth.png)](http://travis-ci.org/segmentio/myth)
 
   _CSS the way it was imagined._
 
   Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's like a CSS polyfill.
 
-  [![Build Status](https://travis-ci.org/segmentio/myth.png)](http://travis-ci.org/segmentio/myth)
+  
 
 ## Installation
 
