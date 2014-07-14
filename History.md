@@ -1,3 +1,14 @@
+1.1.0 - July 14, 2014
+---------------------
+
+* add [custom media](http://dev.w3.org/csswg/mediaqueries/#custom-mq) feature
+* add [rebeccapurple](http://lists.w3.org/Archives/Public/www-style/2014Jun/0312.html) support (mapping to [`#663399`](http://dev.w3.org/csswg/css-color/#valuedef-rebeccapurple))
+* improved `calc()`
+* improved `@import`
+* update autoprefixer to 2.x
+* sourcemap support thanks to rework 1.x
+* fixed `maximum call stack` issue ([#91](https://github.com/segmentio/myth/issues/91)
+* fixed empty `font-feature` value issue [#79](https://github.com/segmentio/myth/issues/79))
 
 1.0.4 - June 3, 2014
 --------------------
