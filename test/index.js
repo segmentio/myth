@@ -8,6 +8,7 @@ var myth = require('..');
 var browser = require('../myth.js');
 var path = require('path');
 var slugify = require('to-slug-case');
+var spaceify = require('to-space-case');
 var Stream = require('stream').Readable;
 
 /**
@@ -68,8 +69,9 @@ describe('features', function(){
 });
 
 /**
-* Sourcemap test
-*/
+ * Sourcemap tests.
+ */
+
 describe('sourcemap', function(){
   it('should contain a correct sourcemap', function(){
     var input = read('sourcemap/in');
@@ -123,15 +125,7 @@ describe('cli', function(){
     child.stdin.end();
   });
 
-  it('should log on verbose', function(done){
-    exec('bin/myth -v test/cli/input.css test/cli/output.css', function(err, stdout){
-      if (err) return done(err);
-      assert(-1 != stdout.indexOf('write'));
-      done();
-    });
-  });
-
-  it('should log on non-existant file', function(done){
+  it('should error on non-existant file', function(done){
     exec('bin/myth test/cli/non-existant.css', function(err, stdout, stderr){
       assert(err);
       assert(err.code == 1);
@@ -152,11 +146,32 @@ describe('cli', function(){
     });
   });
 
-  it('should compress css with -c option', function (done) {
-    exec('bin/myth -c test/cli/compress.css', function (err, stdout, stderr) {
+  it('should log on --verbose', function(done){
+    exec('bin/myth --verbose test/cli/input.css test/cli/output.css', function(err, stdout){
+      if (err) return done(err);
+      assert(-1 != stdout.indexOf('write'));
+      done();
+    });
+  });
+
+  it('should minify on --compress', function(done){
+    exec('bin/myth --compress test/cli/compress.css', function(err, stdout, stderr){
       if (err) return done(err);
       assert.equal(stdout, 'body{color:red;}');
       done();
+    });
+  });
+
+  myth.features.forEach(function(feature){
+    var space = spaceify(feature);
+    var slug = slugify(feature);
+    var output = read('features/' + slug);
+    it('should disable ' + space + ' on --no-' + slug, function(done){
+      exec('bin/myth --no-' + slug + ' test/features/' + slug + '.css', function(err, stdout, stderr){
+        if (err) return done(err);
+        assert.equal(stdout.trim(), output.trim());
+        done();
+      });
     });
   });
 });

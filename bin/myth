@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+var fmt = require('util').format;
 var fs = require('fs');
 var exists = fs.existsSync;
 var logger = require('./logger');
@@ -8,6 +9,8 @@ var path = require('path');
 var resolve = path.resolve;
 var program = require('commander');
 var read = require('read-file-stdin');
+var slug = require('to-slug-case');
+var space = require('to-space-case');
 var watch = require('node-watch');
 var write = require('write-file-stdout');
 
@@ -20,7 +23,13 @@ program
   .usage('[<input>] [<output>]')
   .option('-c, --compress', 'compress output')
   .option('-w, --watch', 'watch the input file for changes')
-  .option('-v, --verbose', 'log verbose output for debugging');
+  .option('-v, --verbose', 'log verbose output for debugging\n');
+
+myth.features.forEach(function(feature){
+  var flag = fmt('--no-%s', slug(feature));
+  var desc = fmt('disable %s support', space(feature));
+  program.option(flag, desc);
+});
 
 /**
  * Examples.
@@ -86,7 +95,11 @@ function run(){
     var css = buffer.toString();
 
     try {
-      css = myth(css, { source: input, compress: program.compress });
+      css = myth(css, {
+        compress: program.compress,
+        features: program,
+        source: input
+      });
     } catch (e) {
       e.css = css;
       logger.throw(e);
