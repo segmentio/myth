@@ -69,21 +69,21 @@ describe('features', function(){
 });
 
 /**
- * Sourcemap test
+ * Sourcemap tests.
  */
 
-// describe('sourcemap', function(){
-//   it('should contain a correct sourcemap', function(){
-//     var input = read('sourcemap/in');
-//     var output = read('sourcemap/out');
-//     var options = {
-//       source: './test/sourcemap/in.css',
-//       sourcemap: true
-//     };
-//     var css = myth(input, options);
-//     assert.equal(css.trim(), output.trim());
-//   });
-// });
+describe('sourcemap', function(){
+  it('should contain a correct sourcemap', function(){
+    var input = read('sourcemap/in');
+    var output = read('sourcemap/out');
+    var options = {
+      source: './test/sourcemap/in.css',
+      sourcemap: true
+    };
+    var css = myth(input, options);
+    assert.equal(css.trim(), output.trim());
+  });
+});
 
 /**
  * CLI tests.
