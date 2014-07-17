@@ -5,7 +5,7 @@
 
   Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's like a CSS polyfill.
 
-  
+
 
 ## Installation
 
@@ -212,11 +212,21 @@ Usage: myth [<input>] [<output>]
 
 Options:
 
-  -c, --compress   compress the css output
-  -h, --help       output usage information
-  -v, --verbose    log verbose output for debugging
-  -V, --version    output the version number
-  -w, --watch      watch the input file for changes
+  -h, --help          output usage information
+  -V, --version       output the version number
+  -c, --compress      compress output
+  -w, --watch         watch the input file for changes
+  -v, --verbose       log verbose output for debugging
+
+  --no-import         disable import support
+  --no-variables      disable variables support
+  --no-custom-media   disable custom media support
+  --no-hex-alpha      disable hex alpha support
+  --no-color          disable color support
+  --no-calc           disable calc support
+  --no-font-variant   disable font variant support
+  --no-rebeccapurple  disable rebeccapurple support
+  --no-prefixes       disable prefixes support
 
 Examples:
 

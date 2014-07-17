@@ -1,3 +1,9 @@
+1.1.1 - July 17, 2014
+---------------------
+
+* fix `browsers` option [#97](https://github.com/segmentio/myth/pull/97)
+* add CLI options to disable features
+
 1.1.0 - July 14, 2014
 ---------------------
 
