@@ -91,7 +91,6 @@ pre {
 
 .Header {
   background: url(images/background.jpg);
-  -webkit-background-size: cover;
   background-size: cover;
   text-align: center;
   padding-bottom: 6em;
@@ -182,7 +181,6 @@ pre {
 .Section--feature-variables::before {
   height: 6em;
   bottom: 100%;
-  background: -webkit-gradient(linear, left top, left bottom, from(transparent), to(#26202B));
   background: -webkit-linear-gradient(top, transparent, #26202B);
   background: linear-gradient(to bottom, transparent, #26202B);
 }
@@ -198,7 +196,6 @@ pre {
 .Section--feature-no-prefixes::after {
   height: 14em;
   top: 100%;
-  background: -webkit-gradient(linear, left top, left bottom, from(#26202B), to(transparent));
   background: -webkit-linear-gradient(top, #26202B, transparent);
   background: linear-gradient(to bottom, #26202B, transparent);
 }
@@ -381,7 +378,6 @@ pre {
   .Section--feature .Section-example-code {
     width: 50%;
     float: left;
-    -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
