@@ -1,3 +1,8 @@
+
+1.2.0 - September 12, 2014
+--------------------------
+* upgrade `autoprefixer` to `3.0.0`
+
 1.1.1 - July 17, 2014
 ---------------------
 * fix `browsers` option [#97](https://github.com/segmentio/myth/pull/97)
@@ -9,8 +14,8 @@
 * add [rebeccapurple](http://lists.w3.org/Archives/Public/www-style/2014Jun/0312.html) support
 * improve `calc()` support
 * improve `@import` support
-* upgrade autoprefixer to `2.x`
-* upgrade rework to `1.x` for sourcemap support
+* upgrade autoprefixer to `2.0.0`
+* upgrade rework to `1.0.0` for sourcemap support
 * fix `maximum call stack` issue [#91](https://github.com/segmentio/myth/issues/91)
 * fix empty `font-feature` value issue [#79](https://github.com/segmentio/myth/issues/79)
 
