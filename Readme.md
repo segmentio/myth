@@ -189,7 +189,7 @@ a:hover {
 
 #### No Prefixes
 
-  The prefixes from the most-common *and* most-recent browsers are supported, so you never need to worry about what the current browser support landscape is. Big thanks to [`autoprefixer`](https://github.com/ai/autoprefixer)!
+  The prefixes from the most-common *and* most-recent browsers are supported, so you never need to worry about what the current browser support landscape is. Big thanks to [`autoprefixer`](https://github.com/postcss/autoprefixer)!
 
 ```css
 .button {
@@ -269,7 +269,7 @@ fs.writeFileSync('converted.css', converted);
 
   Options:
 
-  - `browsers` - `Array` - an array of [browsers and versions to support](https://github.com/ai/autoprefixer#browsers).
+  - `browsers` - `Array` - an array of [browsers and versions to support](https://github.com/postcss/autoprefixer#browsers).
   - `compress` - `Boolean` - whether to compress the CSS output.
   - `source` - `String` - the full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
 

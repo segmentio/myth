@@ -12,7 +12,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "autoprefixer": "^2.1.0",
+    "autoprefixer-core": "^3.0.0",
     "clone-component": "~0.2.2",
     "colors": "~0.6.2",
     "commander": "^2.1.0",
