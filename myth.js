@@ -1,6 +1,6 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.myth=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
-var autoprefixer = _dereq_('autoprefixer');
+var autoprefixer = _dereq_('autoprefixer-core');
 var calc = _dereq_('rework-calc');
 var clone = _dereq_('clone-component');
 var color = _dereq_('rework-color-function');
@@ -117,9 +117,7 @@ exports.prefixes = function(options){
   var plugin = options.plugin;
   var opts = clone(options);
   var src = options.source;
-  var prefixes = options.browsers
-    ? autoprefixer(options.browsers)
-    : autoprefixer();
+  var prefixes = autoprefixer({ browsers: options.browsers });
 
   return function(stylesheet, rework){
     var str = rework.toString(options);
@@ -130,7 +128,7 @@ exports.prefixes = function(options){
   };
 };
 
-},{"autoprefixer":5,"clone-component":106,"path":104,"rework":157,"rework-calc":108,"rework-color-function":111,"rework-custom-media":123,"rework-font-variant":124,"rework-hex-alpha":126,"rework-import":128,"rework-rebeccapurple":153,"rework-vars":154}],2:[function(_dereq_,module,exports){
+},{"autoprefixer-core":5,"clone-component":106,"path":104,"rework":157,"rework-calc":108,"rework-color-function":111,"rework-custom-media":123,"rework-font-variant":124,"rework-hex-alpha":126,"rework-import":128,"rework-rebeccapurple":153,"rework-vars":154}],2:[function(_dereq_,module,exports){
 
 var features = _dereq_('./features');
 var Rework = _dereq_('rework');
@@ -592,6 +590,13 @@ function plugin(options){
     } else if (typeof reqs[reqs.length - 1] === 'object') {
       options = reqs.pop();
     }
+    if ((options != null ? options.browsers : void 0) != null) {
+      reqs = options.browsers;
+    } else if (reqs) {
+      if (typeof console !== "undefined" && console !== null) {
+        console.warn('autoprefixer: autoprefixer(browsers) is deprecated ' + 'and will be removed in 3.1. ' + 'Use autoprefixer({ browsers: browsers }).');
+      }
+    }
     if (reqs == null) {
       reqs = autoprefixer["default"];
     }
@@ -642,7 +647,9 @@ function plugin(options){
   autoprefixer["default"] = ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1'];
 
   autoprefixer.loadDefault = function() {
-    return this.defaultCache || (this.defaultCache = autoprefixer(this["default"]));
+    return this.defaultCache || (this.defaultCache = autoprefixer({
+      browsers: this["default"]
+    }));
   };
 
   autoprefixer.process = function(str, options) {
@@ -653,7 +660,7 @@ function plugin(options){
   };
 
   autoprefixer.postcss = function(css) {
-    return this.loadDefault().postcss(css);
+    return autoprefixer.loadDefault().postcss(css);
   };
 
   autoprefixer.info = function() {
@@ -742,6 +749,9 @@ function plugin(options){
       none: {
         regexp: /^none$/i,
         select: function() {
+          if (typeof console !== "undefined" && console !== null) {
+            console.warn("autoprefixer(\'none\') is deprecated and will be " + 'removed in 3.1. ' + 'Use autoprefixer({ browsers: [] })');
+          }
           return [];
         }
       },
@@ -9695,27 +9705,27 @@ var Container = _dereq_('./container');
 // CSS at-rule like “this.keyframes name { }”.
 //
 // Can contain declarations (like this.font-face or this.page) ot another rules.
-var AtRule = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};"use strict";MIXIN$0(AtRule, super$0);
+var AtRule = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(AtRule, super$0);var $proto$0={};
     function AtRule(defaults) {
         this.type = 'atrule';
         super$0.call(this, defaults);
     }AtRule.prototype = Object.create(super$0.prototype, {"constructor": {"value": AtRule, "configurable": true, "writable": true} });DP$0(AtRule, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Different style for this.encoding and this.page at-rules.
-    AtRule.prototype.styleType = function() {
+    $proto$0.styleType = function() {
         return this.type + ((this.rules || this.decls) ? '-body' : '-bodiless');
-    }
+    };
 
-    AtRule.prototype.defaultStyle = function(type) {
+    $proto$0.defaultStyle = function(type) {
         if ( type == 'atrule-body' ) {
             return { between: ' ', after: this.defaultAfter() };
         } else {
             return { between: '' };
         }
-    }
+    };
 
     // Load into at-rule mixin for selected content type
-    AtRule.prototype.addMixin = function(type) {
+    $proto$0.addMixin = function(type) {
         var mixin = type == 'rules' ? Container.WithRules : Container.WithDecls;
         if ( !mixin ) return;
 
@@ -9730,10 +9740,10 @@ var AtRule = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = f
             this[name] = value;
         }
         mixin.apply(this);
-    }
+    };
 
     // Stringify at-rule
-    AtRule.prototype.stringify = function(builder, last) {
+    $proto$0.stringify = function(builder, last) {
         var style = this.style();
 
         var name   = '@' + this.name;
@@ -9753,22 +9763,22 @@ var AtRule = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = f
             var semicolon = (!last || this.semicolon) ? ';' : '';
             builder(name + params + style.between + semicolon, this);
         }
-    }
+    };
 
     // Hack to detect container type by child type
-    AtRule.prototype.append = function(child) {
+    $proto$0.append = function(child) {
         var mixin = child.type == 'decl' ? 'decls' : 'rules';
         this.addMixin(mixin);
         return this.append(child);
-    }
+    };
 
     // Hack to detect container type by child type
-    AtRule.prototype.prepend = function(child) {
+    $proto$0.prepend = function(child) {
         var mixin = child.type == 'decl' ? 'decls' : 'rules';
         this.addMixin(mixin);
         return this.prepend(child);
-    }
-;return AtRule;})(Container);
+    };
+MIXIN$0(AtRule.prototype,$proto$0);$proto$0=void 0;return AtRule;})(Container);
 
 module.exports = AtRule;
 
@@ -9776,24 +9786,24 @@ module.exports = AtRule;
 var Node = _dereq_('./node');
 
 // CSS comment between declarations or rules
-var Comment = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};"use strict";MIXIN$0(Comment, super$0);
+var Comment = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Comment, super$0);var $proto$0={};
     function Comment(defaults) {
         this.type = 'comment';
         super$0.call(this, defaults);
     }Comment.prototype = Object.create(super$0.prototype, {"constructor": {"value": Comment, "configurable": true, "writable": true} });DP$0(Comment, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Default spaces for new node
-    Comment.prototype.defaultStyle = function() {
+    $proto$0.defaultStyle = function() {
        return { left: ' ', right: ' ' };
-    }
+    };
 
     // Stringify declaration
-    Comment.prototype.stringify = function(builder) {
+    $proto$0.stringify = function(builder) {
         var style = this.style();
         if ( this.before ) builder(this.before);
         builder('/*' + style.left + this.text + style.right + '*/', this);
-    }
-;return Comment;})(Node);
+    };
+MIXIN$0(Comment.prototype,$proto$0);$proto$0=void 0;return Comment;})(Node);
 
 module.exports = Comment;
 
@@ -9802,9 +9812,9 @@ var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(
 var Declaration = _dereq_('./declaration');
 
 // CSS node, that contain another nodes (like at-rules or rules with selectors)
-var Container = (function(super$0){"use strict";function Container() {super$0.apply(this, arguments)}MIXIN$0(Container, super$0);Container.prototype = Object.create(super$0.prototype, {"constructor": {"value": Container, "configurable": true, "writable": true}, first: {"get": first$get$0, "configurable": true, "enumerable": true}, last: {"get": last$get$0, "configurable": true, "enumerable": true}, list: {"get": list$get$0, "configurable": true, "enumerable": true} });DP$0(Container, "prototype", {"configurable": false, "enumerable": false, "writable": false});var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function')return f.call(v);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};
+var Container = (function(super$0){"use strict";function Container() {super$0.apply(this, arguments)}MIXIN$0(Container, super$0);Container.prototype = Object.create(super$0.prototype, {"constructor": {"value": Container, "configurable": true, "writable": true}, first: {"get": first$get$0, "configurable": true, "enumerable": true}, last: {"get": last$get$0, "configurable": true, "enumerable": true}, list: {"get": list$get$0, "configurable": true, "enumerable": true} });DP$0(Container, "prototype", {"configurable": false, "enumerable": false, "writable": false});var $proto$0={};var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};
     // Stringify container childs
-    Container.prototype.stringifyContent = function(builder) {
+    $proto$0.stringifyContent = function(builder) {
         if ( !this.rules && !this.decls ) return;
 
         var i, last = this.list.length - 1;
@@ -9818,10 +9828,10 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
                 this.decls[i].stringify(builder, last != i || this.semicolon);
             }
         }
-    }
+    };
 
     // Generate default spaces before }
-    Container.prototype.defaultAfter = function() {
+    $proto$0.defaultAfter = function() {
         if ( this.list.length === 0 ) {
             return '';
         } else {
@@ -9832,11 +9842,11 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
                 return "\n";
             }
         }
-    }
+    };
 
     // Stringify node with start (for example, selector) and brackets block
     // with child inside
-    Container.prototype.stringifyBlock = function(builder, start) {
+    $proto$0.stringifyBlock = function(builder, start) {
         var style = this.style();
 
         if ( this.before ) builder(this.before);
@@ -9846,15 +9856,15 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
 
         if ( style.after ) builder(style.after);
         builder('}', this, 'end');
-    }
+    };
 
     // Add child to end of list without any checks.
     // Please, use `append()` method, `push()` is mostly for parser.
-    Container.prototype.push = function(child) {
+    $proto$0.push = function(child) {
         child.parent = this;
         this.list.push(child);
         return this;
-    }
+    };
 
     // Execute `callback` on every child element. First arguments will be child
     // node, second will be index.
@@ -9870,7 +9880,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     //      # On next iteration will be next rule, regardless of that
     //      # list size was increased
     //  });
-    Container.prototype.each = function(callback) {
+    $proto$0.each = function(callback) {
         if ( !this.lastEach ) this.lastEach = 0;
         if ( !this.indexes )  this.indexes = { };
 
@@ -9894,7 +9904,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
         delete this.indexes[id];
 
         if ( result === false ) return false;
-    }
+    };
 
     // Execute callback on every child in all rules inside.
     //
@@ -9905,7 +9915,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     //   });
     //
     // Also as `each` it is safe of insert/remove nodes inside iterating.
-    Container.prototype.eachInside = function(callback) {
+    $proto$0.eachInside = function(callback) {
         return this.each( function(child, i)  {
             var result = callback(child, i);
 
@@ -9915,7 +9925,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
 
             if ( result === false ) return result;
         });
-    }
+    };
 
     // Execute callback on every declaration in all rules inside.
     // It will goes inside at-rules recursivelly.
@@ -9928,9 +9938,9 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     //   });
     //
     // Also as `each` it is safe of insert/remove nodes inside iterating.
-    Container.prototype.eachDecl = function(callback) {
+    $proto$0.eachDecl = function(callback) {
         // Different realization will be inside subclasses
-    }
+    };
 
     // Execute callback on every block comment (only between rules
     // and declarations, not inside selectors and values) in all rules inside.
@@ -9943,14 +9953,14 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     //   });
     //
     // Also as `each` it is safe of insert/remove nodes inside iterating.
-    Container.prototype.eachComment = function(callback) {
+    $proto$0.eachComment = function(callback) {
         return this.eachInside( function(child, i)  {
             if ( child.type == 'comment' ) {
                 var result = callback(child, i);
                 if ( result === false ) return result;
             }
         });
-    }
+    };
 
     // Add child to container.
     //
@@ -9959,13 +9969,13 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     // You can add declaration by hash:
     //
     //   rule.append({ prop: 'color', value: 'black' });
-    Container.prototype.append = function(child) {var $D$0;var $D$1;var $D$2;
+    $proto$0.append = function(child) {var $D$0;var $D$1;var $D$2;
         var childs = this.normalize(child, this.list[this.list.length - 1]);
-        $D$0 = GET_ITER$0(childs);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? childs.length : void 0);for ( child ; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){child = ($D$2 ? childs[$D$0++] : $D$1["value"]);
+        $D$0 = GET_ITER$0(childs);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? childs.length : void 0);for ( child ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){child = ($D$2 ? childs[$D$0++] : $D$1["value"]);
             this.list.push(child);
         };$D$0 = $D$1 = $D$2 = void 0;
         return this;
-    }
+    };
 
     // Add child to beginning of container
     //
@@ -9974,9 +9984,9 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     // You can add declaration by hash:
     //
     //   rule.prepend({ prop: 'color', value: 'black' });
-    Container.prototype.prepend = function(child) {var $D$3;var $D$4;var $D$5;
+    $proto$0.prepend = function(child) {var $D$3;var $D$4;var $D$5;
         var childs = this.normalize(child, this.list[0], 'prepend').reverse();
-        $D$3 = GET_ITER$0(childs);$D$5 = $D$3 === 0;$D$4 = ($D$5 ? childs.length : void 0);for ( child ; $D$5 ? ($D$3 < $D$4) : !($D$4 = $D$3["next"]())["done"]; ){child = ($D$5 ? childs[$D$3++] : $D$4["value"]);
+        $D$3 = GET_ITER$0(childs);$D$5 = $D$3 === 0;$D$4 = ($D$5 ? childs.length : void 0);for ( child ;$D$5 ? ($D$3 < $D$4) : !($D$4 = $D$3["next"]())["done"];){child = ($D$5 ? childs[$D$3++] : $D$4["value"]);
             this.list.unshift(child);
         };$D$3 = $D$4 = $D$5 = void 0;
 
@@ -9985,7 +9995,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
         }
 
         return this;
-    }
+    };
 
     // Insert new `added` child before `exist`.
     // You can set node object or node index (it will be faster) in `exist`.
@@ -9995,12 +10005,12 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     // You can add declaration by hash:
     //
     //   rule.insertBefore(1, { prop: 'color', value: 'black' });
-    Container.prototype.insertBefore = function(exist, add) {var $D$6;var $D$7;var $D$8;
+    $proto$0.insertBefore = function(exist, add) {var $D$6;var $D$7;var $D$8;
         exist = this.index(exist);
 
         var type   = exist === 0 ? 'prepend' : false;
         var childs = this.normalize(add, this.list[exist], type).reverse();
-        $D$6 = GET_ITER$0(childs);$D$8 = $D$6 === 0;$D$7 = ($D$8 ? childs.length : void 0);for ( var child ; $D$8 ? ($D$6 < $D$7) : !($D$7 = $D$6["next"]())["done"]; ){child = ($D$8 ? childs[$D$6++] : $D$7["value"]);
+        $D$6 = GET_ITER$0(childs);$D$8 = $D$6 === 0;$D$7 = ($D$8 ? childs.length : void 0);for ( var child ;$D$8 ? ($D$6 < $D$7) : !($D$7 = $D$6["next"]())["done"];){child = ($D$8 ? childs[$D$6++] : $D$7["value"]);
             this.list.splice(exist, 0, child);
         };$D$6 = $D$7 = $D$8 = void 0;
 
@@ -10009,7 +10019,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
         }
 
         return this;
-    }
+    };
 
     // Insert new `added` child after `exist`.
     // You can set node object or node index (it will be faster) in `exist`.
@@ -10019,11 +10029,11 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     // You can add declaration by hash:
     //
     //   rule.insertAfter(1, { prop: 'color', value: 'black' });
-    Container.prototype.insertAfter = function(exist, add) {var $D$9;var $D$10;var $D$11;
+    $proto$0.insertAfter = function(exist, add) {var $D$9;var $D$10;var $D$11;
         exist = this.index(exist);
 
         var childs = this.normalize(add, this.list[exist]).reverse();
-        $D$9 = GET_ITER$0(childs);$D$11 = $D$9 === 0;$D$10 = ($D$11 ? childs.length : void 0);for ( var child ; $D$11 ? ($D$9 < $D$10) : !($D$10 = $D$9["next"]())["done"]; ){child = ($D$11 ? childs[$D$9++] : $D$10["value"]);
+        $D$9 = GET_ITER$0(childs);$D$11 = $D$9 === 0;$D$10 = ($D$11 ? childs.length : void 0);for ( var child ;$D$11 ? ($D$9 < $D$10) : !($D$10 = $D$9["next"]())["done"];){child = ($D$11 ? childs[$D$9++] : $D$10["value"]);
             this.list.splice(exist + 1, 0, child);
         };$D$9 = $D$10 = $D$11 = void 0;
 
@@ -10032,12 +10042,12 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
         }
 
         return this;
-    }
+    };
 
     // Remove `child` by index or node.
     //
     //   css.remove(2);
-    Container.prototype.remove = function(child) {
+    $proto$0.remove = function(child) {
         child = this.index(child);
         this.list.splice(child, 1);
 
@@ -10049,28 +10059,28 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
         }
 
         return this;
-    }
+    };
 
     // Return true if all childs return true in `condition`.
     // Just shorcut for `list.every`.
-    Container.prototype.every = function(condition) {
+    $proto$0.every = function(condition) {
         return this.list.every(condition);
-    }
+    };
 
     // Return true if one or more childs return true in `condition`.
     // Just shorcut for `list.some`.
-    Container.prototype.some = function(condition) {
+    $proto$0.some = function(condition) {
         return this.list.some(condition);
-    }
+    };
 
     // Return index of child
-    Container.prototype.index = function(child) {
+    $proto$0.index = function(child) {
         if ( typeof(child) == 'number' ) {
             return child;
         } else {
             return this.list.indexOf(child);
         }
-    }
+    };
 
     // Shortcut to get first child
     function first$get$0() {
@@ -10090,7 +10100,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     }
 
     // Normalize child before insert. Copy before from `sample`.
-    Container.prototype.normalize = function(child, sample) {var $D$12;var $D$13;var $D$14;
+    $proto$0.normalize = function(child, sample) {var $D$12;var $D$13;var $D$14;
         var childs;
         if ( child.type == 'root' ) {
             childs = child.rules;
@@ -10103,7 +10113,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
             childs = [child];
         }
 
-        $D$12 = GET_ITER$0(childs);$D$14 = $D$12 === 0;$D$13 = ($D$14 ? childs.length : void 0);for ( child ; $D$14 ? ($D$12 < $D$13) : !($D$13 = $D$12["next"]())["done"]; ){child = ($D$14 ? childs[$D$12++] : $D$13["value"]);
+        $D$12 = GET_ITER$0(childs);$D$14 = $D$12 === 0;$D$13 = ($D$14 ? childs.length : void 0);for ( child ;$D$14 ? ($D$12 < $D$13) : !($D$13 = $D$12["next"]())["done"];){child = ($D$14 ? childs[$D$12++] : $D$13["value"]);
             child.parent = this;
             if ( typeof(child.before) == 'undefined' && sample ) {
                 child.before = sample.before;
@@ -10111,11 +10121,11 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
         };$D$12 = $D$13 = $D$14 = void 0;
 
         return childs;
-    }
-;return Container;})(Node);
+    };
+MIXIN$0(Container.prototype,$proto$0);$proto$0=void 0;return Container;})(Node);
 
 // Container with another rules, like this.media at-rule
- Container.WithRules = ((function(super$0){"use strict";MIXIN$0(constructor$0, super$0);
+ Container.WithRules = ((function(super$0){"use strict";MIXIN$0(constructor$0, super$0);var $proto$0={};
     function constructor$0(defaults) {
         this.rules = [];
         super$0.call(this, defaults);
@@ -10125,14 +10135,14 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     // It will goes inside at-rules recursivelly.
     //
     // See documentation in `Container#eachDecl`.
-    constructor$0.prototype.eachDecl = function(callback) {
+    $proto$0.eachDecl = function(callback) {
         return this.each( function(child)  {
             if ( child.eachDecl ) {
                 var result = child.eachDecl(callback);
                 if ( result === false ) return result;
             }
         });
-    }
+    };
 
     // Execute `callback` on every rule in conatiner and inside child at-rules.
     //
@@ -10145,7 +10155,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     //           console.log(rule.selector + ' at ' + i);
     //       }
     //   });
-    constructor$0.prototype.eachRule = function(callback) {
+    $proto$0.eachRule = function(callback) {
         return this.each( function(child, i)  {
             var result;
             if ( child.type == 'rule' ) {
@@ -10155,7 +10165,7 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
             }
             if ( result === false ) return result;
         });
-    }
+    };
 
     // Execute `callback` on every at-rule in conatiner and inside at-rules.
     //
@@ -10168,61 +10178,62 @@ var Container = (function(super$0){"use strict";function Container() {super$0.ap
     //           console.log(atrule.name + ' at ' + i);
     //       }
     //   });
-    constructor$0.prototype.eachAtRule = function(callback) {
+    $proto$0.eachAtRule = function(callback) {
         return this.eachInside( function(child, i)  {
             if ( child.type == 'atrule' ) {
                 var result = callback(child, i);
                 if ( result === false ) return result;
             }
         });
-    }
-;return constructor$0;})(Container));
+    };
+MIXIN$0(constructor$0.prototype,$proto$0);$proto$0=void 0;return constructor$0;})(Container));
 
 // Container with another rules, like this.media at-rule
- Container.WithDecls = ((function(super$0){"use strict";MIXIN$0(constructor$1, super$0);
+ Container.WithDecls = ((function(super$0){"use strict";MIXIN$0(constructor$1, super$0);var $proto$0={};
     function constructor$1(defaults) {
         this.decls = [];
         super$0.call(this, defaults);
     }constructor$1.prototype = Object.create(super$0.prototype, {"constructor": {"value": constructor$1, "configurable": true, "writable": true} });DP$0(constructor$1, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Allow to define new declaration as hash
-    constructor$1.prototype.normalize = function(child, sample, type) {
+    $proto$0.normalize = function(child, sample, type) {
         if ( !child.type && !Array.isArray(child) ) {
             child = new Declaration(child);
         }
         return super$0.prototype.normalize.call(this, child, sample, type);
-    }
+    };
 
     // Execute callback on every declaration.
     //
     // See documentation in `Container#eachDecl`.
-    constructor$1.prototype.eachDecl = function(callback) {
+    $proto$0.eachDecl = function(callback) {
         return this.each( function(child, i)  {
             if ( child.type == 'decl' ) {
                 var result = callback(child, i);
                 if ( result === false ) return result;
             }
         });
-    }
-;return constructor$1;})(Container));
+    };
+MIXIN$0(constructor$1.prototype,$proto$0);$proto$0=void 0;return constructor$1;})(Container));
 
 module.exports = Container;
 
 },{"./declaration":78,"./node":81}],77:[function(_dereq_,module,exports){
 (function (process){
 // Error while CSS parsing
-var CssSyntaxError = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};"use strict";MIXIN$0(CssSyntaxError, super$0);
+var CssSyntaxError = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(CssSyntaxError, super$0);var $proto$0={};
     function CssSyntaxError(text, source, pos, file) {
         this.file     = file;
         this.line     = pos.line;
         this.column   = pos.column;
         this.source   = source;
-        this.message  = "Can't parse CSS: " + text;
-        this.message += ' at line ' + pos.line + ':' + pos.column;
-        if ( file ) this.message += ' in ' + file;
+        this.reason   = text;
+
+        this.message  = file ? file : '<css input>';
+        this.message += ':' + pos.line + ':' + pos.column + ': ' + text;
     }CssSyntaxError.prototype = Object.create(super$0.prototype, {"constructor": {"value": CssSyntaxError, "configurable": true, "writable": true} });DP$0(CssSyntaxError, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
-    CssSyntaxError.prototype.highlight = function(color) {
+    $proto$0.highlight = function(color) {
         var num   = this.line - 1;
         var lines = this.source.split('\n');
 
@@ -10249,12 +10260,12 @@ var CssSyntaxError = (function(super$0){var DP$0 = Object.defineProperty;var MIX
         }
 
         return prev + broken + mark + next;
-    }
+    };
 
-    CssSyntaxError.prototype.toString = function() {
+    $proto$0.toString = function() {
         return this.message + "\n" + this.highlight();
-    }
-;return CssSyntaxError;})(Error);
+    };
+MIXIN$0(CssSyntaxError.prototype,$proto$0);$proto$0=void 0;return CssSyntaxError;})(Error);
 
 module.exports = CssSyntaxError;
 
@@ -10264,18 +10275,18 @@ var Node   = _dereq_('./node');
 var vendor = _dereq_('./vendor');
 
 // CSS declaration like “color: black” in rules
-var Declaration = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};"use strict";MIXIN$0(Declaration, super$0);
+var Declaration = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Declaration, super$0);var $proto$0={};
     function Declaration(defaults) {
         this.type = 'decl';
         super$0.call(this, defaults);
     }Declaration.prototype = Object.create(super$0.prototype, {"constructor": {"value": Declaration, "configurable": true, "writable": true} });DP$0(Declaration, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
-    Declaration.prototype.defaultStyle = function() {
+    $proto$0.defaultStyle = function() {
         return { before: "\n    ", between: ': ' };
-    }
+    };
 
     // Stringify declaration
-    Declaration.prototype.stringify = function(builder, semicolon) {
+    $proto$0.stringify = function(builder, semicolon) {
         var style = this.style();
 
         if ( style.before ) builder(style.before);
@@ -10287,17 +10298,17 @@ var Declaration = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$
 
         if ( semicolon ) string += ';';
         builder(string, this);
-    }
+    };
 
     // Clean `before` and `between` property in clone to copy it from new
     // parent rule
-    Declaration.prototype.clone = function() {var overrides = arguments[0];if(overrides === void 0)overrides = { };
+    $proto$0.clone = function() {var overrides = arguments[0];if(overrides === void 0)overrides = { };
         var cloned = super$0.prototype.clone.call(this, overrides);
         delete cloned.before;
         delete cloned.between;
         return cloned;
-    }
-;return Declaration;})(Node);
+    };
+MIXIN$0(Declaration.prototype,$proto$0);$proto$0=void 0;return Declaration;})(Node);
 
 module.exports = Declaration;
 
@@ -10307,7 +10318,7 @@ var list = {
 
     // Split string to array by separator symbols with function and inside strings
     // cheching
-    split: function (string, separators, last) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function')return f.call(v);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;
+    split: function (string, separators, last) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;
         var array   = [];
         var current = '';
         var split   = false;
@@ -10334,7 +10345,7 @@ var list = {
             } else if ( letter == ')' ) {
                 if ( func > 0 ) func -= 1;
             } else if ( func === 0 ) {
-                $D$0 = GET_ITER$0(separators);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? separators.length : void 0);for ( var separator ; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){separator = ($D$2 ? separators[$D$0++] : $D$1["value"]);
+                $D$0 = GET_ITER$0(separators);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? separators.length : void 0);for ( var separator ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){separator = ($D$2 ? separators[$D$0++] : $D$1["value"]);
                     if ( letter == separator ) split = true;
                 };$D$0 = $D$1 = $D$2 = void 0;
             }
@@ -10386,7 +10397,7 @@ var Base64  = _dereq_('js-base64').Base64;
 var path    = _dereq_('path');
 
 // All tools to generate source maps
-var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
+var MapGenerator = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
     function MapGenerator(root, opts) {
         this.root    = root;
         this.opts    = opts;
@@ -10394,16 +10405,16 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
     }DP$0(MapGenerator, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Should map be generated
-    MapGenerator.prototype.isMap = function() {
+    $proto$0.isMap = function() {
         if ( typeof(this.opts.map) != 'undefined' ) {
             return !!this.opts.map;
         } else {
             return this.previous().length > 0;
         }
-    }
+    };
 
     // Return source map arrays from previous compilation step (like Sass)
-    MapGenerator.prototype.previous = function() {var this$0 = this;
+    $proto$0.previous = function() {var this$0 = this;
         if ( !this.previousMaps ) {
             this.previousMaps = [];
             this.root.eachInside( function(node)  {
@@ -10416,26 +10427,26 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         }
 
         return this.previousMaps;
-    }
+    };
 
     // Should we inline source map to annotation comment
-    MapGenerator.prototype.isInline = function() {
+    $proto$0.isInline = function() {
         if ( typeof(this.mapOpts.inline) != 'undefined' ) {
             return this.mapOpts.inline;
         }
         return this.previous().some( function(i ) {return i.inline} );
-    }
+    };
 
     // Should we set sourcesContent
-    MapGenerator.prototype.isSourcesContent = function() {
+    $proto$0.isSourcesContent = function() {
         if ( typeof(this.mapOpts.sourcesContent) != 'undefined' ) {
             return this.mapOpts.sourcesContent;
         }
         return this.previous().some( function(i ) {return i.withContent()} );
-    }
+    };
 
     // Clear source map annotation comment
-    MapGenerator.prototype.clearAnnotation = function() {
+    $proto$0.clearAnnotation = function() {
         var last = this.root.last;
         if ( !last ) return;
         if ( last.type != 'comment' ) return;
@@ -10443,10 +10454,10 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         if ( last.text.match(/^# sourceMappingURL=/) ) {
             last.removeSelf();
         }
-    }
+    };
 
     // Set origin CSS content
-    MapGenerator.prototype.setSourcesContent = function() {var this$0 = this;
+    $proto$0.setSourcesContent = function() {var this$0 = this;
         var already = { };
         this.root.eachInside( function(node)  {
             var file = node.source.file || node.source.id;
@@ -10456,11 +10467,11 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
                 this$0.map.setSourceContent(relative, node.source.content);
             }
         });
-    }
+    };
 
     // Apply source map from previous compilation step (like Sass)
-    MapGenerator.prototype.applyPrevMaps = function() {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function')return f.call(v);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;
-        $D$3 = (this.previous());$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for ( var prev ; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){prev = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);
+    $proto$0.applyPrevMaps = function() {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;
+        $D$3 = (this.previous());$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for ( var prev ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){prev = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);
             var from = this.relative(prev.file);
             var root = prev.root || path.dirname(prev.file);
             var map;
@@ -10474,10 +10485,10 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             this.map.applySourceMap(map, from, this.relative(root));
         };$D$0 = $D$1 = $D$2 = $D$3 = void 0;
-    }
+    };
 
     // Should we add annotation comment
-    MapGenerator.prototype.isAnnotation = function() {
+    $proto$0.isAnnotation = function() {
         if ( this.isInline() ) {
             return true ;
         } else if ( typeof(this.mapOpts.annotation) != 'undefined' ) {
@@ -10487,10 +10498,10 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return true;
         }
-    }
+    };
 
     // Add source map annotation comment if it is needed
-    MapGenerator.prototype.addAnnotation = function() {
+    $proto$0.addAnnotation = function() {
         var content;
 
         if ( this.isInline() ) {
@@ -10505,15 +10516,15 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         }
 
         this.css += "\n/*# sourceMappingURL=" + content + " */";
-    }
+    };
 
     // Return output CSS file path
-    MapGenerator.prototype.outputFile = function() {
+    $proto$0.outputFile = function() {
         return this.opts.to ? this.relative(this.opts.to) : 'to.css';
-    }
+    };
 
     // Return Result object with map
-    MapGenerator.prototype.generateMap = function() {
+    $proto$0.generateMap = function() {
         this.stringify();
         if ( this.isSourcesContent() )    this.setSourcesContent();
         if ( this.previous().length > 0 ) this.applyPrevMaps();
@@ -10524,10 +10535,10 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return [this.css, this.map];
         }
-    }
+    };
 
     // Return path relative from output CSS file
-    MapGenerator.prototype.relative = function(file) {
+    $proto$0.relative = function(file) {
         var from = this.opts.to ? path.dirname(this.opts.to) : '.';
 
         if ( typeof(this.mapOpts.annotation) == 'string' ) {
@@ -10540,15 +10551,15 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return file;
         }
-    }
+    };
 
     // Return path of node source for map
-    MapGenerator.prototype.sourcePath = function(node) {
+    $proto$0.sourcePath = function(node) {
         return this.relative(node.source.file || node.source.id);
-    }
+    };
 
     // Return CSS string and source map
-    MapGenerator.prototype.stringify = function() {var this$0 = this;
+    $proto$0.stringify = function() {var this$0 = this;
         this.css = '';
         this.map = new mozilla.SourceMapGenerator({ file: this.outputFile() });
 
@@ -10598,10 +10609,10 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         };
 
         this.root.stringify(builder);
-    }
+    };
 
     // Return Result object with or without map
-    MapGenerator.prototype.generate = function() {
+    $proto$0.generate = function() {
         this.clearAnnotation();
 
         if ( this.isMap() ) {
@@ -10609,8 +10620,8 @@ var MapGenerator = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return [this.root.toString()];
         }
-    }
-;return MapGenerator;})();
+    };
+MIXIN$0(MapGenerator.prototype,$proto$0);$proto$0=void 0;return MapGenerator;})();
 
 module.exports = MapGenerator;
 
@@ -10655,7 +10666,7 @@ var keys = function (obj, keys) {
 };
 
 // Some common methods for all CSS nodes
-var Node = (function(){var DP$0 = Object.defineProperty;"use strict";
+var Node = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
     function Node() {var defaults = arguments[0];if(defaults === void 0)defaults = { };
         for ( var name in defaults ) {
             this[name] = defaults[name];
@@ -10669,22 +10680,31 @@ var Node = (function(){var DP$0 = Object.defineProperty;"use strict";
     // Note, that removing by index is faster:
     //
     //   rule.each( (decl, i) => rule.remove(i) );
-    Node.prototype.removeSelf = function() {
+    $proto$0.removeSelf = function() {
         if ( this.parent ) {
             this.parent.remove(this);
         }
         return this;
-    }
+    };
+
+    // Shortcut to insert nodes before and remove self.
+    //
+    //   importNode.replace( loadedRoot );
+    $proto$0.replace = function(nodes) {
+        this.parent.insertBefore(this, nodes);
+        this.parent.remove(this);
+        return this;
+    };
 
     // Return CSS string of current node
     //
     //   decl.toString(); //=> "  color: black"
-    Node.prototype.toString = function() {
+    $proto$0.toString = function() {
         var result  = '';
         var builder = function(str)  {return result += str};
         this.stringify(builder);
         return result;
-    }
+    };
 
     // Clone current node
     //
@@ -10693,16 +10713,16 @@ var Node = (function(){var DP$0 = Object.defineProperty;"use strict";
     // You can override properties while cloning:
     //
     //   rule.append( decl.clone({ value: '0' }) );
-    Node.prototype.clone = function() {var overrides = arguments[0];if(overrides === void 0)overrides = { };
+    $proto$0.clone = function() {var overrides = arguments[0];if(overrides === void 0)overrides = { };
         var cloned = clone(this);
         for ( var name in overrides ) {
             cloned[name] = overrides[name];
         }
         return cloned;
-    }
+    };
 
     // Remove `parent` node on cloning to fix circular structures
-    Node.prototype.toJSON = function() {
+    $proto$0.toJSON = function() {
         var fixed = { };
 
         for ( var name in this ) {
@@ -10722,21 +10742,21 @@ var Node = (function(){var DP$0 = Object.defineProperty;"use strict";
         }
 
         return fixed;
-    }
+    };
 
     // Default code style
-    Node.prototype.defaultStyle = function() {
+    $proto$0.defaultStyle = function() {
         return { };
-    }
+    };
 
     // Allow to split node with same type by other critera.
     // For example, to use different style for bodiless at-rules.
-    Node.prototype.styleType = function() {
+    $proto$0.styleType = function() {
         return this.type;
-    }
+    };
 
     // Copy code style from first node with same type
-    Node.prototype.style = function() {var this$0 = this;
+    $proto$0.style = function() {var this$0 = this;
         var type     = this.styleType();
         var defaults = this.defaultStyle(type);
 
@@ -10779,10 +10799,10 @@ var Node = (function(){var DP$0 = Object.defineProperty;"use strict";
         }
 
         return merge;
-    }
+    };
 
     // Use raw value if origin was not changed
-    Node.prototype.stringifyRaw = function(prop) {
+    $proto$0.stringifyRaw = function(prop) {
         var value = this[prop];
         var raw   = this['_' + prop];
         if ( raw && raw.value === value ) {
@@ -10790,8 +10810,8 @@ var Node = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return value;
         }
-    }
-;return Node;})();
+    };
+MIXIN$0(Node.prototype,$proto$0);$proto$0=void 0;return Node;})();
 
 module.exports = Node;
 
@@ -10811,7 +10831,7 @@ var isSpace = /\s/;
 var sequence = 0;
 
 // CSS parser
-var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
+var Parser = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
     function Parser(source) {var opts = arguments[1];if(opts === void 0)opts = { };
         this.source = source.toString();
         this.opts   = opts;
@@ -10831,7 +10851,7 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         this.buffer = '';
     }DP$0(Parser, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
-    Parser.prototype.loop = function() {
+    $proto$0.loop = function() {
         this.next  = this.source[0];
         var length = this.source.length - 1;
         while ( this.pos < length ) {
@@ -10839,17 +10859,17 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
             this.nextLetter();
         }
         this.endFile();
-    }
+    };
 
-    Parser.prototype.setMap = function() {
+    $proto$0.setMap = function() {
         var map = new PreviousMap(this.root, this.opts, this.id);
         if ( map.text ) {
             this.root.prevMap = map;
             this.root.eachInside( function(i ) {return i.source.map = map} );
         }
-    }
+    };
 
-    Parser.prototype.nextLetter = function() {
+    $proto$0.nextLetter = function() {
         return this.inString()   ||
                this.inComment()  ||
                this.isComment()  ||
@@ -10861,11 +10881,11 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
                this.isBlockEnd() ||
                this.inSelector() || this.isSelector() ||
                this.inProperty() || this.isProperty() || this.inValue();
-    }
+    };
 
     // Parsers
 
-    Parser.prototype.inString = function(close) {
+    $proto$0.inString = function(close) {
         if ( this.quote ) {
             if ( this.escape && !close ) {
                 this.escape = false;
@@ -10878,9 +10898,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.isString = function() {
+    $proto$0.isString = function() {
         if ( this.letter == '"' || this.letter == "'" ) {
             this.quote    = this.letter;
             this.quotePos = { line: this.line, column: this.column };
@@ -10888,9 +10908,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.inComment = function(close) {var $D$0;
+    $proto$0.inComment = function(close) {var $D$0;
         if ( this.inside('comment') ) {
             if ( close || ( this.letter == '*' && this.next == '/' ) ) {
                 var text, left, right;
@@ -10911,9 +10931,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
             }
             return true;
         }
-    }
+    };
 
-    Parser.prototype.isComment = function() {
+    $proto$0.isComment = function() {
         if ( this.letter == '/' && this.next == '*' ) {
             if ( this.inside('rules') || this.inside('decls') ) {
                 this.init( new Comment() );
@@ -10927,9 +10947,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
                 return true;
             }
         }
-    }
+    };
 
-    Parser.prototype.isWrong = function() {
+    $proto$0.isWrong = function() {
         if ( this.letter == '{' ) {
             if ( this.inside('decls') || this.inside('value') ) {
                 this.error("Unexpected {");
@@ -10949,9 +10969,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
                 }
             }
         }
-    }
+    };
 
-    Parser.prototype.isAtrule = function() {
+    $proto$0.isAtrule = function() {
         if ( this.letter == '@' && this.inside('rules') ) {
             this.init( new AtRule() );
             this.current.name = '';
@@ -10959,9 +10979,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.inAtrule = function(close) {var $D$1;
+    $proto$0.inAtrule = function(close) {var $D$1;
         if ( this.inside('atrule-name') ) {
             if ( this.space() ) {
                 this.checkAtruleName();
@@ -10999,9 +11019,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
             }
             return true;
         }
-    }
+    };
 
-    Parser.prototype.inSelector = function() {var $D$2;
+    $proto$0.inSelector = function() {var $D$2;
         if ( this.inside('selector') ) {
             if ( this.letter == '{' ) {
                 var raw, spaces;
@@ -11017,9 +11037,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.isSelector = function() {
+    $proto$0.isSelector = function() {
         if ( !this.space() && this.inside('rules') ) {
             this.init( new Rule() );
 
@@ -11037,9 +11057,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.isBlockEnd = function(close) {var this$0 = this;
+    $proto$0.isBlockEnd = function(close) {var this$0 = this;
         if ( this.letter == '}' || close ) {
             if ( this.parents.length == 1 ) {
                 if ( !this.opts.safe ) {
@@ -11059,9 +11079,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.inProperty = function(close) {
+    $proto$0.inProperty = function(close) {
         if ( this.inside('prop') ) {
             if ( this.letter == ':' || close ) {
                 if ( this.buffer[0] == '*' || this.buffer[0] == '_' ) {
@@ -11090,9 +11110,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.isProperty = function() {
+    $proto$0.isProperty = function() {
         if ( this.inside('decls') && !this.space() && this.letter != ';' ) {
             this.init( new Declaration() );
             this.addType('prop');
@@ -11103,9 +11123,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.inValue = function(close) {var $D$3;
+    $proto$0.inValue = function(close) {var $D$3;
         if ( this.inside('value') ) {
             if ( this.letter == '(' ) {
                 this.inBrackets = true;
@@ -11139,9 +11159,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
             return true;
         }
-    }
+    };
 
-    Parser.prototype.endFile = function() {var this$0 = this;
+    $proto$0.endFile = function() {var this$0 = this;
         if ( this.inside('atrule-param') || this.inside('atrule-name') ) {
             this.fixEnd( function()  {return this$0.inAtrule('close')} );
         }
@@ -11177,15 +11197,15 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             this.root.after = this.buffer;
         }
-    }
+    };
 
     // Helpers
 
-    Parser.prototype.error = function(message) {var pos = arguments[1];if(pos === void 0)pos = { line: this.line, column: this.column };
+    $proto$0.error = function(message) {var pos = arguments[1];if(pos === void 0)pos = { line: this.line, column: this.column };
         throw new CssSyntaxError(message, this.source, pos, this.opts.from);
-    }
+    };
 
-    Parser.prototype.move = function() {
+    $proto$0.move = function() {
         this.pos    += 1;
         this.column += 1;
         this.letter  = this.next;
@@ -11197,21 +11217,21 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
             this.line  += 1;
             this.column = 0;
         }
-    }
+    };
 
-    Parser.prototype.prevBuffer = function() {
+    $proto$0.prevBuffer = function() {
         return this.buffer.slice(0, -1);
-    }
+    };
 
-    Parser.prototype.inside = function(type) {
+    $proto$0.inside = function(type) {
         return this.type == type;
-    }
+    };
 
-    Parser.prototype.space = function() {
+    $proto$0.space = function() {
         return this.letter.trim() === '';
-    }
+    };
 
-    Parser.prototype.init = function(node) {
+    $proto$0.init = function(node) {
         this.current.push(node);
         this.parents.push(node);
         this.current = node;
@@ -11230,16 +11250,16 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         }
         this.current.before = this.buffer.slice(0, -1);
         this.buffer = '';
-    }
+    };
 
-    Parser.prototype.raw = function(prop, value, origin) {
+    $proto$0.raw = function(prop, value, origin) {
         this.current[prop] = value;
         if ( value != origin ) {
             this.current['_' + prop] = { value: value, raw: origin };
         }
-    }
+    };
 
-    Parser.prototype.fixEnd = function(callback) {
+    $proto$0.fixEnd = function(callback) {
         var start, after;
         if ( this.letter == '}' ) {
             start = this.buffer.search(/\s*\}$/);
@@ -11266,9 +11286,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
 
         this.current.after = after;
         this.buffer = after;
-    }
+    };
 
-    Parser.prototype.pop = function() {
+    $proto$0.pop = function() {
         this.current.source.end = {
             line:   this.line,
             column: this.column
@@ -11278,24 +11298,24 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         this.parents.pop();
         this.current = this.parents[this.parents.length - 1];
         this.buffer  = '';
-    }
+    };
 
-    Parser.prototype.addType = function(type) {
+    $proto$0.addType = function(type) {
         this.types.push(type);
         this.type = type;
-    }
+    };
 
-    Parser.prototype.setType = function(type) {
+    $proto$0.setType = function(type) {
         this.types[this.types.length - 1] = type;
         this.type = type;
-    }
+    };
 
-    Parser.prototype.popType = function() {
+    $proto$0.popType = function() {
         this.types.pop();
         this.type = this.types[this.types.length - 1];
-    }
+    };
 
-    Parser.prototype.atruleType = function() {
+    $proto$0.atruleType = function() {
         var name = this.current.name.toLowerCase();
         if ( name == 'page' || name == 'font-face' ) {
             return 'decls';
@@ -11304,9 +11324,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return 'rules';
         }
-    }
+    };
 
-    Parser.prototype.endAtruleParams = function() {
+    $proto$0.endAtruleParams = function() {
         if ( this.letter == '{' ) {
             var type = this.atruleType();
             this.current.addMixin(type);
@@ -11316,13 +11336,13 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
             if ( this.letter == ';' ) this.current.semicolon = true;
             this.pop();
         }
-    }
+    };
 
-    Parser.prototype.checkAtruleName = function() {
+    $proto$0.checkAtruleName = function() {
         if ( this.current.name === '' ) this.error('At-rule without name');
-    }
+    };
 
-    Parser.prototype.startSpaces = function(string) {
+    $proto$0.startSpaces = function(string) {
         var match = string.match(/^\s+/);
         if ( match ) {
             var pos = match[0].length;
@@ -11330,9 +11350,9 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return [string, ''];
         }
-    }
+    };
 
-    Parser.prototype.endSpaces = function(string) {
+    $proto$0.endSpaces = function(string) {
         var match = string.match(/\s+$/);
         if ( match ) {
             var pos = match[0].length;
@@ -11340,15 +11360,15 @@ var Parser = (function(){var DP$0 = Object.defineProperty;"use strict";
         } else {
             return [string, ''];
         }
-    }
+    };
 
-    Parser.prototype.closeBlocks = function() {
+    $proto$0.closeBlocks = function() {
         for ( var i = 0; i < this.parents.length; i++ ) {
             this.buffer += '{';
             this.isBlockEnd('close');
         }
-    }
-;return Parser;})();
+    };
+MIXIN$0(Parser.prototype,$proto$0);$proto$0=void 0;return Parser;})();
 
 module.exports = function (source) {var opts = arguments[1];if(opts === void 0)opts = { };
     if ( opts.map == 'inline' ) opts.map = { inline: true };
@@ -11369,19 +11389,20 @@ var Rule        = _dereq_('./rule');
 var Root        = _dereq_('./root');
 
 // List of functions to process CSS
-var PostCSS = (function(){var DP$0 = Object.defineProperty;"use strict";
-    function PostCSS() {var processors = arguments[0];if(processors === void 0)processors = [];
-        this.processors = processors;
+var PostCSS = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
+    function PostCSS() {var processors = arguments[0];if(processors === void 0)processors = [];var this$0 = this;
+        this.processors = processors.map( function(i)  {return this$0.normalize(i)} );
     }DP$0(PostCSS, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Add another function to CSS processors
-    PostCSS.prototype.use = function(processor) {
+    $proto$0.use = function(processor) {
+        processor = this.normalize(processor);
         this.processors.push(processor);
         return this;
-    }
+    };
 
     // Process CSS throw installed processors
-    PostCSS.prototype.process = function(css) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function')return f.call(v);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var opts = arguments[1];if(opts === void 0)opts = { };
+    $proto$0.process = function(css) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;var $D$3;var opts = arguments[1];if(opts === void 0)opts = { };
         if ( opts.map == 'inline' ) opts.map = { inline: true };
 
         var parsed;
@@ -11393,14 +11414,24 @@ var PostCSS = (function(){var DP$0 = Object.defineProperty;"use strict";
             parsed = postcss.parse(css, opts);
         }
 
-        $D$3 = (this.processors);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for ( var processor ; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){processor = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);
-            var returned = processor(parsed);
+        $D$3 = (this.processors);$D$0 = GET_ITER$0($D$3);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? $D$3.length : void 0);for ( var processor ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){processor = ($D$2 ? $D$3[$D$0++] : $D$1["value"]);
+            var returned = processor(parsed, opts);
             if ( returned instanceof Root ) parsed = returned;
         };$D$0 = $D$1 = $D$2 = $D$3 = void 0;
 
         return parsed.toResult(opts);
-    }
-;return PostCSS;})();
+    };
+
+    // Return processor function
+    $proto$0.normalize = function(processor) {
+        var type = typeof(processor);
+        if ( (type == 'object' || type == 'function') && processor.postcss ) {
+            return processor.postcss;
+        } else {
+            return processor;
+        }
+    };
+MIXIN$0(PostCSS.prototype,$proto$0);$proto$0=void 0;return PostCSS;})();
 
 // Framework for CSS postprocessors
 //
@@ -11441,7 +11472,7 @@ var path    = _dereq_('path');
 var fs      = _dereq_('fs');
 
 // Detect previous map
-var PreviousMap = (function(){var DP$0 = Object.defineProperty;"use strict";
+var PreviousMap = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
     function PreviousMap(root, opts, id) {
         this.file = opts.from || id;
 
@@ -11454,27 +11485,27 @@ var PreviousMap = (function(){var DP$0 = Object.defineProperty;"use strict";
     }DP$0(PreviousMap, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Return SourceMapConsumer object to read map
-    PreviousMap.prototype.consumer = function() {
+    $proto$0.consumer = function() {
         if ( !this.consumerCache ) {
             this.consumerCache = new mozilla.SourceMapConsumer(this.text);
         }
         return this.consumerCache;
-    }
+    };
 
     // Is map has sources content
-    PreviousMap.prototype.withContent = function() {
+    $proto$0.withContent = function() {
         return !!(this.consumer().sourcesContent &&
                   this.consumer().sourcesContent.length > 0);
-    }
+    };
 
     // Is `string` is starting with `start`
-    PreviousMap.prototype.startWith = function(string, start) {
+    $proto$0.startWith = function(string, start) {
         if ( !string ) return false;
         return string.substr(0, start.length) == start;
-    }
+    };
 
     // Load for annotation comment from previous compilation step
-    PreviousMap.prototype.loadAnnotation = function(root) {
+    $proto$0.loadAnnotation = function(root) {
         var last = root.last;
         if ( !last ) return;
         if ( last.type != 'comment' ) return;
@@ -11482,10 +11513,10 @@ var PreviousMap = (function(){var DP$0 = Object.defineProperty;"use strict";
         if ( this.startWith(last.text, '# sourceMappingURL=') ) {
             this.annotation = last.text;
         }
-    }
+    };
 
     // Encode different type of inline
-    PreviousMap.prototype.decodeInline = function(text) {
+    $proto$0.decodeInline = function(text) {
         var uri    = '# sourceMappingURL=data:application/json,';
         var base64 = '# sourceMappingURL=data:application/json;base64,';
 
@@ -11499,10 +11530,10 @@ var PreviousMap = (function(){var DP$0 = Object.defineProperty;"use strict";
             var encoding = text.match(/ata:application\/json;([^,]+),/)[1];
             throw new Error('Unsupported source map encoding ' + encoding);
         }
-    }
+    };
 
     // Load previous map
-    PreviousMap.prototype.loadMap = function(prev) {
+    $proto$0.loadMap = function(prev) {
         if ( prev === false ) return;
 
         if ( prev ) {
@@ -11532,8 +11563,8 @@ var PreviousMap = (function(){var DP$0 = Object.defineProperty;"use strict";
                 return fs.readFileSync(map, 'utf-8').toString();
             }
         }
-    }
-;return PreviousMap;})();
+    };
+MIXIN$0(PreviousMap.prototype,$proto$0);$proto$0=void 0;return PreviousMap;})();
 
 module.exports = PreviousMap;
 
@@ -11541,7 +11572,7 @@ module.exports = PreviousMap;
 var MapGenerator = _dereq_('./map-generator');
 
 // Object with processed CSS
-var Result = (function(){var DP$0 = Object.defineProperty;"use strict";
+var Result = (function(){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};var $proto$0={};
     function Result(root) {var opts = arguments[1];if(opts === void 0)opts = { };
         this.root = root;
         this.opts = opts;
@@ -11560,18 +11591,18 @@ var Result = (function(){var DP$0 = Object.defineProperty;"use strict";
     }
 
     // Return CSS string on any try to print
-    Result.prototype.toString = function() {
+    $proto$0.toString = function() {
         return this.css;
-    }
+    };
 
     // Generate CSS and map
-    Result.prototype.stringify = function() {
+    $proto$0.stringify = function() {
         var map = new MapGenerator(this.root, this.opts);
         var generated  = map.generate();
         this.cssCached = generated[0];
         this.mapCached = generated[1];
-    }
-;return Result;})();
+    };
+MIXIN$0(Result.prototype,$proto$0);$proto$0=void 0;return Result;})();
 
 module.exports = Result;
 
@@ -11584,7 +11615,7 @@ var Result      = _dereq_('./result');
 var Rule        = _dereq_('./rule');
 
 // Root of CSS
-var Root = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};"use strict";MIXIN$0(Root, super$0);
+var Root = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Root, super$0);var $proto$0={};
     function Root(defaults) {
         this.type  = 'root';
         this.rules = [];
@@ -11592,14 +11623,14 @@ var Root = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = fun
     }Root.prototype = Object.create(super$0.prototype, {"constructor": {"value": Root, "configurable": true, "writable": true} });DP$0(Root, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Fix spaces on insert before first rule
-    Root.prototype.normalize = function(child, sample, type) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol.iterator||'@@iterator';function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function')return f.call(v);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;
+    $proto$0.normalize = function(child, sample, type) {var S_ITER$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol.iterator||'@@iterator';var S_MARK$0 = typeof Symbol!=='undefined'&&Symbol&&Symbol["__setObjectSetter__"];function GET_ITER$0(v){if(v){if(Array.isArray(v))return 0;var f;if(S_MARK$0)S_MARK$0(v);if(typeof v==='object'&&typeof (f=v[S_ITER$0])==='function'){if(S_MARK$0)S_MARK$0(void 0);return f.call(v);}if(S_MARK$0)S_MARK$0(void 0);if((v+'')==='[object Generator]')return v;}throw new Error(v+' is not iterable')};var $D$0;var $D$1;var $D$2;
         var childs = super$0.prototype.normalize.call(this, child, sample, type);
 
-        $D$0 = GET_ITER$0(childs);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? childs.length : void 0);for ( child ; $D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"]; ){child = ($D$2 ? childs[$D$0++] : $D$1["value"]);
+        $D$0 = GET_ITER$0(childs);$D$2 = $D$0 === 0;$D$1 = ($D$2 ? childs.length : void 0);for ( child ;$D$2 ? ($D$0 < $D$1) : !($D$1 = $D$0["next"]())["done"];){child = ($D$2 ? childs[$D$0++] : $D$1["value"]);
             if ( type == 'prepend' ) {
                 if ( this.rules.length > 1 ) {
                     sample.before = this.rules[1].before;
-                } else {
+                } else if ( this.rules.length == 1 ) {
                     sample.before = this.after;
                 }
             } else {
@@ -11612,19 +11643,19 @@ var Root = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = fun
         };$D$0 = $D$1 = $D$2 = void 0;
 
         return childs;
-    }
+    };
 
     // Stringify styles
-    Root.prototype.stringify = function(builder) {
+    $proto$0.stringify = function(builder) {
         this.stringifyContent(builder);
         if ( this.after) builder(this.after);
-    }
+    };
 
     // Generate processing result with optional source map
-    Root.prototype.toResult = function() {var opts = arguments[0];if(opts === void 0)opts = { };
+    $proto$0.toResult = function() {var opts = arguments[0];if(opts === void 0)opts = { };
         return new Result(this, opts);
-    }
-;return Root;})(Container.WithRules);
+    };
+MIXIN$0(Root.prototype,$proto$0);$proto$0=void 0;return Root;})(Container.WithRules);
 
 module.exports = Root;
 
@@ -11634,24 +11665,24 @@ var Declaration = _dereq_('./declaration');
 var list        = _dereq_('./list');
 
 // CSS rule like “a { }”
-var Rule = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};"use strict";MIXIN$0(Rule, super$0);
+var Rule = (function(super$0){"use strict";var DP$0 = Object.defineProperty;var MIXIN$0 = function(t,s){for(var p in s){if(s.hasOwnProperty(p)){DP$0(t,p,Object.getOwnPropertyDescriptor(s,p));}}return t};MIXIN$0(Rule, super$0);var $proto$0={};
     function Rule(defaults) {
         this.type = 'rule';
         super$0.call(this, defaults);
     }Rule.prototype = Object.create(super$0.prototype, {"constructor": {"value": Rule, "configurable": true, "writable": true}, selectors: {"get": selectors$get$0, "set": selectors$set$0, "configurable": true, "enumerable": true} });DP$0(Rule, "prototype", {"configurable": false, "enumerable": false, "writable": false});
 
     // Different style for empty and non-empty rules
-    Rule.prototype.styleType = function() {
+    $proto$0.styleType = function() {
         return this.type + (this.decls.length ? '-body' : '-empty');
-    }
+    };
 
-    Rule.prototype.defaultStyle = function(type) {
+    $proto$0.defaultStyle = function(type) {
         if ( type == 'rule-body' ) {
             return { between: ' ', after: this.defaultAfter() };
         } else {
             return { between: ' ', after: '' };
         }
-    }
+    };
 
     // Shortcut to get selectors as array
 
@@ -11664,11 +11695,11 @@ var Rule = (function(super$0){var DP$0 = Object.defineProperty;var MIXIN$0 = fun
     }
 
     // Stringify rule
-    Rule.prototype.stringify = function(builder) {
+    $proto$0.stringify = function(builder) {
         this.stringifyBlock(builder,
             this.stringifyRaw('selector') + this.style().between + '{');
-    }
-;return Rule;})(Container.WithDecls);
+    };
+MIXIN$0(Rule.prototype,$proto$0);$proto$0=void 0;return Rule;})(Container.WithDecls);
 
 module.exports = Rule;
 
@@ -14199,7 +14230,7 @@ function amdefine(module, requireFn) {
 
 module.exports = amdefine;
 
-}).call(this,_dereq_("FWaASH"),"/../node_modules/autoprefixer/node_modules/postcss/node_modules/source-map/node_modules/amdefine/amdefine.js")
+}).call(this,_dereq_("FWaASH"),"/../node_modules/autoprefixer-core/node_modules/postcss/node_modules/source-map/node_modules/amdefine/amdefine.js")
 },{"FWaASH":105,"path":104}],100:[function(_dereq_,module,exports){
 
 },{}],101:[function(_dereq_,module,exports){
