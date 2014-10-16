@@ -1,4 +1,8 @@
 
+1.2.1 - October 15, 2014
+--------------------------
+* update `read-file-stdin` to `0.2.0`
+
 1.2.0 - September 12, 2014
 --------------------------
 * upgrade `autoprefixer` to `3.0.0`
