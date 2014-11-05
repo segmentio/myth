@@ -21,6 +21,7 @@
 - [mnmly/builder-myth](https://github.com/mnmly/builder-myth): `component-builder` plugin
 - [gulp-myth](https://github.com/sindresorhus/gulp-myth): Gulp plugin
 - [grunt-myth](https://github.com/sindresorhus/grunt-myth): Grunt plugin
+- [duo-myth](https://github.com/duojs/myth): Duo plugin
 
 ## Why?
 
