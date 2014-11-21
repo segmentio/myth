@@ -182,14 +182,21 @@ describe('cli', function(){
 
 describe('cases', function(){
   var cases = [
+    'github',
     'myth.io'
   ];
 
   cases.forEach(function(name){
-    it('should convert ' + name + '\'s css', function(){
+    it('should convert ' + name + '\'s css, quickly', function(){
       var input = read('cases/' + name);
-      var output = read('cases/' + name + '.out');
-      assert.equal(myth(input).trim(), output.trim());
+      var expected = read('cases/' + name + '.out');
+      var start = new Date()
+      var output = myth(input)
+      var end = new Date()
+      var timediff = end - start
+      console.log(name + " done in " + timediff + "ms")
+      assert.ok(timediff < 300);
+      assert.equal(output.trim(), expected.trim());
     });
   });
 });
