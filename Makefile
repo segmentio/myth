@@ -25,6 +25,13 @@ test: myth.js node_modules
 		--slow 700 \
 		--bail
 
+# Run the tests.
+test-debug: myth.js node_modules
+	@$(mocha) debug \
+		--reporter spec \
+		--slow 700
+
 # Phony commands.
 .PHONY: clean
 .PHONY: test
+.PHONY: test-debug
