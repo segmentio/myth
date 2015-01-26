@@ -1,4 +1,8 @@
 
+1.3.0 - January 25, 2015
+------------------------
+* add `--sourcemap` flag to the cli
+
 1.2.1 - October 15, 2014
 --------------------------
 * update `read-file-stdin` to `0.2.0`
