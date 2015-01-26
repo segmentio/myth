@@ -23,6 +23,7 @@ program
   .usage('[<input>] [<output>]')
   .option('-c, --compress', 'compress output')
   .option('-w, --watch', 'watch the input file for changes')
+  .option('-s, --sourcemap', 'add source map')
   .option('-v, --verbose', 'log verbose output for debugging\n');
 
 myth.features.forEach(function(feature){
@@ -97,6 +98,7 @@ function run(){
     try {
       css = myth(css, {
         compress: program.compress,
+        sourcemap: program.sourcemap,
         features: program,
         source: input
       });
