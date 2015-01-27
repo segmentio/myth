@@ -22,6 +22,7 @@
 - [gulp-myth](https://github.com/sindresorhus/gulp-myth): Gulp plugin
 - [grunt-myth](https://github.com/sindresorhus/grunt-myth): Grunt plugin
 - [duo-myth](https://github.com/duojs/myth): Duo plugin
+- [myth-loader](https://github.com/luigy/myth-loader): Webpack Loader
 
 ## Why?
 
