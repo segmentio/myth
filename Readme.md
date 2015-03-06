@@ -273,28 +273,16 @@ var converted = rework(css)
 fs.writeFileSync('converted.css', converted);
 ```
 
-Options:
+Available options:
 
-  - `browsers` - `Array` - an array of [browsers and versions to support](https://github.com/postcss/autoprefixer#browsers).
-  - `compress` - `Boolean` - whether to compress the CSS output.
-  - `source` - `String` - the full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
-  - `features` - `Object` - any features you'd like to disable. All features are enabled by default. For example:
-  - `variables` - `Object` - a dictionary of CSS variables.
-  - `preserve` - `Boolean` - whether to preserve variables in the output.
-
-```js
-features: {
-  import: false,
-  variables: false,
-  customMedia: false,
-  hexAlpha: false,
-  color: false,
-  calc: false,
-  fontVariant: false,
-  rebeccapurple: false,
-  prefixes: false
-}
-```
+| Key         | Type      | Description 
+| ----------- | --------- | ----------- 
+| `browsers`  | `Array`   | An array of [browsers and versions to support](https://github.com/postcss/autoprefixer#browsers).
+| `compress`  | `Boolean` | Whether to compress the CSS output.
+| `features`  | `Object`  | A dictionary of features you'd like to disable. All features are enabled by default. Available features: `calc`, `color`, `customMedia`, `fontVariant`, `hexAlpha`, `import`, `prefixes`, `rebeccapurple`, `variables`.
+| `preserve`  | `Boolean` | Whether to preserve variables in the output.
+| `source`    | `String`  | The full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
+| `variables` | `Object`  | A dictionary of CSS variables to use.
 
 
 ## License
