@@ -1,20 +1,21 @@
 
 # Myth [![Build Status](https://travis-ci.org/segmentio/myth.png)](http://travis-ci.org/segmentio/myth)
 
-  _CSS the way it was imagined._
+_CSS the way it was imagined._
 
-  Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's like a CSS polyfill.
-
+Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's like a CSS polyfill.
 
 
 ## Installation
 
     $ npm install -g myth
 
+
 ## Usage
 
     $ myth input.css output.css
     # Generated output.css from input.css
+
 
 ## Community
 
@@ -24,19 +25,21 @@
 - [duo-myth](https://github.com/duojs/myth): Duo plugin
 - [myth-loader](https://github.com/luigy/myth-loader): Webpack Loader
 
+
 ## Why?
 
-  Myth lets you write pure CSS while still giving you the benefits of tools like LESS and Sass. You can still use variables and math functions, just like you do in preprocessors. It's like a polyfill for future versions of the spec.
+Myth lets you write pure CSS while still giving you the benefits of tools like LESS and Sass. You can still use variables and math functions, just like you do in preprocessors. It's like a polyfill for future versions of the spec.
 
-  Some of the features in CSS require runtime calculations, which neither Myth nor preprocessors handle, but what Myth does is let you write your code today in the future syntax, so that your code is future-proof. When browsers finally support these features you won't need to rewrite anything, just start using the cascade!
+Some of the features in CSS require runtime calculations, which neither Myth nor preprocessors handle, but what Myth does is let you write your code today in the future syntax, so that your code is future-proof. When browsers finally support these features you won't need to rewrite anything, just start using the cascade!
 
-  Taking plain CSS as an input also means you can use Myth to <em>re-process</em> anyone else's CSS (or another preprocessors output), adding the browser support you need, without having to re-write the code in a completely different syntax.
+Taking plain CSS as an input also means you can use Myth to <em>re-process</em> anyone else's CSS (or another preprocessors output), adding the browser support you need, without having to re-write the code in a completely different syntax.
 
-  Myth is built with <a href="https://github.com/visionmedia/rework">Rework</a> so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
+Myth is built with <a href="https://github.com/visionmedia/rework">Rework</a> so it's incredibly fast, and has a nice Javascript API in addition to the CLI.
+
 
 ## Example
 
-  An example is the easiest way to explain it. If you write spec-compliant CSS:
+An example is the easiest way to explain it. If you write spec-compliant CSS:
 
 ```css
 :root {
@@ -71,7 +74,7 @@ a:hover {
 }
 ```
 
-  ... Myth will transform it for you, into browser-compliant CSS:
+... Myth will transform it for you, into browser-compliant CSS:
 
 ```css
 @media screen and (max-width: 30em) {
@@ -133,11 +136,12 @@ a:hover {
 }
 ```
 
+
 ## Features
 
 #### Variables
 
-  Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-variables/). Just like future CSS, but without the cascade. Thanks to [`rework-vars`](https://github.com/visionmedia/rework-vars).
+Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-variables/). Just like future CSS, but without the cascade. Thanks to [`rework-vars`](https://github.com/visionmedia/rework-vars).
 
 ```css
 :root {
@@ -151,7 +155,7 @@ a {
 
 #### Math
 
-  Using the same syntax as the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Just like future CSS, but without runtime interpolation. Thanks to [`rework-calc`](https://github.com/klei-dev/rework-calc).
+Using the same syntax as the [CSS spec](http://www.w3.org/TR/css3-values/#calc-notation). Just like future CSS, but without runtime interpolation. Thanks to [`rework-calc`](https://github.com/klei-dev/rework-calc).
 
 ```css
 pre {
@@ -161,7 +165,7 @@ pre {
 
 #### Custom media queries
 
-  Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/mediaqueries/#custom-mq). Thanks to [`rework-custom-media`](https://github.com/reworkcss/rework-custom-media).
+Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/mediaqueries/#custom-mq). Thanks to [`rework-custom-media`](https://github.com/reworkcss/rework-custom-media).
 
 ```css
 @custom-media --narrow-window (max-width: 30em);
@@ -177,7 +181,7 @@ pre {
 
 #### Color Manipulation
 
-  Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-color/#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
+Using the same syntax as the [CSS spec](http://dev.w3.org/csswg/css-color/#modifying-colors). Thanks to [`rework-color-function`](https://github.com/ianstormtaylor/rework-color-function).
 
 ```css
 a {
@@ -191,7 +195,7 @@ a:hover {
 
 #### No Prefixes
 
-  The prefixes from the most-common *and* most-recent browsers are supported, so you never need to worry about what the current browser support landscape is. Big thanks to [`autoprefixer`](https://github.com/postcss/autoprefixer)!
+The prefixes from the most-common *and* most-recent browsers are supported, so you never need to worry about what the current browser support landscape is. Big thanks to [`autoprefixer`](https://github.com/postcss/autoprefixer)!
 
 ```css
 .button {
@@ -202,8 +206,8 @@ a:hover {
 
 #### And more...
 
-* 4-digit and 8-digit hex color support. [`Spec`](http://dev.w3.org/csswg/css-color/#hex-notation) - [`Thanks`](https://github.com/ianstormtaylor/rework-hex-alpha)
-* Font-variant shorthands. [`Spec`](http://www.w3.org/TR/css3-fonts/#font-variant-prop) - [`Thanks`](https://github.com/ianstormtaylor/rework-font-variant)
+- 4-digit and 8-digit hex color support. [`Spec`](http://dev.w3.org/csswg/css-color/#hex-notation) - [`Thanks`](https://github.com/ianstormtaylor/rework-hex-alpha)
+- Font-variant shorthands. [`Spec`](http://www.w3.org/TR/css3-fonts/#font-variant-prop) - [`Thanks`](https://github.com/ianstormtaylor/rework-font-variant)
 
 ## API
 
@@ -269,12 +273,15 @@ var converted = rework(css)
 fs.writeFileSync('converted.css', converted);
 ```
 
-  Options:
+Options:
 
   - `browsers` - `Array` - an array of [browsers and versions to support](https://github.com/postcss/autoprefixer#browsers).
   - `compress` - `Boolean` - whether to compress the CSS output.
   - `source` - `String` - the full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
   - `features` - `Object` - any features you'd like to disable. All features are enabled by default. For example:
+  - `variables` - `Object` - a dictionary of CSS variables.
+  - `preserve` - `Boolean` - whether to preserve variables in the output.
+
 ```js
 features: {
   import: false,
@@ -289,14 +296,15 @@ features: {
 }
 ```
 
+
 ## License
 
-  The MIT License (MIT)
+The MIT License (MIT)
 
-  Copyright (c) 2013, Segment.io &lt;friends@segment.io&gt;
+Copyright (c) 2015, Segment &lt;friends@segment.io&gt;
 
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -1,4 +1,8 @@
 
+1.4.0 - March 6, 2015
+---------------------
+* add `variables` and `preserve` options
+
 1.3.0 - January 25, 2015
 ------------------------
 * add `--sourcemap` flag to the cli
