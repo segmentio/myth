@@ -279,9 +279,9 @@ Available options:
 | ----------- | --------- | ----------- 
 | `browsers`  | `Array`   | An array of [browsers and versions to support](https://github.com/postcss/autoprefixer#browsers).
 | `compress`  | `Boolean` | Whether to compress the CSS output.
-| `features`  | `Object`  | A dictionary of features you'd like to disable. All features are enabled by default. Available features: `calc`, `color`, `customMedia`, `fontVariant`, `hexAlpha`, `import`, `prefixes`, `rebeccapurple`, `variables`.
+| `features`  | `Object`  | A dictionary of features to disable. All features are enabled by default. Available features: `calc`, `color`, `customMedia`, `fontVariant`, `hexAlpha`, `import`, `prefixes`, `rebeccapurple`, `variables`.
 | `preserve`  | `Boolean` | Whether to preserve variables in the output.
-| `source`    | `String`  | The full path to the source CSS file. This is necessary if you want Myth to concatenate `@import` rules in your CSS.
+| `source`    | `String`  | The full path to the source CSS file. This is **required** if you want Myth to concatenate `@import` rules in your CSS.
 | `variables` | `Object`  | A dictionary of CSS variables to use.
 
 
