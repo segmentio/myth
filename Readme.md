@@ -24,7 +24,7 @@ Myth is a preprocessor that lets you write pure CSS without having to worry abou
 - [grunt-myth](https://github.com/sindresorhus/grunt-myth): Grunt plugin
 - [duo-myth](https://github.com/duojs/myth): Duo plugin
 - [myth-loader](https://github.com/luigy/myth-loader): Webpack Loader
-
+- [meteor-myth](https://github.com/aquator/meteor-myth): Meteor plugin
 
 ## Why?
 
