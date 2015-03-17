@@ -222,6 +222,7 @@ Options:
   -V, --version       output the version number
   -c, --compress      compress output
   -w, --watch         watch the input file for changes
+  -s, --sourcemap     add source map
   -v, --verbose       log verbose output for debugging
 
   --no-import         disable import support
@@ -282,6 +283,7 @@ Available options:
 | `features`  | `Object`  | A dictionary of features to disable. All features are enabled by default. Available features: `calc`, `color`, `customMedia`, `fontVariant`, `hexAlpha`, `import`, `prefixes`, `rebeccapurple`, `variables`.
 | `preserve`  | `Boolean` | Whether to preserve variables in the output.
 | `source`    | `String`  | The full path to the source CSS file. This is **required** if you want Myth to concatenate `@import` rules in your CSS.
+| `sourcemap` | `Boolean` | Whether to embed a source map.
 | `variables` | `Object`  | A dictionary of CSS variables to use.
 
 
