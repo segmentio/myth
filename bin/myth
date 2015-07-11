@@ -22,9 +22,10 @@ program
   .version(require('../package.json').version)
   .usage('[<input>] [<output>]')
   .option('-c, --compress', 'compress output')
-  .option('-w, --watch', 'watch the input file for changes')
+  .option('-i, --ignore-errors', 'ignore complilation errors', false)
   .option('-s, --sourcemap', 'add source map')
-  .option('-v, --verbose', 'log verbose output for debugging\n');
+  .option('-v, --verbose', 'log verbose output for debugging\n')
+  .option('-w, --watch', 'watch the input file for changes');
 
 myth.features.forEach(function(feature){
   var flag = fmt('--no-%s', slug(feature));
@@ -64,6 +65,7 @@ var input = program.args[0] ? resolve(program.args[0]) : null;
 var output = program.args[1] ? resolve(program.args[1]) : null;
 var verbose = program.verbose;
 var regen = program.watch && input && output;
+var ignore = program.ignoreErrors;
 
 /**
  * Exists?
@@ -103,8 +105,12 @@ function run(){
         source: input
       });
     } catch (e) {
-      e.css = css;
-      logger.throw(e);
+      if (ignore) {
+        return;
+      } else {
+        e.css = css;
+        logger.throw(e);
+      }
     }
 
     write(output, css);

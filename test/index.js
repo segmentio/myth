@@ -147,6 +147,17 @@ describe('cli', function(){
     });
   });
 
+  it('should ignore errors on --ignore-errors', function(done){
+    exec('bin/myth --ignore-errors test/cli/error.css', function(err, stdout, stderr){
+      if (err) return done(err);
+      assert(-1 == stderr.indexOf('Error'));
+      assert(-1 == stderr.indexOf('rework-vars: missing closing ")"'));
+      assert(-1 == stderr.indexOf('color('));
+      assert(-1 == stderr.indexOf('at '));
+      done();
+    });
+  });
+
   it('should log on --verbose', function(done){
     exec('bin/myth --verbose test/cli/input.css test/cli/output.css', function(err, stdout){
       if (err) return done(err);
