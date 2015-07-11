@@ -1,7 +1,29 @@
 
 body {
-  transition: -webkit-transform 1s;
+  -webkit-transition: -webkit-transform 1s;
   transition: transform 1s;
+}
+
+:-webkit-full-screen a {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+
+:-moz-full-screen a {
+  display: flex;
+}
+
+:-ms-fullscreen a {
+  display: -ms-flexbox;
+  display: flex;
+}
+
+:fullscreen a {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 @-webkit-keyframes moving-gradient {

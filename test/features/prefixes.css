@@ -3,6 +3,10 @@ body {
   transition: transform 1s;
 }
 
+:fullscreen a {
+  display: flex;
+}
+
 @keyframes moving-gradient {
   0% {
     background-position: left bottom;

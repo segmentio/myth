@@ -12,13 +12,14 @@
     "test": "make test"
   },
   "dependencies": {
-    "autoprefixer-core": "^3.0.0",
+    "autoprefixer-core": "^5.2.1",
     "clone-component": "~0.2.2",
     "colors": "~0.6.2",
     "commander": "^2.1.0",
     "is-browser": "^2.0.0",
     "node-watch": "~0.3.4",
     "pad-component": "~0.0.1",
+    "postcss": "^4.1.16",
     "read-file-stdin": "^0.2.0",
     "rework": "^1.0.0",
     "rework-calc": "^1.1.0",

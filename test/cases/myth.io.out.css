@@ -15,6 +15,7 @@ body {
 a {
   color: #847AD1;
   text-decoration: underline;
+  -webkit-transition: color .2s;
   transition: color .2s;
 }
 
@@ -180,6 +181,7 @@ pre {
 .Section--feature-variables::before {
   height: 6em;
   bottom: 100%;
+  background: -webkit-linear-gradient(top, transparent, #26202B);
   background: linear-gradient(to bottom, transparent, #26202B);
 }
 
@@ -194,6 +196,7 @@ pre {
 .Section--feature-no-prefixes::after {
   height: 14em;
   top: 100%;
+  background: -webkit-linear-gradient(top, #26202B, transparent);
   background: linear-gradient(to bottom, #26202B, transparent);
 }
 
@@ -233,7 +236,7 @@ pre {
 
 .Footer-title {
   font-size: 1.5em;
-  transition: -webkit-transform .2s;
+  -webkit-transition: -webkit-transform .2s;
   transition: transform .2s;
 }
 
@@ -256,10 +259,12 @@ pre {
  */
 
 .Header-subtitle {
+  -webkit-transition: opacity 2s ease-in-out .5s;
   transition: opacity 2s ease-in-out .5s;
 }
 
 .Header-description {
+  -webkit-transition: opacity 2s ease-in-out 2.5s;
   transition: opacity 2s ease-in-out 2.5s;
 }
 
@@ -267,6 +272,7 @@ pre {
 .Section--feature .Section-title,
 .Section--feature .Section-description,
 .Section--feature .Section-example {
+  -webkit-transition: opacity 2s ease-in-out 4.5s;
   transition: opacity 2s ease-in-out 4.5s;
 }
 

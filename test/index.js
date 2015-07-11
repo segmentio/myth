@@ -81,6 +81,7 @@ describe('sourcemap', function(){
       sourcemap: true
     };
     var css = myth(input, options);
+    debugger;
     assert.equal(css.trim(), output.trim());
   });
 });

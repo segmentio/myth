@@ -4,6 +4,7 @@
   -webkit-font-feature-settings: "c2sc";
   font-feature-settings: "c2sc";
   font-variant: small-caps;
+  -webkit-transition: all 1s;
   transition: all 1s;
 }
 
@@ -31,5 +32,6 @@
   -moz-font-feature-settings: "c2sc";
   font-feature-settings: "c2sc";
   font-variant: small-caps;
+  -webkit-transition: all 1s;
   transition: all 1s;
 }
