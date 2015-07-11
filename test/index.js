@@ -189,7 +189,6 @@ describe('cases', function(){
     it('should convert ' + name + '\'s css', function(){
       var input = read('cases/' + name);
       var output = read('cases/' + name + '.out');
-      debugger;
       assert.equal(myth(input).trim(), output.trim());
     });
   });
