@@ -1,4 +1,9 @@
 
+1.5.0 - July 11, 2015
+---------------------
+* upgrade `autoprefixer` to `5.2.0`
+* add `--ignore-errors` flag to the cli
+
 1.4.0 - March 6, 2015
 ---------------------
 * add `variables` and `preserve` options
@@ -9,7 +14,7 @@
 
 1.2.1 - October 15, 2014
 --------------------------
-* update `read-file-stdin` to `0.2.0`
+* upgrade `read-file-stdin` to `0.2.0`
 
 1.2.0 - September 12, 2014
 --------------------------
