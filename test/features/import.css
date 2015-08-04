@@ -1,6 +1,8 @@
 
 @import "import.include.css";
 
+@import "paths-example/import.include.css";
+
 body {
   color: red;
 }

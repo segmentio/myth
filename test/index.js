@@ -38,7 +38,7 @@ describe('features', function(){
 
     describe(slug, function(){
       it('should add ' + slug + ' node support', function(){
-        var css = myth(input, { source: source });
+        var css = myth(input, { source: source, paths: [__dirname]});
         assert.equal(css.trim(), expected.trim());
       });
 
