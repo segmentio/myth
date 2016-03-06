@@ -27,7 +27,7 @@
     "rework-custom-media": "~0.1.1",
     "rework-font-variant": "1.0.1",
     "rework-hex-alpha": "^1.0.0",
-    "rework-import": "^1.2.0",
+    "rework-import": "^2.1.0",
     "rework-rebeccapurple": "^1.0.1",
     "rework-vars": "^3.0.0",
     "to-slug-case": "~0.1.2",
