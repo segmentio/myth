@@ -12,31 +12,32 @@
     "test": "make test"
   },
   "dependencies": {
-    "autoprefixer-core": "^5.2.1",
-    "clone-component": "~0.2.2",
-    "colors": "~0.6.2",
+    "autoprefixer": "^6.3.6",
+    "browserify": "^13.0.1",
+    "colors": "^1.1.2",
     "commander": "^2.1.0",
     "is-browser": "^2.0.0",
     "node-watch": "~0.3.4",
     "pad-component": "~0.0.1",
-    "postcss": "^4.1.16",
+    "postcss": "^5.0.21",
     "read-file-stdin": "^0.2.0",
-    "rework": "^1.0.0",
+    "rework": "^1.0.1",
     "rework-calc": "^1.1.0",
     "rework-color-function": "^1.0.0",
-    "rework-custom-media": "~0.1.1",
+    "rework-custom-media": "^0.1.0",
     "rework-font-variant": "1.0.1",
     "rework-hex-alpha": "^1.0.0",
-    "rework-import": "^1.2.0",
+    "rework-import": "^2.1.0",
     "rework-rebeccapurple": "^1.0.1",
     "rework-vars": "^3.0.0",
-    "to-slug-case": "~0.1.2",
-    "to-space-case": "~0.1.3",
+    "to-slug-case": "~1.0.0",
+    "to-space-case": "~1.0.0",
+    "utils-copy": "^1.1.1",
     "write-file-stdout": "~0.0.2"
   },
   "devDependencies": {
-    "browserify": "^3.46.0",
-    "mocha": "^1.15.1"
+    "browserify": "^13.0.1",
+    "mocha": "^2.5.3"
   },
   "keywords": [
     "preprocessor",
