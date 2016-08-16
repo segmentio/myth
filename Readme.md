@@ -26,6 +26,7 @@ Myth is a preprocessor that lets you write pure CSS without having to worry abou
 - [myth-loader](https://github.com/luigy/myth-loader): Webpack Loader
 - [meteor-myth](https://github.com/aquator/meteor-myth): Meteor plugin
 - [myth-transformer](https://github.com/ppvk/myth-transform): Dart transformer
+- [myth-client](https://github.com/Xstoudi/myth-client): A simple client-side transpiler
 
 ## Why?
 
