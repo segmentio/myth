@@ -1,5 +1,5 @@
 
-# Myth [![Build Status](https://travis-ci.org/segmentio/myth.png)](http://travis-ci.org/segmentio/myth)
+# Myth [![Build Status](https://travis-ci.org/pin3da/myth6.svg?branch=master)](https://travis-ci.org/pin3da/myth6)
 
 _CSS the way it was imagined._
 
