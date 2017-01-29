@@ -5,6 +5,14 @@ _CSS the way it was imagined._
 
 Myth is a preprocessor that lets you write pure CSS without having to worry about slow browser support, or even slow spec approval. It's like a CSS polyfill.
 
+## Important note
+
+This is a fork of: https://github.com/segmentio/myth
+
+I will publish this module on npm just to have this package running
+with node 6 because the original author does not maintain the module.
+
+I will happily merge all the pull-requests that passes the test.
 
 ## Installation
 
@@ -277,8 +285,8 @@ fs.writeFileSync('converted.css', converted);
 
 Available options:
 
-| Key         | Type      | Description 
-| ----------- | --------- | ----------- 
+| Key         | Type      | Description
+| ----------- | --------- | -----------
 | `browsers`  | `Array`   | An array of [browsers and versions to support](https://github.com/postcss/autoprefixer#browsers).
 | `compress`  | `Boolean` | Whether to compress the CSS output.
 | `features`  | `Object`  | A dictionary of features to disable. All features are enabled by default. Available features: `calc`, `color`, `customMedia`, `fontVariant`, `hexAlpha`, `import`, `prefixes`, `rebeccapurple`, `variables`.

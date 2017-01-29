@@ -1,9 +1,9 @@
 {
-  "name": "myth",
+  "name": "myth6",
   "version": "1.5.0",
   "license": "MIT",
-  "repository": "git://github.com/segmentio/myth.git",
-  "description": "A CSS preprocessor that acts like a polyfill for future versions of the spec.",
+  "repository": "git://github.com/pin3da/myth6.git",
+  "description": "A segmentio/myth fork that supports node 6",
   "main": "lib/index.js",
   "bin": {
     "myth": "bin/myth"
