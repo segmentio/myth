@@ -17,7 +17,7 @@
     "colors": "~0.6.2",
     "commander": "^2.1.0",
     "is-browser": "^2.0.0",
-    "node-watch": "~0.3.4",
+    "node-watch": "~0.7.3",
     "pad-component": "~0.0.1",
     "postcss": "^4.1.16",
     "read-file-stdin": "^0.2.0",
